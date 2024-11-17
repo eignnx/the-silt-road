@@ -124,8 +124,12 @@ export class UnitPriceSummary {
     toString(): string {
         const unitPrice = commodityBasePrice1860(this.commodity);
         const u = this.unit.short;
-        if (unitPrice < 0.10) {
-            return `¢${(this.unitPrice * 100 * 100).toFixed(2)} / 100${u}`;
+        if (unitPrice < 0.01) {
+            return `${(this.unitPrice * 100 * 100).toFixed(0)}¢ / 100${u}`;
+        } else if (unitPrice < 1.00) {
+            return `${(this.unitPrice * 100).toFixed(0)}¢ / ${u}`;
+        } else if (unitPrice > 1000.0) {
+            return `$${(this.unitPrice / 1000.0).toFixed(1)}k / ${u}`;
         } else {
             return `$${this.unitPrice.toFixed(2)} / ${u}`;
         }
