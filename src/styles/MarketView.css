@@ -6,6 +6,20 @@ h2 {
     text-decoration: underline;
 }
 
+.inventory-market-side-by-side {
+    display: grid;
+    grid-template-columns: 1fr 10ch 1fr;
+    width: 100%;
+}
+
+.market-inventory {
+    grid-column: 3;
+}
+
+.player-inventory {
+    grid-column: 1;
+}
+
 .inventory-row {
     align-items: center;
     display: grid;

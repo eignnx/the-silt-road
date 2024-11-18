@@ -33,6 +33,12 @@ button:hover {
   background-color: rgb(133, 92, 69);
 }
 
+button:disabled {
+  background-color: rgb(75, 58, 36);
+  color: rgb(164, 142, 129);
+  border-color: rgb(164, 142, 129);
+}
+
 body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
@@ -43,7 +49,7 @@ body {
 }
 
 body>* {
-  width: 70ch;
+  /* width: 70ch; */
 }
 
 form>* {
