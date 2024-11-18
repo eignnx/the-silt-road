@@ -1,0 +1,18 @@
+p {
+    font-style: italic;
+}
+
+h2 {
+    text-decoration: underline;
+}
+
+.inventory-row {
+    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 1fr);
+    width: 100%;
+
+    &>button {
+        width: min-content
+    }
+}

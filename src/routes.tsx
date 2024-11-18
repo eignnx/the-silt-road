@@ -3,7 +3,7 @@ import InventoryEditor, { loader as inventoryEditorLoader, action as inventoryEd
 import ErrorPage from './routes/ErrorPage';
 import MainMenu from './routes/MainMenu';
 import Dashboard from './routes/Dashboard';
-import MarketView from './routes/MarketView';
+import MarketView, { marketViewAction, marketViewLoader } from './routes/MarketView';
 import CaravanEditor, { caravanEditorAction, caravanEditorLoader } from './routes/CaravanEditor';
 
 export const router = createBrowserRouter([
@@ -20,6 +20,8 @@ export const router = createBrowserRouter([
             {
                 path: "market",
                 element: <MarketView />,
+                loader: marketViewLoader,
+                action: marketViewAction,
             },
             {
                 path: "cargo",

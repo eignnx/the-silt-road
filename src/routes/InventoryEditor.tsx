@@ -1,6 +1,6 @@
 import { redirect, useFetcher, } from 'react-router-dom';
-import "../index.css";
-import "../Inventory.css";
+import "../styles/index.css";
+import "../styles/Inventory.css";
 import { addToPlayerInventory, getPlayerInventory, updatePlayerInventory } from '../model/PlayerInventory';
 import InventoryDisplay from '../components/InventoryDisplay';
 import { useEffect, useRef } from 'react';

@@ -7,6 +7,10 @@ export const COMMODITIES = [
 
 export type Commodity = typeof COMMODITIES[number];
 
+export type Inventory = {
+    [comm in Commodity]?: number;
+};
+
 export function commodityUnit(commodity: Commodity): { short: string, long: string; } {
     switch (commodity) {
         case 'wool':
@@ -120,6 +124,14 @@ export class UnitPriceSummary {
         public unitPrice: number,
         public unit: { short: string, long: string; },
     ) { }
+
+    deviate(deviationPct: number): UnitPriceSummary {
+        return new UnitPriceSummary(
+            this.commodity,
+            this.unitPrice * (1.0 + deviationPct),
+            this.unit,
+        );
+    }
 
     toString(): string {
         const unitPrice = commodityBasePrice1860(this.commodity);

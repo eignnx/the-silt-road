@@ -1,7 +1,7 @@
 import { Form, useLoaderData } from 'react-router-dom';
-import { Inventory } from '../model/PlayerInventory';
+import { Inventory } from '../model/Commodities';
 import { titleCase } from '../utils';
-import { Commodity, commodityUnit, UnitPriceSummary } from '../model/Commodities';
+import { Commodity, UnitPriceSummary } from '../model/Commodities';
 
 export default function InventoryDisplay() {
     const { inventory } = useLoaderData() as { inventory: Inventory; };

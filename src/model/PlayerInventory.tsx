@@ -1,8 +1,4 @@
-import { Commodity } from './Commodities';
-
-export type Inventory = {
-    [comm in Commodity]?: number;
-};
+import { Commodity, Inventory } from './Commodities';
 
 const DEFAULT_PLAYER_INVENTORY = JSON.stringify({
     feed: 430,
