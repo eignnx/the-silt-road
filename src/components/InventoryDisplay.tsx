@@ -1,7 +1,7 @@
 import { Form, useLoaderData } from 'react-router-dom';
 import { Inventory } from '../model/PlayerInventory';
 import { titleCase } from '../utils';
-import { Commodity, commodityBasePrice1860, commodityUnit, UnitPriceSummary } from '../model/Commodities';
+import { Commodity, commodityUnit, UnitPriceSummary } from '../model/Commodities';
 
 export default function InventoryDisplay() {
     const { inventory } = useLoaderData() as { inventory: Inventory; };
@@ -10,7 +10,6 @@ export default function InventoryDisplay() {
         <div className='inventory-display'>
             {Object.entries(inventory).map(([commKey, qty]) => {
                 const comm = commKey as Commodity;
-                const unit = commodityUnit(comm).short;
                 const unitPrice = UnitPriceSummary.basePrice1860(comm);
                 return (
                     <div className='inventory-row'>
