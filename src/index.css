@@ -47,10 +47,14 @@ body>* {
 }
 
 form>* {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 form>label {
   display: flex;
   justify-content: space-between;
+}
+
+pre {
+  font-family: 'Courier New', Courier, monospace;
 }

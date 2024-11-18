@@ -1,0 +1,11 @@
+.input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    align-items: center;
+}
+
+.input-row>button {
+    grid-column: 3;
+    width: min-content;
+}
