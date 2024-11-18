@@ -1,11 +1,17 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Root, { loader as rootLoader, action as rootAction } from './routes/Root';
+import InventoryEditor, { loader as rootLoader, action as rootAction } from './routes/InventoryEditor';
 import ErrorPage from './routes/ErrorPage';
+import MainMenu from './routes/MainMenu';
 
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <Root />,
+        element: <MainMenu />,
+        errorElement: <ErrorPage />,
+    },
+    {
+        path: "/inventory",
+        element: <InventoryEditor />,
         errorElement: <ErrorPage />,
         loader: rootLoader,
         action: rootAction,

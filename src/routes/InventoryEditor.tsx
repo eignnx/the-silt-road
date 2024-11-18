@@ -1,7 +1,7 @@
 import { redirect, useFetcher, } from 'react-router-dom';
 import "../index.css";
 import "../Inventory.css";
-import { getPlayerInventory, updatePlayerInventory } from '../model/PlayerInventory';
+import { addToPlayerInventory, getPlayerInventory, updatePlayerInventory } from '../model/PlayerInventory';
 import InventoryDisplay from '../components/InventoryDisplay';
 import { useEffect, useRef } from 'react';
 import { COMMODITIES } from '../model/Commodities';
@@ -15,14 +15,14 @@ export async function action({ request, params }: { request: any, params: any; }
     const formData = await request.formData();
     const { comm, qty } = Object.fromEntries(formData);
     if (COMMODITIES.includes(comm)) {
-        updatePlayerInventory({ [comm]: +qty });
-        return redirect("/");
+        addToPlayerInventory({ [comm]: +qty });
+        return redirect("");
     } else {
         throw new Error(`'${comm}' is not a valid commodity.`);
     }
 }
 
-export default function Root() {
+export default function InventoryEditor() {
     const fetcher = useFetcher();
     const notSubmitting = fetcher.state !== "submitting";
     const formRef = useRef<HTMLFormElement>(null);
