@@ -48,9 +48,6 @@ body {
   justify-content: center;
 }
 
-body>* {
-  /* width: 70ch; */
-}
 
 form>* {
   margin-top: 0.5rem;

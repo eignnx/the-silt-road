@@ -1,13 +1,28 @@
 .dashboard-wrapper {
+    --sidebar-width: 15ch;
+
     display: grid;
-    grid-template-columns: 1fr 9fr;
+    grid-template-columns: var(--sidebar-width) auto;
+    grid-template-areas: "sidebar outlet";
     gap: 1rem;
 }
 
-.dashboard-sidebar {
-    background-color: #14110b2b;
+aside.dashboard-sidebar {
+    position: fixed;
+    width: var(--sidebar-width);
+    z-index: 10;
+    background-color: #2f291c35;
+
+    height: 100vh;
+    grid-area: sidebar;
+}
+
+main.dashboard-outlet {
+    grid-area: outlet;
+}
+
+nav {
     padding: 1rem;
-    height: 100lvh;
 }
 
 nav>a {
