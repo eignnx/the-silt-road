@@ -123,28 +123,37 @@ export default function MarketView() {
             </tbody>
             <tfoot>
                 <tr>
-                    <th colSpan={2}></th>
+                    <th colSpan={2} rowSpan={3} className='legal-blurb'>
+                        <p>All sales considered final at time of purchase. Arbitration services available in case of dispute.</p>
+                        <p>Violations punishable under U.S. Dept. of Commerce Reg. 471 § 3.6</p>
+                    </th>
+                    <th colSpan={2}>Total Bill</th>
                     <th></th>
-                    <th>Total Bill</th>
-                    <th></th>
-                    <th>Sale Qty.</th>
-                    <th></th>
+                    <th colSpan={2}>Sale Qty.</th>
                     <th colSpan={2}></th>
                 </tr>
                 <tr>
-                    <td colSpan={2}>
-                        <p>All sales considered final at time of purchase. Arbitration services available in case of dispute.</p>
-                        <p>Violations punishable under U.S. Dept. of Commerce Reg. 471 § 3.6</p>
-                    </td>
-                    <td></td>
-                    <td>$550.75</td>
+                    <td colSpan={2}>$550.75</td>
                     <td>
                         {200 > 0 ? "☞" : 200 < 0 ? "☜" : "⸺"}
                     </td>
-                    <td>123</td>
-                    <td></td>
+                    <td colSpan={2}>123</td>
                     <td colSpan={2}>
+                    </td>
+                </tr>
+                <tr>
+                    <td colSpan={5}>
                         <button>Confirm Transaction ✗</button>
+                    </td>
+                    <td colSpan={2} className='signature-section'>
+                        <div>
+                            <span className='signature-label'>Purchaser:</span>
+                            <span className='signature'>Homer S. McCoy</span>
+                        </div>
+                        <div>
+                            <span className='signature-label'>Vendor:</span>
+                            <span className='signature'>Rattsville General Market</span>
+                        </div>
                     </td>
                 </tr>
             </tfoot>

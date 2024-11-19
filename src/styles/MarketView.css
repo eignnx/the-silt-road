@@ -60,11 +60,13 @@ tfoot {
         font-variant: small-caps;
         font-size: smaller;
         text-justify: distribute;
+        text-align: left;
         margin: 0;
     }
 
-    td:has(p) {
+    th:has(p) {
         padding-block: 0;
+        width: min-content;
     }
 }
 
@@ -77,6 +79,24 @@ tbody>tr:nth-of-type(odd) {
     justify-content: space-between;
     gap: 0.2rem;
 }
+
+.signature-section>div {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+
+    &>.signature-label {
+        font-variant: small-caps;
+        font-size: x-small;
+    }
+
+    &>.signature {
+        font-family: "Mrs Saint Delafield", cursive;
+        text-decoration: underline;
+        padding-inline-end: 0.5rem;
+    }
+}
+
 
 .inventory-market-side-by-side {
     display: grid;
