@@ -64,13 +64,29 @@ export async function updateMarket(updates: Market): Promise<Market> {
     return market;
 }
 
-export async function changeMarketInventory(comm: Commodity, qty: number): Promise<Market> {
+export async function updateMarketInventory(updates: Inventory): Promise<Market> {
     const market = await getMarket();
-    const onHandQty = market.inventory[comm] ?? 0;
-    if (onHandQty + qty < 0) {
-        throw new Error(`Cannot reduce inventory below 0.`);
+    Object.assign(market.inventory, updates);
+    localStorage.setItem(`SILT_ROAD:market`, JSON.stringify(market));
+    return market;
+}
+
+/**
+ * 
+ * @param change A mapping from Commodities to signed integers representing a
+ *               change in inventory.
+ * @returns 
+ */
+export async function changeMarketInventory(change: Inventory): Promise<Market> {
+    const market = await getMarket();
+    for (const [commKey, qtyDelta] of Object.entries(change)) {
+        const comm = commKey as Commodity;
+        const onHandQty = market.inventory[comm] ?? 0;
+        if (onHandQty + qtyDelta < 0) {
+            throw new Error(`Cannot reduce inventory below 0.`);
+        }
+        market.inventory[comm] = onHandQty + qtyDelta;
     }
-    market.inventory[comm] = onHandQty + qty;
     localStorage.setItem(`SILT_ROAD:market`, JSON.stringify(market));
     return market;
 }

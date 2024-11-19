@@ -97,49 +97,6 @@ tbody>tr:nth-of-type(odd) {
     }
 }
 
-
-.inventory-market-side-by-side {
-    display: grid;
-    grid-template-columns:
-        /*nofmt*/
-        [commname-start]
-        /*nofmt*/
-        auto
-        /*nofmt*/
-        [commname-end playerqty-start]
-        /*nofmt*/
-        auto
-        /*nofmt*/
-        [playerqty-end gutter-start sellbtn-start]
-        /*nofmt*/
-        auto
-        /*nofmt*/
-        [sellbtn-end txnqty-start]
-        /*nofmt*/
-        auto
-        /*nofmt*/
-        [txnqty-end buybtn-start]
-        /*nofmt*/
-        auto
-        /*nofmt*/
-        [buybtn-end gutter-end marketqty-start]
-        /*nofmt*/
-        auto
-        /*nofmt*/
-        [marketqty-end unitprice-start]
-        /*nofmt*/
-        auto
-        /*nofmt*/
-        [unitprice-end]
-        /*nofmt*/
-    ;
-    align-items: center;
-
-    gap: 0.2rem;
-
-    width: 100%;
-}
-
 .commname,
 .playerqty,
 .sellbtn,
@@ -188,20 +145,6 @@ tbody>tr:nth-of-type(odd) {
     text-align: right;
 }
 
-
-.inventory-row {
-
-    /* grid-template-columns: subgrid; */
-
-}
-
-.market-inventory {
-    /* grid-column: 3; */
-}
-
-.player-inventory {
-    /* grid-column: 1; */
-}
 
 .inventory-row {
     align-items: center;

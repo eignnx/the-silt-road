@@ -1,13 +1,13 @@
 import { Commodity, Inventory } from './Commodities';
 
-const DEFAULT_PLAYER_INVENTORY = JSON.stringify({
+const DEFAULT_PLAYER_INVENTORY: Inventory = {
     feed: 430,
     grain: 600,
     textiles: 145,
-});
+};
 
 export function getPlayerInventory(): Inventory {
-    const retreival = localStorage.getItem(`SILT_ROAD:playerInventory`) ?? DEFAULT_PLAYER_INVENTORY;
+    const retreival = localStorage.getItem(`SILT_ROAD:playerInventory`) ?? JSON.stringify(DEFAULT_PLAYER_INVENTORY);
     return JSON.parse(retreival);
 }
 
