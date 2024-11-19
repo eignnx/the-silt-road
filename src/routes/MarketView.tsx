@@ -1,21 +1,35 @@
 import { useFetcher, useLoaderData } from 'react-router-dom';
-import { Commodity, Inventory } from '../model/Commodities';
+import { COMMODITIES, Commodity, Inventory } from '../model/Commodities';
 import { changeMarketInventory, getMarket, Market, marketPrice } from '../model/Markets';
 import { addToPlayerInventory, getPlayerInventory } from '../model/PlayerInventory';
 
 import '../styles/MarketView.css';
 import { titleCase } from '../utils';
 
-type MarketViewLoaderData = {
-    playerInventory: Inventory;
-    market: Market;
-};
+type InventoryCmpRow = { comm: Commodity, playerQty?: number, marketQty?: number; };
 
-export async function marketViewLoader() {
-    return {
-        playerInventory: getPlayerInventory(),
-        market: await getMarket()
-    };
+type LoaderRetTy = { orderedInventories: InventoryCmpRow[], market: Market; };
+
+export async function marketViewLoader(): Promise<LoaderRetTy> {
+    const playerInventory = getPlayerInventory();
+    const market = await getMarket();
+
+    const orderedInventories: InventoryCmpRow[] = [];
+
+    for (const comm of COMMODITIES) {
+        const playerQty = playerInventory[comm] ?? 0;
+        const marketQty = market.inventory[comm] ?? 0;
+        orderedInventories.push({
+            comm,
+            playerQty: playerQty > 0 ? playerQty : undefined,
+            marketQty: marketQty > 0 ? marketQty : undefined,
+        });
+    }
+
+    // Sort inventory by commodity name:
+    orderedInventories.sort((a, b) => a.comm.localeCompare(b.comm));
+
+    return { orderedInventories, market };
 }
 
 export async function marketViewAction({ request }: { request: Request; }) {
@@ -42,134 +56,98 @@ export async function marketViewAction({ request }: { request: Request; }) {
 }
 
 export default function MarketView() {
-    const { playerInventory, market } = useLoaderData() as MarketViewLoaderData;
+    const { orderedInventories, market } = useLoaderData() as LoaderRetTy;
     const fetcher = useFetcher();
-
-    type OrderedInventories = {
-        common: { [comm in Commodity]: { player: number, market: number; } };
-        playerOnly: { [comm in Commodity]: number };
-        marketOnly: { [comm in Commodity]: number };
-    };
-
-    const orderedInventories: OrderedInventories = {
-        common: {} as any,
-        playerOnly: {} as any,
-        marketOnly: {} as any,
-    };
-
-    for (const commKey in playerInventory) {
-        const comm = commKey as Commodity;
-        const playerQty = playerInventory[comm]!;
-        if (playerQty < 1) { continue; }
-
-        const marketQty = market.inventory[comm];
-        if (marketQty !== undefined && marketQty > 0) {
-            orderedInventories.common[comm] = {
-                player: playerQty,
-                market: marketQty
-            };
-        } else {
-            orderedInventories.playerOnly[comm] = playerQty;
-        }
-
-    }
-
-    for (const commKey in market.inventory) {
-        const comm = commKey as Commodity;
-        const marketQty = market.inventory[comm]!;
-        if (marketQty < 1) { continue; }
-
-        if (playerInventory[comm] === undefined) {
-            orderedInventories.marketOnly[comm] = marketQty;
-        }
-    }
 
     return (<>
         <h1>Market</h1>
-        <div className="inventory-market-side-by-side">
-            <div className="player-inventory">
-                <h2>Your Inventory</h2>
-                <div className="inventory-display">
-                    {Object.entries(orderedInventories.common).map(([comm, { player: qty }]) => {
-                        return (
-                            <fetcher.Form method="PATCH">
-                                <div className='inventory-row'>
-                                    <span className='commodity'>{titleCase(comm)}</span>
-                                    <span>{`x ${qty}`}</span>
-                                    <button type="submit">Sell</button>
-                                </div>
-                                <input type="hidden" name="commodityKind" value={comm} />
-                                <input type="hidden" name="_action" value="sell" />
-                            </fetcher.Form>
-                        );
-                    }
-                    )}
-                    {Object.entries(orderedInventories.playerOnly).map(([comm, qty]) => {
-                        return (
-                            <fetcher.Form method="PATCH">
-                                <div className='inventory-row'>
-                                    <span className='commodity'>{titleCase(comm)}</span>
-                                    <span>{`x ${qty}`}</span>
-                                    <button type="submit">Sell</button>
-                                </div>
-                                <input type="hidden" name="commodityKind" value={comm} />
-                                <input type="hidden" name="_action" value="sell" />
-                            </fetcher.Form>
-                        );
-                    })}
-                    {Object.entries(orderedInventories.marketOnly).map(() => (
-                        <div className='inventory-row'>
-                            <span className='commodity'> - </span>
-                            <span> - </span>
-                            <button disabled>Sell</button>
-                        </div>
-                    ))}
-                </div>
-            </div>
-            <div className="market-inventory">
-                <h2>Market Inventory</h2>
-                <div className="inventory-display">
-                    {Object.entries(orderedInventories.common).map(([comm, { market: qty }]) => {
-                        return (
-                            <fetcher.Form method="PATCH">
-                                <div className='inventory-row'>
-                                    <span className='commodity'>{titleCase(comm)}</span>
-                                    <span>{`x ${qty}`}</span>
-                                    <span>
-                                        {`${marketPrice(market, comm as Commodity)}`}
-                                    </span>
-                                    <button type="submit">Buy</button>
-                                </div>
-                                <input type="hidden" name="commodityKind" value={comm} />
-                                <input type="hidden" name="_action" value="buy" />
-                            </fetcher.Form>
-                        );
-                    }
-                    )}
-                    {Object.entries(orderedInventories.playerOnly).map(() => (
-                        <div className='inventory-row'>
-                            <span className='commodity'> - </span>
-                            <span> - </span>
-                            <span> - </span>
-                            <button disabled>Buy</button>
-                        </div>
-                    ))}
-                    {Object.entries(orderedInventories.marketOnly).map(([comm, qty]) => (
-                        <fetcher.Form method="PATCH">
-                            <div className='inventory-row'>
-                                <span className='commodity'>{titleCase(comm)}</span>
-                                <span>{`x ${qty}`}</span>
-                                <span>
-                                    {`${marketPrice(market, comm as Commodity)}`}
-                                </span>
-                                <button type="submit">Buy</button>
-                            </div>
-                            <input type="hidden" name="commodityKind" value={comm} />
-                            <input type="hidden" name="_action" value="buy" />
-                        </fetcher.Form>
-                    ))}
-                </div>
-            </div>
-        </div>
+        {/* <div className="inventory-market-side-by-side">
+            {orderedInventories.map(({ comm, playerQty, marketQty }) => (
+                (playerQty || marketQty) &&
+                <>
+                    <span className="commname">{titleCase(comm)}</span>
+                    <span className="playerqty">{playerQty ?? "-"}</span>
+                    <button className="sellbtn">Sell</button>
+                    <span className="txnqty">{"⇦10⇨"}</span>
+                    <button className="buybtn">Buy</button>
+                    <span className="marketqty">{marketQty ?? "-"}</span>
+                    <span className="unitprice">{marketPrice(market, comm).toString()}</span>
+                </>
+            ))}
+        </div> */}
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Commodity</th>
+                    <th scope="col">Owned Qty.</th>
+                    <th scope="col" colSpan={5}>Transaction</th>
+                    <th scope="col">Market Qty.</th>
+                    <th scope="col">Unit Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {orderedInventories.map(({ comm, playerQty, marketQty }) => {
+
+                    // Dummy data for now:
+                    const txn = ((comm.length % 3) - 1) * comm.length;
+
+                    return (playerQty || marketQty) ?
+                        <tr>
+                            <th scope="row">{titleCase(comm)}</th>
+                            <td className='numeric'>{playerQty ?? "⸺"}</td>
+                            <td>
+                                <button disabled={!playerQty}>
+                                    Sell
+                                </button>
+                            </td>
+                            {txn === 0 ? <td colSpan={3}>⸺</td> : <>
+                                <td>
+                                    <span className="txnprice">${Math.abs(txn * 431 / 100).toFixed(2)}</span>
+                                </td>
+                                <td>
+                                    {txn > 0 ? "☞" : txn < 0 ? "☜" : "⸺"}
+                                </td>
+                                <td>
+                                    <span className="txnqty numeric">x{Math.abs(txn)}</span>
+                                </td>
+                            </>}
+                            <td>
+                                <button disabled={!marketQty}>
+                                    Buy
+                                </button>
+                            </td>
+                            <td className='numeric'>{marketQty ?? "⸺"}</td>
+                            <td>{marketPrice(market, comm).toString()}</td>
+                        </tr> : null;
+                })}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colSpan={2}></th>
+                    <th></th>
+                    <th>Total Bill</th>
+                    <th></th>
+                    <th>Sale Qty.</th>
+                    <th></th>
+                    <th colSpan={2}></th>
+                </tr>
+                <tr>
+                    <td colSpan={2}>
+                        <p>All sales considered final at time of purchase. Arbitration services available in case of dispute.</p>
+                        <p>Violations punishable under U.S. Dept. of Commerce Reg. 471 § 3.6</p>
+                    </td>
+                    <td></td>
+                    <td>$550.75</td>
+                    <td>
+                        {200 > 0 ? "☞" : 200 < 0 ? "☜" : "⸺"}
+                    </td>
+                    <td>123</td>
+                    <td></td>
+                    <td colSpan={2}>
+                        <button>Confirm Transaction ✗</button>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
     </>);
 };
