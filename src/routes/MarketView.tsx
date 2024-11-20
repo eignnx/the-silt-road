@@ -1,12 +1,13 @@
-import { Form, useFetcher, useLoaderData, useSubmit } from 'react-router-dom';
+import { useFetcher, useLoaderData } from 'react-router-dom';
 import { COMMODITIES, Commodity, commodityUnit, Inventory } from '../model/Commodities';
-import { changeMarketInventory, getMarket, Market, marketPrice, updateMarketInventory } from '../model/Markets';
-import { addToPlayerInventory as changePlayerInventory, getPlayerInventory, updatePlayerInventory } from '../model/PlayerInventory';
+import { changeMarketInventory, getMarket, Market, marketPrice } from '../model/Markets';
+import { addToPlayerInventory as changePlayerInventory, getPlayerInventory } from '../model/PlayerInventory';
 
 import '../styles/MarketView.css';
 import { titleCase } from '../utils';
 import { useState } from 'react';
 import { BANK, PLAYER_ACCT } from '../model/BankAcct';
+import { PLAYER_INFO, PlayerInfo } from '../model/PlayerInfo';
 
 type InventoryCmpRow = { comm: Commodity, playerQty?: number, marketQty?: number; };
 
@@ -14,6 +15,7 @@ type LoaderRetTy = {
     playerInventory: Inventory;
     market: Market;
     playerBankBalance: number;
+    playerInfo: PlayerInfo;
 };
 
 export async function marketViewLoader(): Promise<LoaderRetTy> {
@@ -21,6 +23,7 @@ export async function marketViewLoader(): Promise<LoaderRetTy> {
         playerInventory: getPlayerInventory(),
         market: await getMarket(),
         playerBankBalance: await BANK.getAcctBalance(PLAYER_ACCT),
+        playerInfo: await PLAYER_INFO.getPlayerInfo(),
     };
 }
 
@@ -78,7 +81,7 @@ function computeOrderedInventories(playerInventory: Inventory, market: Market, c
 }
 
 export default function MarketView() {
-    const { playerInventory, market, playerBankBalance } = useLoaderData() as LoaderRetTy;
+    const { playerInventory, market, playerBankBalance, playerInfo } = useLoaderData() as LoaderRetTy;
     const fetcher = useFetcher();
 
     const [currentTxn, setCurrentTxn] = useState<Inventory>({});
@@ -272,7 +275,7 @@ export default function MarketView() {
                     <td colSpan={4} className='signature-section'>
                         <div>
                             <span className='signature-label'>Client:</span>
-                            <span className='signature'>Homer S. McCoy</span>
+                            <span className='signature'>{playerInfo.playerName}</span>
                         </div>
                         <div>
                             <span className='signature-label'>Vendor:</span>

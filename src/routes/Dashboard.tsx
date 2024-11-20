@@ -1,19 +1,22 @@
 import { NavLink, Outlet, useLoaderData } from 'react-router-dom';
 import '../styles/Dashboard.css';
 import { BANK, PLAYER_ACCT } from '../model/BankAcct';
+import { PLAYER_INFO, PlayerInfo } from '../model/PlayerInfo';
 
 type LoaderRetTy = {
     playerAccountBalance: number;
+    playerInfo: PlayerInfo;
 };
 
 export async function dashboardLoader(): Promise<LoaderRetTy> {
     return {
-        playerAccountBalance: await BANK.getAcctBalance(PLAYER_ACCT)
+        playerAccountBalance: await BANK.getAcctBalance(PLAYER_ACCT),
+        playerInfo: await PLAYER_INFO.getPlayerInfo(),
     };
 }
 
 export default function Dashboard() {
-    const { playerAccountBalance } = useLoaderData() as LoaderRetTy;
+    const { playerAccountBalance, playerInfo } = useLoaderData() as LoaderRetTy;
 
     const links = {
         market: 'Market',
@@ -41,22 +44,21 @@ export default function Dashboard() {
                 <section>
                     <table>
                         <thead>
-                            <tr><td colSpan={2}>Homer S. McCoy</td></tr>
-                            <tr><td colSpan={2}>McCoy & Sons Conveyance Co.</td></tr>
+                            <tr><td colSpan={2}>{playerInfo.companyName}</td></tr>
+                            <tr><td colSpan={2}>Owner: {playerInfo.playerName}</td></tr>
                         </thead>
                         <tr>
                             <th scope="row">Bank Balance</th>
                             <td>${playerAccountBalance.toFixed(2)}</td>
                         </tr>
                         <tr>
-                            <th scope="col" colSpan={2}>Cargo / Capacity</th>
+                            <th scope="col" colSpan={2}>Caravan</th>
                         </tr>
                         <tr>
                             <td colSpan={2}>
+                                <div>Cargo & Capacity</div>
+                                <div>{cargoWeight}lbs / {cargoCapacity}lbs</div>
                                 <div>
-                                    <div>
-                                        {cargoWeight}lbs / {cargoCapacity}lbs
-                                    </div>
                                     <meter
                                         min={0}
                                         max={cargoCapacity}
