@@ -3,6 +3,8 @@
 :root {
   --clr-dark: rgb(51, 38, 11);
   --clr-light: rgb(238, 228, 185);
+  --clr-dark-lighter: color-mix(in oklab, var(--clr-dark) 30%, var(--clr-light));
+  --ink-blue: rgb(36, 36, 107);
 }
 
 html {

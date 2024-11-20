@@ -89,11 +89,47 @@ export default function MarketView() {
         <table>
             <thead>
                 <tr>
-                    <th scope="col">Commodity</th>
-                    <th scope="col">Owned</th>
+                    <th colSpan={2} className='header-flavor-text'>
+                        <div>
+                            Rattsville General Market
+                        </div>
+                        <div>
+                            200 Main St.
+                        </div>
+                        <div>
+                            Rattsville, Hoghead County
+                        </div>
+                        <div>
+                            Colorado, U.S.A.
+                        </div>
+                    </th>
+                    <th colSpan={4} className='title'>Bill of Sale</th>
+                    <th colSpan={2} className='header-flavor-text'>
+                        <div>
+                            Doc. No. 3195
+                        </div>
+                        <div>
+                            Hemlock & Co., Print
+                        </div>
+                        <div>
+                            Redistribution Prohibited
+                        </div>
+                        <div>
+                            (3 7-20)
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+
+                    <th scope="col" rowSpan={2}>Commodity</th>
+                    <th scope="col" rowSpan={2}>Owned</th>
                     <th scope="col" colSpan={4}>Transaction</th>
-                    <th scope="col">Avail.</th>
-                    <th scope="col">Unit Price</th>
+                    <th scope="col" rowSpan={2}>Avail.</th>
+                    <th scope="col" rowSpan={2}>Unit Price</th>
+                </tr>
+                <tr className='obligations-headers'>
+                    <th scope="col" colSpan={2}>Client Obligations</th>
+                    <th scope="col" colSpan={2}>Vendor Obligations</th>
                 </tr>
             </thead>
             <tbody>
@@ -115,7 +151,12 @@ export default function MarketView() {
                                     Sell
                                 </button>
                             </td>
-                            {txnQty === 0 ? <td colSpan={2}>⸺⸺</td> : <>
+                            {txnQty === 0 ? (
+                                <>
+                                    <td>⸺</td>
+                                    <td>⸺</td>
+                                </>
+                            ) : <>
                                 <td>
                                     {"☞ "}
                                     {txnQty < 0 ? (
@@ -192,7 +233,7 @@ export default function MarketView() {
                 <tr>
                     <td colSpan={4} className='signature-section'>
                         <div>
-                            <span className='signature-label'>Purchaser:</span>
+                            <span className='signature-label'>Client:</span>
                             <span className='signature'>Homer S. McCoy</span>
                         </div>
                         <div>

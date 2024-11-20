@@ -7,6 +7,7 @@ h2 {
 }
 
 table {
+    border: 1px solid var(--clr-dark);
     border-collapse: collapse;
     background: var(--clr-light);
     color: var(--clr-dark);
@@ -18,20 +19,47 @@ table {
 }
 
 th[scope="col"] {
-    padding-block: 0.5rem;
+    /* padding-block: 0.5rem; */
     /* font-weight: 900; */
     text-align: center;
-    font-size: larger;
-    font-family: Oswald, Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-weight: 700;
-    /* text-transform: uppercase; */
-    font-variant: small-caps;
+    /* font-size: larger; */
+    text-transform: uppercase;
+    /* font-variant: small-caps; */
 }
 
 th[scope="row"] {
     font-weight: bold;
     text-align: left;
-    /* background */
+}
+
+th.header-flavor-text {
+    padding: 0.75rem;
+    border: none;
+    width: min-content;
+    color: var(--clr-dark-lighter);
+    font-size: x-small;
+    font-variant: small-caps;
+
+    /* vertical-align: top; */
+    /* text-decoration: underline; */
+
+    &:first-of-type {
+        text-align: left;
+    }
+
+    &:last-of-type {
+        text-align: right;
+    }
+}
+
+
+.title {
+    border: none;
+    font-family: Oswald, Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 400;
+    font-size: xx-large;
+    text-transform: uppercase;
+    padding: 0.5rem;
 }
 
 tfoot th {
@@ -44,19 +72,27 @@ th,
 td {
     text-align: center;
     padding-inline: 0.5rem;
-    border: 1px solid var(--clr-dark)
+    border: 1px solid var(--clr-dark);
 }
 
 
 thead {
     border-bottom: 4px double var(--clr-dark);
+
+    .obligations-headers>th {
+        /* font-family: inherit; */
+        /* font-weight: bold; */
+        font-size: x-small;
+        width: min-content;
+        padding: 0.1rem;
+    }
 }
 
 tfoot {
     border-top: 4px double var(--clr-dark);
 
     p {
-        color: color-mix(in oklab, var(--clr-dark) 30%, var(--clr-light));
+        color: var(--clr-dark-lighter);
         font-style: normal;
         font-variant: small-caps;
         font-size: x-small;
@@ -78,7 +114,7 @@ tfoot {
 .date-of-sale {
     font-family: "Mrs Saint Delafield", cursive;
     font-weight: bold;
-    color: color-mix(in oklab, var(--clr-dark) 50%, black);
+    color: var(--ink-blue);
 }
 
 tbody>tr:nth-of-type(odd) {
@@ -105,7 +141,8 @@ tbody>tr:nth-of-type(odd) {
         font-family: "Mrs Saint Delafield", cursive;
         text-decoration: underline;
         padding-inline-end: 0.5rem;
-        color: color-mix(in oklab, var(--clr-dark) 50%, black);
+        color: var(--ink-blue);
+        font-weight: bold;
     }
 }
 
