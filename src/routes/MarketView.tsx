@@ -153,39 +153,54 @@ export default function MarketView() {
                         <p>Arbitration services available in case of dispute.</p>
                         <p>Fruadulant representation punishable under U.S. Dept. of Commerce Reg. 471 § 3.6</p>
                     </th>
-                    {totalBill > 0 ? (
+                    {totalBill >= 0 ? (
                         <>
                             <th colSpan={2}>Total Bill</th>
-                            <th colSpan={2}>Sale Qty.</th>
+                            <th colSpan={2}></th>
                         </>
                     ) : (
                         <>
-                            <th colSpan={2}>Sale Qty.</th>
+                            <th colSpan={2}></th>
                             <th colSpan={2}>Total Bill</th>
                         </>
                     )}
-                    <th colSpan={2}></th>
+                    <th colSpan={2}>
+                        Date of Sale
+                    </th>
                 </tr>
                 <tr>
-                    {totalBill > 0 ? (
+                    {totalBill === 0 ? (
+                        <>
+                            <td colSpan={2}>⸺</td>
+                            <td colSpan={2}></td>
+                        </>
+                    ) : totalBill > 0 ? (
                         <>
                             <td colSpan={2}>${Math.abs(totalBill).toFixed(2)}</td>
-                            <td colSpan={2}>{Math.abs(saleQty)}</td>
+                            <td colSpan={2}></td>
                         </>
                     ) : (
                         <>
-                            <td colSpan={2}>{Math.abs(saleQty)}</td>
+                            <td colSpan={2}></td>
                             <td colSpan={2}>${Math.abs(totalBill).toFixed(2)}</td>
                         </>
                     )}
-                    {/* <td>
-                        {saleQty < 0 ? "☞" : saleQty > 0 ? "☜" : "⸺"}
-                    </td> */}
-                    <td colSpan={2}>
+                    <td colSpan={2} className='date-of-sale'>
+                        17th January 1860
                     </td>
                 </tr>
                 <tr>
-                    <td colSpan={4}>
+                    <td colSpan={4} className='signature-section'>
+                        <div>
+                            <span className='signature-label'>Purchaser:</span>
+                            <span className='signature'>Homer S. McCoy</span>
+                        </div>
+                        <div>
+                            <span className='signature-label'>Vendor:</span>
+                            <span className='signature'>Rattsville General Market</span>
+                        </div>
+                    </td>
+                    <td colSpan={2}>
                         <button
                             type="submit"
                             onClick={() => {
@@ -200,16 +215,6 @@ export default function MarketView() {
                         >
                             Confirm Transaction ✗
                         </button>
-                    </td>
-                    <td colSpan={2} className='signature-section'>
-                        <div>
-                            <span className='signature-label'>Purchaser:</span>
-                            <span className='signature'>Homer S. McCoy</span>
-                        </div>
-                        <div>
-                            <span className='signature-label'>Vendor:</span>
-                            <span className='signature'>Rattsville General Market</span>
-                        </div>
                     </td>
                 </tr>
             </tfoot>

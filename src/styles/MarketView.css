@@ -68,6 +68,16 @@ tfoot {
     th:has(p) {
         width: min-content;
     }
+
+    th {
+        text-align: center;
+    }
+}
+
+.date-of-sale {
+    font-family: "Mrs Saint Delafield", cursive;
+    font-weight: bold;
+    color: color-mix(in oklab, var(--clr-dark) 50%, black);
 }
 
 tbody>tr:nth-of-type(odd) {
@@ -94,6 +104,7 @@ tbody>tr:nth-of-type(odd) {
         font-family: "Mrs Saint Delafield", cursive;
         text-decoration: underline;
         padding-inline-end: 0.5rem;
+        color: color-mix(in oklab, var(--clr-dark) 50%, black);
     }
 }
 
