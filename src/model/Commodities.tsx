@@ -151,7 +151,6 @@ export class UnitPriceSummary {
 
 }
 
-
 export function CommoditiesDataList() {
     return (
         <datalist id="commodities">
