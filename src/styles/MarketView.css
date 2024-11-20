@@ -205,3 +205,9 @@ tbody>tr:nth-of-type(odd) {
         width: min-content
     }
 }
+
+.price-too-expensive {
+    color: red;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+}

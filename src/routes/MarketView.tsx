@@ -6,32 +6,54 @@ import { addToPlayerInventory as changePlayerInventory, getPlayerInventory, upda
 import '../styles/MarketView.css';
 import { titleCase } from '../utils';
 import { useState } from 'react';
+import { BANK, PLAYER_ACCT } from '../model/BankAcct';
 
 type InventoryCmpRow = { comm: Commodity, playerQty?: number, marketQty?: number; };
 
-type LoaderRetTy = { playerInventory: Inventory, market: Market; };
+type LoaderRetTy = {
+    playerInventory: Inventory;
+    market: Market;
+    playerBankBalance: number;
+};
 
 export async function marketViewLoader(): Promise<LoaderRetTy> {
     return {
         playerInventory: getPlayerInventory(),
         market: await getMarket(),
+        playerBankBalance: await BANK.getAcctBalance(PLAYER_ACCT),
     };
 }
 
 export async function marketViewAction({ request }: { request: Request; }) {
-    const formData = await request.formData();
+    const { currentTxn, totalBill } = await request.json();
+
     const playerInvUpdates: Inventory = {};
     const marketInvUpdates: Inventory = {};
 
-    for (const [commKey, qtyStr] of formData.entries()) {
+    for (const [commKey, qtyStr] of Object.entries(currentTxn)) {
         const comm = commKey as Commodity;
-        const qty = +qtyStr;
+        const qty = +(qtyStr as string);
         playerInvUpdates[comm] = +qty;
         marketInvUpdates[comm] = -qty;
     }
 
+    try {
+        if (totalBill > 0) {
+            await BANK.transfer(PLAYER_ACCT, BANK.SINK, Math.abs(totalBill));
+        } else {
+            await BANK.transfer(BANK.SOURCE, PLAYER_ACCT, Math.abs(totalBill));
+        }
+    } catch (e) {
+        if ((e as Error).message === "INSUFFICIENT FUNDS") {
+            return null;
+        } else {
+            throw e;
+        }
+    }
+
     changePlayerInventory(playerInvUpdates);
     await changeMarketInventory(marketInvUpdates);
+
 
     return null;
 }
@@ -56,7 +78,7 @@ function computeOrderedInventories(playerInventory: Inventory, market: Market, c
 }
 
 export default function MarketView() {
-    const { playerInventory, market } = useLoaderData() as LoaderRetTy;
+    const { playerInventory, market, playerBankBalance } = useLoaderData() as LoaderRetTy;
     const fetcher = useFetcher();
 
     const [currentTxn, setCurrentTxn] = useState<Inventory>({});
@@ -82,6 +104,16 @@ export default function MarketView() {
         const comm = commKey as Commodity;
         totalBill += marketPrice(market, comm).unitPrice * (currentTxn[comm] ?? 0);
         saleQty += currentTxn[comm] ?? 0;
+    }
+
+    const tooExpensiveForPlayer = totalBill > playerBankBalance;
+
+    function submitForm() {
+        fetcher.submit(
+            { currentTxn, totalBill },
+            { method: "POST", encType: "application/json" }
+        );
+        setCurrentTxn({});
     }
 
     return (<>
@@ -217,7 +249,13 @@ export default function MarketView() {
                         </>
                     ) : totalBill > 0 ? (
                         <>
-                            <td colSpan={2}>${Math.abs(totalBill).toFixed(2)}</td>
+                            <td
+                                colSpan={2}
+                                className={tooExpensiveForPlayer ? "price-too-expensive" : ""}
+                                title={tooExpensiveForPlayer ? "You lack the funds to make this purchase!" : undefined}
+                            >
+                                ${Math.abs(totalBill).toFixed(2)}
+                            </td>
                             <td colSpan={2}></td>
                         </>
                     ) : (
@@ -244,15 +282,9 @@ export default function MarketView() {
                     <td colSpan={2}>
                         <button
                             type="submit"
-                            onClick={() => {
-                                console.log(currentTxn);
-                                const fd = new FormData();
-                                Object.entries(currentTxn).forEach(([comm, qty]) => {
-                                    fd.append(comm, qty.toString());
-                                });
-                                fetcher.submit(fd, { method: "POST" });
-                                setCurrentTxn({});
-                            }}
+                            onClick={submitForm}
+                            disabled={tooExpensiveForPlayer}
+                            title={tooExpensiveForPlayer ? "You lack the funds to make this purchase!" : undefined}
                         >
                             Confirm Transaction ✗
                         </button>
