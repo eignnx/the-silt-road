@@ -58,14 +58,14 @@ tfoot {
         color: color-mix(in oklab, var(--clr-dark) 30%, var(--clr-light));
         font-style: normal;
         font-variant: small-caps;
-        font-size: smaller;
+        font-size: x-small;
         text-justify: distribute;
-        text-align: left;
-        margin: 0;
+        text-align: center;
+        margin-block: 0.3rem;
+        line-height: 85%;
     }
 
     th:has(p) {
-        padding-block: 0;
         width: min-content;
     }
 }

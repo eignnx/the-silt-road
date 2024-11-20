@@ -115,7 +115,7 @@ export default function MarketView() {
                                     Sell
                                 </button>
                             </td>
-                            {txnQty === 0 ? <td colSpan={2}>⸺</td> : <>
+                            {txnQty === 0 ? <td colSpan={2}>⸺⸺</td> : <>
                                 <td>
                                     {"☞ "}
                                     {txnQty < 0 ? (
@@ -124,11 +124,6 @@ export default function MarketView() {
                                         <span className="txnprice">${txnPrice.toFixed(2)}</span>
                                     )}
                                 </td>
-                                {/* <td className='manicule'>
-                                    {txnQty !== 0 ? "⬌" : ""}
-                                    {txnQty !== 0 ? "☜☞" : ""}
-                                    {txnQty < 0 ? "☞" : txnQty > 0 ? "☜" : "⸺"}
-                                </td> */}
                                 <td>
                                     {txnQty > 0 ? (
                                         <span className="txnqty numeric">{Math.abs(txnQty)} {commodityUnit(comm).short}</span>
@@ -154,8 +149,9 @@ export default function MarketView() {
             <tfoot>
                 <tr>
                     <th colSpan={2} rowSpan={3} className='legal-blurb'>
-                        <p>All sales considered final at time of purchase. Arbitration services available in case of dispute.</p>
-                        <p>Violations punishable under U.S. Dept. of Commerce Reg. 471 § 3.6</p>
+                        <p>All sales considered final no sooner than time of purchase.</p>
+                        <p>Arbitration services available in case of dispute.</p>
+                        <p>Fruadulant representation punishable under U.S. Dept. of Commerce Reg. 471 § 3.6</p>
                     </th>
                     {totalBill > 0 ? (
                         <>
