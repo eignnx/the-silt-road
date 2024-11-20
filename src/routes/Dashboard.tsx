@@ -21,6 +21,9 @@ export default function Dashboard() {
         caravan: 'Caravan',
     };
 
+    const cargoWeight = 1234;
+    const cargoCapacity = 4475;
+
     return (
         <div className="dashboard-wrapper">
             <aside className="dashboard-sidebar">
@@ -46,12 +49,21 @@ export default function Dashboard() {
                             <td>${playerAccountBalance.toFixed(2)}</td>
                         </tr>
                         <tr>
-                            <th scope="col">Cargo</th>
-                            <th scope="col">Capacity</th>
+                            <th scope="col" colSpan={2}>Cargo / Capacity</th>
                         </tr>
                         <tr>
-                            <td>234lbs</td>
-                            <td>4475lbs</td>
+                            <td colSpan={2}>
+                                <div>
+                                    <div>
+                                        234lbs / 4475lbs
+                                    </div>
+                                    <meter
+                                        min={0}
+                                        max={cargoCapacity}
+                                        value={cargoWeight}
+                                    >{cargoWeight}/{cargoCapacity}</meter>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <th scope="row">Employees</th>

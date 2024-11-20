@@ -57,7 +57,6 @@ body {
   justify-content: center;
 }
 
-
 form>* {
   margin-top: 0.5rem;
 }
@@ -69,4 +68,8 @@ form>label {
 
 pre {
   font-family: 'Courier New', Courier, monospace;
+}
+
+meter {
+  width: 100%;
 }
