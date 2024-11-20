@@ -106,7 +106,7 @@ export default function MarketView() {
                     <th colSpan={4} className='title'>Bill of Sale</th>
                     <th colSpan={2} className='header-flavor-text'>
                         <div>
-                            Doc. No. 3195
+                            FORM 3195, Rev.
                         </div>
                         <div>
                             Hemlock & Co., Print
@@ -115,7 +115,7 @@ export default function MarketView() {
                             Redistribution Prohibited
                         </div>
                         <div>
-                            (3 7-20)
+                            4000-128 (I6603)
                         </div>
                     </th>
                 </tr>
