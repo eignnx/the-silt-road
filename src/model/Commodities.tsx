@@ -20,27 +20,29 @@ export function commodityUnit(commodity: Commodity): { short: string, long: stri
         case 'iron':
         case 'copper':
         case 'nickel':
-        case 'gold':
             return { long: "ingot", short: "ing" };
-        case 'flour':
+        case 'gold':
+            return { long: "ounce", short: "oz" };
+        case "flour":
         case 'cheese':
         case 'salted meat':
+        case "sugar":
+        case "salt":
+            return { long: "pounds", short: "lbs" };
         case "feed":
         case "grain":
         case "potatoes":
-        case "sugar":
-        case "salt":
-        case "medical supplies":
         case "tobacco":
-            return { long: "pounds", short: "lbs" };
-        case "ammunition":
-            return { long: "rounds", short: "rnd" };
-        case 'clothing':
+            return { long: "bushel", short: "bsh" };
+        case "medical supplies":
+            return { long: "crates", short: "crate" };
+        case "clothing":
         case "firearms":
         case "heavy machinery":
             return { long: "pieces", short: "pc" };
         case "lumber":
             return { long: "board-feet", short: "bdft" };
+        case "ammunition":
         case 'wine':
         case "spirits":
             return { long: "cases", short: "case" };
@@ -53,9 +55,9 @@ export function commodityBasePrice1860(commodity: Commodity): number {
     return dollars2024To1860((() => {
         switch (commodity) {
             case "grain":
-                return 1.10 / 5.0;
+                return 1.10 / 5.0 * 60; // 60lbs per bushel
             case "feed":
-                return 0.85 * 1.10 / 5.0;
+                return 0.85 * 1.10 / 5.0 * 60; // 60lbs per bushel
             case "flour":
                 return 2.75 / 5.0;
             case "spirits":
@@ -69,7 +71,9 @@ export function commodityBasePrice1860(commodity: Commodity): number {
             case "salted meat":
                 return 4.595;
             case "potatoes":
-                return 0.935;
+                return 0.935 * 60; // 60lbs per bushel
+            case 'tobacco':
+                return 2.35 * 60; // Price per pound (60lbs per bushel)
             case "cheese":
                 return 5.731 * 55.0; // per pound * 55 pounds per wheel
             case "lumber":
@@ -77,7 +81,7 @@ export function commodityBasePrice1860(commodity: Commodity): number {
             case "heavy machinery":
                 return 1250.0; // Estimate of price of a plow.
             case "ammunition":
-                return 450.0 / 1000.0; // Price of 1000 rounds of .45 ACP
+                return 450.0; // Price of 1000 rounds of .45 ACP
             case "firearms":
                 return 600.0; // My estimate for price of a midrange handgun.
             case "textiles":
@@ -93,13 +97,11 @@ export function commodityBasePrice1860(commodity: Commodity): number {
             case "nickel":
                 return 203.0; // price per 1000cm^3
             case "gold":
-                return 1.704e6; // price per 1000cm^3
+                return 2653.70; // price per oz
             case "coal":
                 return 118.70; // price per ton
             case "medical supplies":
-                return 24.75; // Price of a medkit?
-            case 'tobacco':
-                return 2.35; // Price per pound.
+                return 95.00; // Price of a medkit crate?
         }
     }
     )());
