@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import InventoryEditor, { loader as inventoryEditorLoader, action as inventoryEditorAction } from './routes/InventoryEditor';
 import ErrorPage from './routes/ErrorPage';
 import MainMenu from './routes/MainMenu';
-import Dashboard from './routes/Dashboard';
+import Dashboard, { dashboardLoader } from './routes/Dashboard';
 import MarketView, { marketViewAction, marketViewLoader } from './routes/MarketView';
 import CaravanEditor, { caravanEditorAction, caravanEditorLoader } from './routes/CaravanEditor';
 
@@ -16,6 +16,7 @@ export const router = createBrowserRouter([
         path: "/game",
         element: <Dashboard />,
         errorElement: <ErrorPage />,
+        loader: dashboardLoader,
         children: [
             {
                 path: "market",
