@@ -147,7 +147,7 @@ export default function MarketView() {
                             Redistribution Prohibited
                         </div>
                         <div>
-                            4000-128 (I6603)
+                            4000-128 (J6603)
                         </div>
                     </th>
                 </tr>
