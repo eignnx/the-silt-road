@@ -21,7 +21,7 @@ export default function Dashboard() {
         caravan: 'Caravan',
     };
 
-    const cargoWeight = 1234;
+    const cargoWeight = 1200;
     const cargoCapacity = 4475;
 
     return (
@@ -55,12 +55,14 @@ export default function Dashboard() {
                             <td colSpan={2}>
                                 <div>
                                     <div>
-                                        234lbs / 4475lbs
+                                        {cargoWeight}lbs / {cargoCapacity}lbs
                                     </div>
                                     <meter
                                         min={0}
                                         max={cargoCapacity}
                                         value={cargoWeight}
+                                        optimum={0}
+                                        high={cargoCapacity * 0.9}
                                     >{cargoWeight}/{cargoCapacity}</meter>
                                 </div>
                             </td>
