@@ -1,5 +1,5 @@
 .dashboard-wrapper {
-    --sidebar-width: 25ch;
+    --sidebar-width: 30ch;
 
     display: grid;
     grid-template-columns: var(--sidebar-width) auto;
@@ -24,6 +24,8 @@ aside.dashboard-sidebar {
 
 main.dashboard-outlet {
     grid-area: outlet;
+    display: flex;
+    justify-content: center;
 }
 
 nav {

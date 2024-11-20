@@ -73,7 +73,9 @@ export default function Dashboard() {
                 </section>
             </aside>
             <main className='dashboard-outlet'>
-                <Outlet />
+                <div>
+                    <Outlet />
+                </div>
             </main>
         </div>
     );
