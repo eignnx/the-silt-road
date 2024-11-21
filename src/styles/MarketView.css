@@ -118,7 +118,7 @@ tfoot {
 }
 
 tbody>tr:nth-of-type(odd) {
-    background-color: rgba(126, 76, 0, 0.1);
+    background-color: rgba(142, 142, 142, 0.1);
 }
 
 .transaction-td {

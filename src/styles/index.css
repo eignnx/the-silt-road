@@ -3,7 +3,7 @@
 :root {
   --clr-dark: rgb(51, 38, 11);
   --clr-light: rgb(238, 228, 185);
-  --clr-dark-lighter: color-mix(in oklab, var(--clr-dark) 30%, var(--clr-light));
+  --clr-dark-lighter: color(from var(--clr-dark) srgb r g b / 60%);
   --ink-blue: rgb(36, 36, 107);
 }
 
@@ -69,4 +69,59 @@ pre {
 
 meter {
   width: 100%;
+}
+
+.document {
+  box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.468);
+}
+
+.handwritten {
+  font-family: "Cedarville Cursive", cursive;
+  font-weight: 600;
+  font-style: normal;
+  color: var(--ink-blue)
+}
+
+p.handwritten {
+  text-align: left;
+}
+
+.fineprint {
+  color: var(--clr-dark-lighter);
+  font-size: x-small;
+  font-variant: small-caps;
+}
+
+th.section-div-row {
+  padding-block: 0.5rem;
+  /* font-family: Oswald, sans-serif; */
+  /* font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
+  /* font-weight: bold; */
+  font-size: larger;
+
+  text-transform: none;
+  font-variant: small-caps;
+  /* border-block-style: double; */
+  border-block: 3px double var(--clr-dark);
+
+  &::before,
+  &::after {
+    content: " ⸺ ";
+  }
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-evenly {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.classified-notice {
+  font-family: "Rubik Dirt", system-ui;
 }

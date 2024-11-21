@@ -121,179 +121,182 @@ export default function MarketView() {
 
     return (<>
         <h1>Market</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th colSpan={2} className='header-flavor-text'>
-                        <div>
-                            Rattsville General Market
-                        </div>
-                        <div>
-                            200 Main St.
-                        </div>
-                        <div>
-                            Rattsville, Hoghead County
-                        </div>
-                        <div>
-                            Colorado, U.S.A.
-                        </div>
-                    </th>
-                    <th colSpan={4} className='title'>Bill of Sale</th>
-                    <th colSpan={2} className='header-flavor-text'>
-                        <div>
-                            FORM 3195, Rev.
-                        </div>
-                        <div>
-                            Hemlock & Co., Print
-                        </div>
-                        <div>
-                            Redistribution Prohibited
-                        </div>
-                        <div>
-                            4000-128 (J6603)
-                        </div>
-                    </th>
-                </tr>
-                <tr>
+        <article className='document'>
 
-                    <th scope="col" rowSpan={2}>Commodity</th>
-                    <th scope="col" rowSpan={2}>Owned</th>
-                    <th scope="col" colSpan={4}>Transaction</th>
-                    <th scope="col" rowSpan={2}>Avail.</th>
-                    <th scope="col" rowSpan={2}>Unit Price</th>
-                </tr>
-                <tr className='obligations-headers'>
-                    <th scope="col" colSpan={2}>Client Obligations</th>
-                    <th scope="col" colSpan={2}>Vendor Obligations</th>
-                </tr>
-            </thead>
-            <tbody>
-                {orderedInventories.map(({ comm, playerQty, marketQty }) => {
+            <table>
+                <thead>
+                    <tr>
+                        <th colSpan={2} className='header-flavor-text'>
+                            <div>
+                                Rattsville General Market
+                            </div>
+                            <div>
+                                200 Main St.
+                            </div>
+                            <div>
+                                Rattsville, Hoghead County
+                            </div>
+                            <div>
+                                Colorado, U.S.A.
+                            </div>
+                        </th>
+                        <th colSpan={4} className='title'>Bill of Sale</th>
+                        <th colSpan={2} className='header-flavor-text'>
+                            <div>
+                                FORM 3195, Rev.
+                            </div>
+                            <div>
+                                Hemlock & Co., Print
+                            </div>
+                            <div>
+                                Redistribution Prohibited
+                            </div>
+                            <div>
+                                4000-128 (J6603)
+                            </div>
+                        </th>
+                    </tr>
+                    <tr>
 
-                    // The number of units being transferred (negative means sale to market).
-                    const txnQty = currentTxn[comm] ?? 0;
-                    const txnPrice = Math.abs(marketPrice(market, comm).unitPrice * txnQty);
+                        <th scope="col" rowSpan={2}>Commodity</th>
+                        <th scope="col" rowSpan={2}>Owned</th>
+                        <th scope="col" colSpan={4}>Transaction</th>
+                        <th scope="col" rowSpan={2}>Avail.</th>
+                        <th scope="col" rowSpan={2}>Unit Price</th>
+                    </tr>
+                    <tr className='obligations-headers'>
+                        <th scope="col" colSpan={2}>Client Obligations</th>
+                        <th scope="col" colSpan={2}>Vendor Obligations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {orderedInventories.map(({ comm, playerQty, marketQty }) => {
 
-                    return (playerQty || marketQty) ?
-                        <tr>
-                            <th scope="row">{titleCase(comm)}</th>
-                            <td className='numeric'>{playerQty ?? "⸺"}</td>
-                            <td>
-                                <button
-                                    disabled={!playerQty}
-                                    onClick={() => addSale(comm)}
-                                >
-                                    Sell
-                                </button>
-                            </td>
-                            {txnQty === 0 ? (
-                                <>
-                                    <td>⸺</td>
-                                    <td>⸺</td>
-                                </>
-                            ) : <>
+                        // The number of units being transferred (negative means sale to market).
+                        const txnQty = currentTxn[comm] ?? 0;
+                        const txnPrice = Math.abs(marketPrice(market, comm).unitPrice * txnQty);
+
+                        return (playerQty || marketQty) ?
+                            <tr>
+                                <th scope="row">{titleCase(comm)}</th>
+                                <td className='numeric'>{playerQty ?? "⸺"}</td>
                                 <td>
-                                    {"☞ "}
-                                    {txnQty < 0 ? (
-                                        <span className="txnqty numeric">{Math.abs(txnQty)} {commodityUnit(comm).short}</span>
-                                    ) : (
-                                        <span className="txnprice">${txnPrice.toFixed(2)}</span>
-                                    )}
+                                    <button
+                                        disabled={!playerQty}
+                                        onClick={() => addSale(comm)}
+                                    >
+                                        Sell
+                                    </button>
                                 </td>
+                                {txnQty === 0 ? (
+                                    <>
+                                        <td>⸺</td>
+                                        <td>⸺</td>
+                                    </>
+                                ) : <>
+                                    <td>
+                                        {"☞ "}
+                                        {txnQty < 0 ? (
+                                            <span className="txnqty numeric">{Math.abs(txnQty)} {commodityUnit(comm).short}</span>
+                                        ) : (
+                                            <span className="txnprice">${txnPrice.toFixed(2)}</span>
+                                        )}
+                                    </td>
+                                    <td>
+                                        {txnQty > 0 ? (
+                                            <span className="txnqty numeric">{Math.abs(txnQty)} {commodityUnit(comm).short}</span>
+                                        ) : (
+                                            <span className="txnprice">${txnPrice.toFixed(2)}</span>
+                                        )}
+                                        {" ☜"}
+                                    </td>
+                                </>}
                                 <td>
-                                    {txnQty > 0 ? (
-                                        <span className="txnqty numeric">{Math.abs(txnQty)} {commodityUnit(comm).short}</span>
-                                    ) : (
-                                        <span className="txnprice">${txnPrice.toFixed(2)}</span>
-                                    )}
-                                    {" ☜"}
+                                    <button
+                                        disabled={!marketQty}
+                                        onClick={() => addPurchase(comm)}
+                                    >
+                                        Buy
+                                    </button>
                                 </td>
-                            </>}
-                            <td>
-                                <button
-                                    disabled={!marketQty}
-                                    onClick={() => addPurchase(comm)}
+                                <td className='numeric'>{marketQty ?? "⸺"}</td>
+                                <td>{marketPrice(market, comm).toString()}</td>
+                            </tr> : null;
+                    })}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colSpan={2} rowSpan={3} className='legal-blurb'>
+                            <p>All sales considered final no sooner than time of purchase.</p>
+                            <p>Arbitration services available in case of dispute.</p>
+                            <p>Fruadulant representation punishable under U.S. Dept. of Commerce Reg. 471 § 3.6</p>
+                        </th>
+                        {totalBill >= 0 ? (
+                            <>
+                                <th colSpan={2}>Total Bill</th>
+                                <th colSpan={2}></th>
+                            </>
+                        ) : (
+                            <>
+                                <th colSpan={2}></th>
+                                <th colSpan={2}>Total Bill</th>
+                            </>
+                        )}
+                        <th colSpan={2}>
+                            Date of Sale
+                        </th>
+                    </tr>
+                    <tr>
+                        {totalBill === 0 ? (
+                            <>
+                                <td colSpan={2}>⸺</td>
+                                <td colSpan={2}></td>
+                            </>
+                        ) : totalBill > 0 ? (
+                            <>
+                                <td
+                                    colSpan={2}
+                                    className={tooExpensiveForPlayer ? "price-too-expensive" : ""}
+                                    title={tooExpensiveForPlayer ? "You lack the funds to make this purchase!" : undefined}
                                 >
-                                    Buy
-                                </button>
-                            </td>
-                            <td className='numeric'>{marketQty ?? "⸺"}</td>
-                            <td>{marketPrice(market, comm).toString()}</td>
-                        </tr> : null;
-                })}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th colSpan={2} rowSpan={3} className='legal-blurb'>
-                        <p>All sales considered final no sooner than time of purchase.</p>
-                        <p>Arbitration services available in case of dispute.</p>
-                        <p>Fruadulant representation punishable under U.S. Dept. of Commerce Reg. 471 § 3.6</p>
-                    </th>
-                    {totalBill >= 0 ? (
-                        <>
-                            <th colSpan={2}>Total Bill</th>
-                            <th colSpan={2}></th>
-                        </>
-                    ) : (
-                        <>
-                            <th colSpan={2}></th>
-                            <th colSpan={2}>Total Bill</th>
-                        </>
-                    )}
-                    <th colSpan={2}>
-                        Date of Sale
-                    </th>
-                </tr>
-                <tr>
-                    {totalBill === 0 ? (
-                        <>
-                            <td colSpan={2}>⸺</td>
-                            <td colSpan={2}></td>
-                        </>
-                    ) : totalBill > 0 ? (
-                        <>
-                            <td
-                                colSpan={2}
-                                className={tooExpensiveForPlayer ? "price-too-expensive" : ""}
+                                    ${Math.abs(totalBill).toFixed(2)}
+                                </td>
+                                <td colSpan={2}></td>
+                            </>
+                        ) : (
+                            <>
+                                <td colSpan={2}></td>
+                                <td colSpan={2}>${Math.abs(totalBill).toFixed(2)}</td>
+                            </>
+                        )}
+                        <td colSpan={2} className='date-of-sale'>
+                            17th January 1860
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colSpan={4} className='signature-section'>
+                            <div>
+                                <span className='signature-label'>Client:</span>
+                                <span className='signature'>{playerInfo.playerName}</span>
+                            </div>
+                            <div>
+                                <span className='signature-label'>Vendor:</span>
+                                <span className='signature'>Rattsville General Market</span>
+                            </div>
+                        </td>
+                        <td colSpan={2}>
+                            <button
+                                type="submit"
+                                onClick={submitForm}
+                                disabled={tooExpensiveForPlayer}
                                 title={tooExpensiveForPlayer ? "You lack the funds to make this purchase!" : undefined}
                             >
-                                ${Math.abs(totalBill).toFixed(2)}
-                            </td>
-                            <td colSpan={2}></td>
-                        </>
-                    ) : (
-                        <>
-                            <td colSpan={2}></td>
-                            <td colSpan={2}>${Math.abs(totalBill).toFixed(2)}</td>
-                        </>
-                    )}
-                    <td colSpan={2} className='date-of-sale'>
-                        17th January 1860
-                    </td>
-                </tr>
-                <tr>
-                    <td colSpan={4} className='signature-section'>
-                        <div>
-                            <span className='signature-label'>Client:</span>
-                            <span className='signature'>{playerInfo.playerName}</span>
-                        </div>
-                        <div>
-                            <span className='signature-label'>Vendor:</span>
-                            <span className='signature'>Rattsville General Market</span>
-                        </div>
-                    </td>
-                    <td colSpan={2}>
-                        <button
-                            type="submit"
-                            onClick={submitForm}
-                            disabled={tooExpensiveForPlayer}
-                            title={tooExpensiveForPlayer ? "You lack the funds to make this purchase!" : undefined}
-                        >
-                            Confirm Transaction ✗
-                        </button>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+                                Confirm Transaction ✗
+                            </button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </article>
     </>);
 };

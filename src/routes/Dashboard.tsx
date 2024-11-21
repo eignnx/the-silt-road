@@ -22,6 +22,7 @@ export default function Dashboard() {
         market: 'Market',
         cargo: 'Cargo',
         caravan: 'Caravan',
+        employees: 'Employees',
     };
 
     const cargoWeight = 1200;

@@ -1,0 +1,22 @@
+.employee-record-sheet {
+    padding-block: 2rem;
+    background-color: rgb(208, 191, 198);
+    max-width: 80ch;
+    margin-block: 3rem;
+
+    .document-title {
+        font-family: Oswald, sans-serif;
+        font-size: large;
+        text-transform: uppercase;
+        padding: 0.5rem;
+    }
+
+    table {
+        background-color: rgb(208, 191, 198);
+        /* background-color: rgb(210, 230, 199); */
+    }
+
+    .handwritten {
+        font-size: smaller;
+    }
+}
