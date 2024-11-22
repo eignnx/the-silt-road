@@ -4,7 +4,7 @@
   --clr-dark: rgb(51, 38, 11);
   --clr-light: rgb(238, 228, 185);
   --clr-dark-lighter: color(from var(--clr-dark) srgb r g b / 60%);
-  --ink-blue: rgb(36, 36, 107);
+  --ink-blue: rgb(38, 38, 79);
 }
 
 html {
@@ -78,11 +78,10 @@ meter {
 .handwritten {
   font-family: "Cedarville Cursive", cursive;
   font-weight: 600;
-  font-style: normal;
-  color: var(--ink-blue)
-}
-
-p.handwritten {
+  font-size: x-large;
+  line-height: 0.75em;
+  color: var(--ink-blue);
+  padding-inline: 0.2rem;
   text-align: left;
 }
 

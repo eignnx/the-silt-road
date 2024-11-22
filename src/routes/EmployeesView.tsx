@@ -109,7 +109,7 @@ export default function EmployeesView() {
                         <tr>
                             <td colSpan={4} rowSpan={3}>
                                 <p className='handwritten'>
-                                    Confronted about tardiness, refysed to sign acknowledgement of disiplyn.
+                                    Confrunted about tardyness, refused to sine ack.ment of disiplin.
                                 </p>
                             </td>
                             <td className='handwritten'>4/1/59</td>
