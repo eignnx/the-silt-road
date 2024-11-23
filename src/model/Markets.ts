@@ -1,6 +1,16 @@
+import { randChoice } from '../utils';
 import { COMMODITIES, Commodity, commodityBasePrice1860, Inventory, UnitPriceSummary } from './Commodities';
+import { WORLD_MAP } from './Towns';
+import { genHumanFirstName, genHumanLastName } from '../gen/names';
+
+const RESOURCE_KEY = `SILT_ROAD:markets`;
+
+export type AllMarkets = {
+    [townName: string]: Market;
+};
 
 export interface Market {
+    name: string,
     inventory: Inventory;
     priceDeviations: PriceDeviations;
 }
@@ -9,7 +19,7 @@ export type PriceDeviations = {
     [comm in Commodity]: number;
 };
 
-export function generateMarket(): Market {
+export function generateMarket(town: string): Market {
     const inventory: Inventory = {};
     const priceDeviations: PriceDeviations = {} as PriceDeviations;
 
@@ -41,7 +51,28 @@ export function generateMarket(): Market {
 
     }
 
-    return { inventory, priceDeviations };
+    let marketName = randChoice(
+        (town.length < 8)
+            ? [
+                `Markets at ${town}`,
+                `${town} General Market`,
+                `${town} Plaza`,
+                `${town} Co-Op.`,
+                `${town}'s Market`,
+                `${town}'s Trade Goods`,
+                `Traders at ${town}`,
+            ]
+            : [
+                `${genHumanLastName()} ${randChoice([
+                    " & Son's",
+                    "'s Market",
+                    "'s Trade Goods",
+                ])}`,
+                `Trader ${genHumanFirstName()}'s`
+            ]
+    );
+
+    return { name: marketName, inventory, priceDeviations };
 }
 
 export function marketPrice(market: Market, comm: Commodity): UnitPriceSummary {
@@ -50,24 +81,56 @@ export function marketPrice(market: Market, comm: Commodity): UnitPriceSummary {
         .deviate(market.priceDeviations[comm]);
 }
 
-const DEFAULT_MARKET: Market = generateMarket();
-
-export async function getMarket(): Promise<Market> {
-    const retrieval = localStorage.getItem(`SILT_ROAD:market`) ?? JSON.stringify(DEFAULT_MARKET);
-    return JSON.parse(retrieval);
+async function DEFAULT_MARKETS(): Promise<AllMarkets> {
+    const worldMap = await WORLD_MAP.getWorldMap();
+    const markets: AllMarkets = {};
+    for (const town of worldMap.towns) {
+        markets[town.name] = generateMarket(town.name);
+    }
+    return markets;
 }
 
-export async function updateMarket(updates: Market): Promise<Market> {
-    const market = await getMarket();
+export async function getMarkets(): Promise<AllMarkets> {
+    const retrieval = localStorage.getItem(RESOURCE_KEY);
+    if (retrieval !== null)
+        return JSON.parse(retrieval);
+    else {
+        return await replaceMarkets(await DEFAULT_MARKETS());
+    }
+}
+
+export async function replaceMarkets(newMarkets: AllMarkets): Promise<AllMarkets> {
+    localStorage.setItem(RESOURCE_KEY, JSON.stringify(newMarkets));
+    return newMarkets;
+}
+
+export async function getMarket(town: string): Promise<Market> {
+    const markets = await getMarkets();
+    const market = markets[town];
+    if (market !== undefined)
+        return market;
+    else
+        throw new Error(`Unknown town name '${town}'`);
+}
+
+async function setMarket(town: string, newMarket: Market): Promise<Market> {
+    localStorage.setItem(RESOURCE_KEY, JSON.stringify({
+        ... await getMarkets(),
+        [town]: newMarket
+    }));
+    return newMarket;
+}
+
+export async function updateMarket(town: string, updates: Market): Promise<Market> {
+    const market = await getMarket(town);
     Object.assign(market, updates);
-    localStorage.setItem(`SILT_ROAD:market`, JSON.stringify(market));
-    return market;
+    return await setMarket(town, market);
 }
 
-export async function updateMarketInventory(updates: Inventory): Promise<Market> {
-    const market = await getMarket();
+export async function updateMarketInventory(town: string, updates: Inventory): Promise<Market> {
+    const market = await getMarket(town);
     Object.assign(market.inventory, updates);
-    localStorage.setItem(`SILT_ROAD:market`, JSON.stringify(market));
+    await setMarket(town, market);
     return market;
 }
 
@@ -77,8 +140,8 @@ export async function updateMarketInventory(updates: Inventory): Promise<Market>
  *               change in inventory.
  * @returns 
  */
-export async function changeMarketInventory(change: Inventory): Promise<Market> {
-    const market = await getMarket();
+export async function changeMarketInventory(town: string, change: Inventory): Promise<Market> {
+    const market = await getMarket(town);
     for (const [commKey, qtyDelta] of Object.entries(change)) {
         const comm = commKey as Commodity;
         const onHandQty = market.inventory[comm] ?? 0;
@@ -87,6 +150,6 @@ export async function changeMarketInventory(change: Inventory): Promise<Market> 
         }
         market.inventory[comm] = onHandQty + qtyDelta;
     }
-    localStorage.setItem(`SILT_ROAD:market`, JSON.stringify(market));
+    await setMarket(town, market);
     return market;
 }

@@ -8,27 +8,31 @@ import { titleCase } from '../utils';
 import { useState } from 'react';
 import { BANK, PLAYER_ACCT } from '../model/BankAcct';
 import { PLAYER_INFO, PlayerInfo } from '../model/PlayerInfo';
+import { WORLD_MAP } from '../model/Towns';
 
 type InventoryCmpRow = { comm: Commodity, playerQty?: number, marketQty?: number; };
 
 type LoaderRetTy = {
     playerInventory: Inventory;
+    currentTown: string,
     market: Market;
     playerBankBalance: number;
     playerInfo: PlayerInfo;
 };
 
 export async function marketViewLoader(): Promise<LoaderRetTy> {
+    const currentTown = await WORLD_MAP.getPlayerLocation();
     return {
         playerInventory: getPlayerInventory(),
-        market: await getMarket(),
+        market: await getMarket(currentTown),
+        currentTown,
         playerBankBalance: await BANK.getAcctBalance(PLAYER_ACCT),
         playerInfo: await PLAYER_INFO.getPlayerInfo(),
     };
 }
 
 export async function marketViewAction({ request }: { request: Request; }) {
-    const { currentTxn, totalBill } = await request.json();
+    const { currentTxn, totalBill, currentTown } = await request.json();
 
     const playerInvUpdates: Inventory = {};
     const marketInvUpdates: Inventory = {};
@@ -55,7 +59,7 @@ export async function marketViewAction({ request }: { request: Request; }) {
     }
 
     changePlayerInventory(playerInvUpdates);
-    await changeMarketInventory(marketInvUpdates);
+    await changeMarketInventory(currentTown, marketInvUpdates);
 
 
     return null;
@@ -81,7 +85,10 @@ function computeOrderedInventories(playerInventory: Inventory, market: Market, c
 }
 
 export default function MarketView() {
-    const { playerInventory, market, playerBankBalance, playerInfo } = useLoaderData() as LoaderRetTy;
+    const {
+        playerInventory, market, currentTown, playerBankBalance, playerInfo
+    } = useLoaderData() as LoaderRetTy;
+
     const fetcher = useFetcher();
 
     const [currentTxn, setCurrentTxn] = useState<Inventory>({});
@@ -113,7 +120,7 @@ export default function MarketView() {
 
     function submitForm() {
         fetcher.submit(
-            { currentTxn, totalBill },
+            { currentTxn, totalBill, currentTown },
             { method: "POST", encType: "application/json" }
         );
         setCurrentTxn({});
@@ -128,13 +135,13 @@ export default function MarketView() {
                     <tr>
                         <th colSpan={2} className='header-flavor-text'>
                             <div>
-                                Rattsville General Market
+                                {market.name}
                             </div>
                             <div>
                                 200 Main St.
                             </div>
                             <div>
-                                Rattsville, Hoghead County
+                                {titleCase(currentTown)}, Silt County
                             </div>
                             <div>
                                 Colorado, U.S.A.
@@ -281,7 +288,7 @@ export default function MarketView() {
                             </div>
                             <div>
                                 <span className='signature-label'>Vendor:</span>
-                                <span className='signature'>Rattsville General Market</span>
+                                <span className='signature'>{market.name}</span>
                             </div>
                         </td>
                         <td colSpan={2}>

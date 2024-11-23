@@ -1,4 +1,4 @@
-const RESOURCE_KEY = `SILT_ROAD:town`;
+const RESOURCE_KEY = `SILT_ROAD:worldMap`;
 
 export type TownMapPin = {
     name: string;
@@ -26,7 +26,11 @@ function generateWorldMap(): WorldMap {
 
 async function getWorldMap(): Promise<WorldMap> {
     const fetched = localStorage.getItem(RESOURCE_KEY);
-    return JSON.parse(fetched ?? JSON.stringify(generateWorldMap()));
+    console.trace(fetched);
+    if (fetched !== null)
+        return JSON.parse(fetched);
+    else
+        return await replaceWorldMap(generateWorldMap());
 }
 
 async function replaceWorldMap(newWorldMap: WorldMap): Promise<WorldMap> {
@@ -44,11 +48,16 @@ export const WORLD_MAP = {
         return [];
     },
 
-    async setPlayerPos(pos: string) {
+    async getPlayerLocation(): Promise<string> {
+        const worldMap = await getWorldMap();
+        return worldMap.playerLocation;
+    },
+
+    async setPlayerLocation(townName: string) {
         const worldMap = await getWorldMap();
         replaceWorldMap({
             ...worldMap,
-            playerLocation: pos,
+            playerLocation: townName,
         });
-    }
+    },
 };

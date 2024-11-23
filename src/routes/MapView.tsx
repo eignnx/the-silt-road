@@ -18,7 +18,7 @@ export async function mapViewAction({ request }: { request: any; }) {
     console.log(_action, formData);
 
     if (_action === "playerTravelToTown") {
-        WORLD_MAP.setPlayerPos(formData.dest);
+        WORLD_MAP.setPlayerLocation(formData.dest);
         return redirect("");
     } else {
         throw new Error(`SILT_ROAD: unknown action request data: ${formData}`);
