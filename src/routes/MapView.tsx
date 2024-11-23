@@ -36,10 +36,8 @@ export default function MapView() {
     }
 
     function handleTownClick(dest: string) {
-        const payload = { _action: "playerTravelToTown", dest };
-        console.log(payload);
         submit(
-            payload,
+            { _action: "playerTravelToTown", dest },
             {
                 encType: "application/json",
                 method: "POST",
@@ -54,22 +52,28 @@ export default function MapView() {
             <svg
                 className="inner-map-container"
                 xmlns="http://www.w3.org/2000/svg"
+                role="presentation"
             >
                 {worldMap.towns.map(town => (
                     <svg
+                        role="button"
                         width="20%"
                         height="20%"
                         x={`${town.coords.x - 10}%`}
                         y={`${town.coords.y - 10}%`}
+                        tabIndex={0} // These elements should be navigable via TAB.
+                        aria-label={`Travel to ${town.name}`}
+                        aria-description={
+                            playerInTown(town.name) ? "You are here." : undefined
+                        }
+                        onClick={() => handleTownClick(town.name)}
+                        onKeyDown={e => { if (e.code === "Enter") handleTownClick(town.name); }}
                     >
                         <text
                             textAnchor='middle'
                             dominantBaseline="hanging"
                             x="50%"
                             y={"55%"}
-                            aria-description={
-                                playerInTown(town.name) ? "You are here." : undefined
-                            }
                         >
                             {town.name}
                         </text>
@@ -83,7 +87,6 @@ export default function MapView() {
                             cx="50%"
                             cy="50%"
                             r="5"
-                            onClick={() => handleTownClick(town.name)}
                         />
                     </svg>
                 ))}
