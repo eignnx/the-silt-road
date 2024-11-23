@@ -1,0 +1,52 @@
+#map-view {
+    &.document {
+        background-color: var(--clr-light);
+        color: var(--clr-dark);
+        width: 100ch;
+        height: 90ch;
+        vertical-align: auto;
+        margin-block: 2rem;
+        /* Setup stacking ctx for children */
+        position: relative;
+        border-radius: 2px;
+    }
+
+    & h1 {
+        text-align: center;
+    }
+
+    .inner-map-container {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    text,
+    .town-map-pin {
+        cursor: pointer;
+    }
+
+    .town-map-pin {
+        /* margin: 0.5rem; */
+        /* position: absolute; */
+        fill: black;
+        stroke-width: 3px;
+        stroke: grey;
+        transition: all 300ms;
+    }
+
+    .town-map-pin:not(.player-in-town):hover {
+        fill: green;
+        stroke: white;
+    }
+
+    .player-in-town {
+        fill: red;
+        r: 7.5px;
+    }
+
+    .player-map-pin {
+        fill: red;
+    }
+}

@@ -19,6 +19,7 @@ export default function Dashboard() {
     const { playerAccountBalance, playerInfo } = useLoaderData() as LoaderRetTy;
 
     const links = {
+        map: 'Map',
         market: 'Market',
         cargo: 'Cargo',
         caravan: 'Caravan',

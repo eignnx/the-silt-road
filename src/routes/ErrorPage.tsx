@@ -8,10 +8,11 @@ export default function ErrorPage() {
         <div>
             <h1>Error</h1>
             <p>We encountered an unhandled error.</p>
-            <details>
+            <details open>
                 <summary>Details</summary>
-                <pre>{error.statusText}</pre>
+                <pre>{error.status} - {error.statusText}</pre>
                 <pre>{error.message}</pre>
+                <pre>{error.data}</pre>
                 <pre>{error.stack}</pre>
             </details>
         </div>

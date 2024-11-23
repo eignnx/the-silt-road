@@ -6,6 +6,7 @@ import Dashboard, { dashboardLoader } from './routes/Dashboard';
 import MarketView, { marketViewAction, marketViewLoader } from './routes/MarketView';
 import CaravanEditor, { caravanEditorAction, caravanEditorLoader } from './routes/CaravanEditor';
 import EmployeesView, { employeesViewAction, employeesViewLoader } from './routes/EmployeesView';
+import MapView, { mapViewAction, mapViewLoader } from './routes/MapView';
 
 export const router = createBrowserRouter([
     {
@@ -42,7 +43,13 @@ export const router = createBrowserRouter([
                 element: <EmployeesView />,
                 loader: employeesViewLoader,
                 action: employeesViewAction,
-            }
+            },
+            {
+                path: "map",
+                element: <MapView />,
+                loader: mapViewLoader,
+                action: mapViewAction,
+            },
         ]
     },
 ]);
