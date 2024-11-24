@@ -240,17 +240,7 @@ export default function MarketView() {
                             <p>Arbitration services available in case of dispute.</p>
                             <p>Fruadulant representation punishable under U.S. Dept. of Commerce Reg. 471 § 3.6</p>
                         </th>
-                        {totalBill >= 0 ? (
-                            <>
-                                <th colSpan={2}>Total Bill</th>
-                                <th colSpan={2}></th>
-                            </>
-                        ) : (
-                            <>
-                                <th colSpan={2}></th>
-                                <th colSpan={2}>Total Bill</th>
-                            </>
-                        )}
+                        <th colSpan={4}>Total Bill</th>
                         <th colSpan={2}>
                             Date of Sale
                         </th>
@@ -259,7 +249,7 @@ export default function MarketView() {
                         {totalBill === 0 ? (
                             <>
                                 <td colSpan={2}>⸺</td>
-                                <td colSpan={2}></td>
+                                <td colSpan={2}>⸺</td>
                             </>
                         ) : totalBill > 0 ? (
                             <>
@@ -270,11 +260,11 @@ export default function MarketView() {
                                 >
                                     ${Math.abs(totalBill).toFixed(2)}
                                 </td>
-                                <td colSpan={2}></td>
+                                <td colSpan={2}>⸺</td>
                             </>
                         ) : (
                             <>
-                                <td colSpan={2}></td>
+                                <td colSpan={2}>⸺</td>
                                 <td colSpan={2}>${Math.abs(totalBill).toFixed(2)}</td>
                             </>
                         )}
