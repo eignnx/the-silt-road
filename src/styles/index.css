@@ -5,10 +5,11 @@
   --clr-light: rgb(238, 228, 185);
   --clr-dark-lighter: color(from var(--clr-dark) srgb r g b / 60%);
   --ink-blue: rgb(38, 38, 79);
+  --clr-dirt: rgb(94, 82, 77);
 }
 
 html {
-  background-color: rgb(94, 82, 77);
+  background-color: var(--clr-dirt);
   color: white;
 }
 
