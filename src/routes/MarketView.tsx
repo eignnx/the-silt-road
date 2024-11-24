@@ -8,6 +8,7 @@ import { BANK, PLAYER_ACCT } from '../model/BankAcct';
 import { PLAYER_INFO, PlayerInfo } from '../model/PlayerInfo';
 import { WORLD_MAP } from '../model/Towns';
 import BillOfSale from '../components/BillOfSale';
+import TradeLedger from '../components/TradeLedger';
 
 
 export type MarketViewLoaderData = {
@@ -70,6 +71,9 @@ export default function MarketView() {
         <h1>Market</h1>
         <h2>{currentTown}</h2>
         <h3>{market.name}</h3>
-        <BillOfSale />
+        <section id="billofsale-and-tradeledger">
+            <TradeLedger />
+            <BillOfSale />
+        </section>
     </>);
 };

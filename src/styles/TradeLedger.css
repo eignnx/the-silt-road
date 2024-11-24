@@ -1,0 +1,53 @@
+.trade-ledger {
+    --bg-clr: color-mix(in oklab, var(--clr-light), brown 10%);
+    --clr-red:
+        color-mix(in oklab,
+            maroon 40%,
+            var(--bg-clr));
+    --clr-blue:
+        color-mix(in oklab,
+            rgb(48, 48, 140) 40%,
+            var(--bg-clr));
+
+    background-color: var(--bg-clr);
+
+    thead h3 {
+        font-size: 30pt;
+        margin: 0;
+        margin-block-start: 0.25rem;
+        margin-block-end: -1rem;
+        padding-block: 0;
+        font-family: var(--fnt-cursive);
+
+    }
+
+    table {
+        border: none;
+    }
+
+    td.handwritten {
+        font-size: smaller;
+    }
+
+    tbody td:nth-child(3n) {
+        border-inline-end-style: double;
+        border-inline-end-width: 4px;
+    }
+
+    tbody {
+
+        th,
+        td {
+            border-block-color: var(--clr-blue);
+            border-inline-color: var(--clr-red);
+        }
+    }
+
+    .text-size-smaller {
+        font-size: smaller;
+    }
+
+    tbody td {
+        text-align: center;
+    }
+}

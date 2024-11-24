@@ -144,3 +144,24 @@ tbody>tr:nth-of-type(odd) {
     text-decoration: underline;
     text-decoration-thickness: 2px;
 }
+
+#billofsale-and-tradeledger {
+    display: flex;
+    align-items: start;
+    gap: 1rem;
+
+    isolation: isolate;
+
+    .trade-ledger {
+        margin-inline-end: -1.1rem;
+        z-index: -1;
+    }
+
+    thead {
+        height: 7rem;
+    }
+
+    tbody>tr {
+        height: 2.5rem;
+    }
+}
