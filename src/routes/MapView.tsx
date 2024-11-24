@@ -15,7 +15,6 @@ export async function mapViewLoader(): Promise<LoaderRetTy> {
 
 export async function mapViewAction({ request }: { request: any; }) {
     const { _action, ...formData } = await request.json();
-    console.log(_action, formData);
 
     if (_action === "playerTravelToTown") {
         WORLD_MAP.setPlayerLocation(formData.dest);
@@ -29,6 +28,7 @@ export default function MapView() {
     const { worldMap } = useLoaderData() as LoaderRetTy;
 
     const submit = useSubmit();
+    const navigator = useNavigate();
 
     function playerInTown(townName: string): boolean {
         return typeof worldMap.playerLocation === "string"
@@ -36,19 +36,15 @@ export default function MapView() {
     }
 
     function handleTownClick(dest: string) {
-        submit(
-            { _action: "playerTravelToTown", dest },
-            {
-                encType: "application/json",
-                method: "POST",
-            }
-        );
-    }
-
-    const navigator = useNavigate();
-
-    function handleDoubleClick(town: string) {
-        if (playerInTown(town)) {
+        if (!playerInTown(dest)) {
+            submit(
+                { _action: "playerTravelToTown", dest },
+                {
+                    encType: "application/json",
+                    method: "POST",
+                }
+            );
+        } else {
             navigator("../market");
         }
     }
@@ -74,7 +70,6 @@ export default function MapView() {
                             playerInTown(town.name) ? "You are here." : undefined
                         }
                         onClick={() => handleTownClick(town.name)}
-                        onDoubleClick={() => handleDoubleClick(town.name)}
                         onKeyDown={e => { if (e.code === "Enter") handleTownClick(town.name); }}
                     >
                         <text
