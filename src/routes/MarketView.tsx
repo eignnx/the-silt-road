@@ -236,9 +236,11 @@ export default function MarketView() {
                 <tfoot>
                     <tr>
                         <th colSpan={2} rowSpan={3} className='legal-blurb'>
+                            ✯✯✯
                             <p>All sales considered final no sooner than time of purchase.</p>
                             <p>Arbitration services available in case of dispute.</p>
                             <p>Fruadulant representation punishable under U.S. Dept. of Commerce Reg. 471 § 3.6</p>
+                            ✯✯✯
                         </th>
                         <th colSpan={4}>Total Bill</th>
                         <th colSpan={2}>

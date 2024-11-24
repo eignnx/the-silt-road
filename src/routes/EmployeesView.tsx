@@ -45,7 +45,7 @@ export default function EmployeesView() {
                         </tr>
                         <tr>
                             <th scope="row">Emp. Name</th><td className='handwritten'>{emp.name}</td>
-                            <td>Emp. No. 24</td>
+                            <td>Emp. № 24</td>
                             <th scope="row">Date of Hire</th>
                             <td className='handwritten'>March 23rd 1859</td>
                         </tr>
@@ -69,7 +69,7 @@ export default function EmployeesView() {
                                     <button>Raise</button>
                                 </div>
                             </td>
-                            <td></td>
+                            <td>✯✯✯</td>
                         </tr>
                         <tr>
                             <th scope="row" rowSpan={2}>Skills:</th>
