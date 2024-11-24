@@ -24,6 +24,7 @@ export default function Dashboard() {
         cargo: 'Cargo',
         caravan: 'Caravan',
         employees: 'Employees',
+        "wagon-shop": "Wagon Shop",
     };
 
     const cargoWeight = 1200;
