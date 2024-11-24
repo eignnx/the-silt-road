@@ -1,6 +1,7 @@
 import { useLoaderData } from 'react-router-dom';
 import { displayWagon, Wagon } from '../model/PlayerCaravan';
 import { titleCase } from '../utils';
+import "../styles/WagonShop.css";
 
 type LoaderData = {};
 
@@ -39,13 +40,45 @@ export default function WagonShopPage() {
             dryWeightTons: 0.35,
             price: 35.00,
         },
+        {
+            kind: "conestoga",
+            condition: "worn",
+            cargoCapTons: 8,
+            passengerCap: 4,
+            dryWeightTons: 2,
+            price: 225.00,
+        },
+        {
+            kind: "cart",
+            condition: "like new",
+            cargoCapTons: 1,
+            passengerCap: 1,
+            dryWeightTons: 0.35,
+            price: 35.00,
+        },
+        {
+            kind: "conestoga",
+            condition: "worn",
+            cargoCapTons: 8,
+            passengerCap: 4,
+            dryWeightTons: 2,
+            price: 225.00,
+        },
+        {
+            kind: "cart",
+            condition: "like new",
+            cargoCapTons: 1,
+            passengerCap: 1,
+            dryWeightTons: 0.35,
+            price: 35.00,
+        },
     ];
 
     return <>
         <h1>Wagon Shop</h1>
-        {wagonsForSale.map((w, idx) => (
-            <article className='document'>
-                <table key={idx}>
+        <section id="wagon-shop" className="document-grid" data-cell-width="100px">
+            {wagonsForSale.map((w, idx) => (
+                <table key={idx} className='document'>
                     <thead>
                         <tr>
                             <th colSpan={3}>
@@ -70,13 +103,17 @@ export default function WagonShopPage() {
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td></td>
                             <th scope="row">Price</th>
                             <td>${w.price.toFixed(2)}</td>
+                            <td>
+                                <button>
+                                    Purchase
+                                </button>
+                            </td>
                         </tr>
                     </tfoot>
                 </table>
-            </article>
-        ))}
+            ))}
+        </section>
     </>;
 }

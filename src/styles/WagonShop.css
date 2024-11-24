@@ -1,0 +1,7 @@
+#wagon-shop {
+    & thead h4 {
+        font-family: "Rubik Dirt", system-ui;
+        font-size: x-large;
+        margin-block: 0.5rem;
+    }
+}

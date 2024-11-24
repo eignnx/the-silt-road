@@ -76,6 +76,13 @@ meter {
   box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.468);
 }
 
+.document-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  width: 900px;
+  gap: 1rem;
+}
+
 .handwritten {
   font-family: "Cedarville Cursive", cursive;
   font-weight: 600;
