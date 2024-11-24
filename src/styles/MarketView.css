@@ -144,6 +144,13 @@ tbody>tr:nth-of-type(odd) {
         color: var(--ink-blue);
         font-weight: bold;
     }
+
+    .printed-signature {
+        font-size: smaller;
+        text-decoration: underline;
+        padding-inline-end: 1rem;
+        color: black;
+    }
 }
 
 .commname,
@@ -163,37 +170,14 @@ tbody>tr:nth-of-type(odd) {
 }
 
 .commname {
-    grid-column: commname;
     text-align: left;
     font-weight: bold;
 }
 
 
-.playerqty {
-    grid-column: playerqty;
-}
-
-.sellbtn {
-    grid-column: sellbtn;
-}
-
-.txnqty {
-    grid-column: txnqty;
-}
-
-.buybtn {
-    grid-column: buybtn;
-}
-
-.marketqty {
-    grid-column: marketqty;
-}
-
 .unitprice {
-    grid-column: unitprice;
     text-align: right;
 }
-
 
 .inventory-row {
     align-items: center;

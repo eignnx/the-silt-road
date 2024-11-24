@@ -128,6 +128,8 @@ export default function MarketView() {
 
     return (<>
         <h1>Market</h1>
+        <h2>{currentTown}</h2>
+        <h3>{market.name}</h3>
         <article className='document'>
 
             <table>
@@ -288,18 +290,33 @@ export default function MarketView() {
                             </div>
                             <div>
                                 <span className='signature-label'>Vendor:</span>
-                                <span className='signature'>{market.name}</span>
+                                <span className='printed-signature'>{market.name}</span>
                             </div>
                         </td>
                         <td colSpan={2}>
-                            <button
-                                type="submit"
-                                onClick={submitForm}
-                                disabled={tooExpensiveForPlayer}
-                                title={tooExpensiveForPlayer ? "You lack the funds to make this purchase!" : undefined}
-                            >
-                                Confirm Transaction ✗
-                            </button>
+                            <div>
+
+                                <button
+                                    type="submit"
+                                    onClick={submitForm}
+                                    disabled={tooExpensiveForPlayer || Object.keys(currentTxn).length === 0}
+                                    title={tooExpensiveForPlayer ? "You lack the funds to make this purchase!" : undefined}
+                                    style={{ width: "100%" }}
+                                >
+                                    Confirm Transaction ✓
+                                </button>
+                            </div>
+                            <div>
+                                <button
+                                    type="reset"
+                                    disabled={totalBill === 0}
+                                    onClick={() => setCurrentTxn({})}
+                                    style={{ width: "100%" }}
+                                >
+                                    Void Transaction ✗
+
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </tfoot>
