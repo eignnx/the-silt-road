@@ -1,4 +1,4 @@
-import { redirect, useLoaderData, useSubmit } from 'react-router-dom';
+import { redirect, useLoaderData, useNavigate, useSubmit } from 'react-router-dom';
 import { WORLD_MAP, WorldMap } from "../model/Towns";
 import "../styles/MapView.css";
 import { useEffect, useState } from 'react';
@@ -45,6 +45,13 @@ export default function MapView() {
         );
     }
 
+    const navigator = useNavigate();
+
+    function handleDoubleClick(town: string) {
+        if (playerInTown(town)) {
+            navigator("../market");
+        }
+    }
 
     return (
         <article id="map-view" className='document'>
@@ -67,6 +74,7 @@ export default function MapView() {
                             playerInTown(town.name) ? "You are here." : undefined
                         }
                         onClick={() => handleTownClick(town.name)}
+                        onDoubleClick={() => handleDoubleClick(town.name)}
                         onKeyDown={e => { if (e.code === "Enter") handleTownClick(town.name); }}
                     >
                         <text
