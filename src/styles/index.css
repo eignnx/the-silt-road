@@ -2,7 +2,7 @@
 
 :root {
   --clr-dark: rgb(51, 38, 11);
-  --clr-light: rgb(238, 228, 185);
+  --clr-light: rgb(228, 203, 170);
   --clr-dark-lighter: color(from var(--clr-dark) srgb r g b / 60%);
   --ink-blue: rgb(38, 38, 79);
   --clr-dirt: rgb(94, 82, 77);
@@ -99,6 +99,59 @@ meter {
   font-variant: small-caps;
 }
 
+table {
+  border: 1px solid var(--clr-dark-lighter);
+  border-collapse: collapse;
+  background: var(--clr-light);
+  color: var(--clr-dark);
+  margin-block: 1rem;
+
+  button {
+    margin-block: 0.2rem;
+  }
+}
+
+th[scope="col"] {
+  /* padding-block: 0.5rem; */
+  /* font-weight: 900; */
+  text-align: center;
+  /* font-size: larger; */
+  text-transform: uppercase;
+  /* font-variant: small-caps; */
+}
+
+th[scope="row"] {
+  font-weight: bold;
+  text-align: left;
+}
+
+tfoot th {
+  font-weight: bold;
+  text-align: left;
+  font-variant: small-caps;
+}
+
+th,
+td {
+  text-align: center;
+  padding-inline: 0.5rem;
+  border: 1px solid var(--clr-dark-lighter);
+}
+
+
+thead {
+  border-bottom: 4px double var(--clr-dark-lighter);
+
+  .obligations-headers>th {
+    /* font-family: inherit; */
+    /* font-weight: bold; */
+    font-size: x-small;
+    width: min-content;
+    padding: 0.1rem;
+  }
+}
+
+
 th.section-div-row {
   padding-block: 0.5rem;
   /* font-family: Oswald, sans-serif; */
@@ -109,7 +162,7 @@ th.section-div-row {
   text-transform: none;
   font-variant: small-caps;
   /* border-block-style: double; */
-  border-block: 3px double var(--clr-dark);
+  border-block: 3px double var(--clr-dark-lighter);
 
   &::before,
   &::after {

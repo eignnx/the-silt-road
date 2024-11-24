@@ -6,31 +6,6 @@ h2 {
     text-decoration: underline;
 }
 
-table {
-    border: 1px solid var(--clr-dark);
-    border-collapse: collapse;
-    background: var(--clr-light);
-    color: var(--clr-dark);
-    margin-block: 1rem;
-
-    button {
-        margin-block: 0.2rem;
-    }
-}
-
-th[scope="col"] {
-    /* padding-block: 0.5rem; */
-    /* font-weight: 900; */
-    text-align: center;
-    /* font-size: larger; */
-    text-transform: uppercase;
-    /* font-variant: small-caps; */
-}
-
-th[scope="row"] {
-    font-weight: bold;
-    text-align: left;
-}
 
 th.header-flavor-text {
     padding: 0.75rem;
@@ -62,34 +37,8 @@ th.header-flavor-text {
     padding: 0.5rem;
 }
 
-tfoot th {
-    font-weight: bold;
-    text-align: left;
-    font-variant: small-caps;
-}
-
-th,
-td {
-    text-align: center;
-    padding-inline: 0.5rem;
-    border: 1px solid var(--clr-dark);
-}
-
-
-thead {
-    border-bottom: 4px double var(--clr-dark);
-
-    .obligations-headers>th {
-        /* font-family: inherit; */
-        /* font-weight: bold; */
-        font-size: x-small;
-        width: min-content;
-        padding: 0.1rem;
-    }
-}
-
 tfoot {
-    border-top: 4px double var(--clr-dark);
+    border-top: 4px double var(--clr-dark-lighter);
 
     p {
         color: var(--clr-dark-lighter);
