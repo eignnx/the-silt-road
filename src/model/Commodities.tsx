@@ -119,14 +119,14 @@ export function commodityShortName(comm: Commodity): string {
         case 'textiles': return 'txtl';
         case 'ammunition': return 'amm';
         case 'firearms': return 'arms';
-        case 'heavy machinery': return 'hvmch';
+        case 'heavy machinery': return 'mchnr';
         case 'medical supplies': return 'meds';
         case 'potatoes': return 'ptoe';
         case 'sugar': return 'sugr';
         case 'salt': return 'salt';
         case 'tobacco': return 'tbcco';
         case 'lumber': return 'lmbr';
-        case 'spirits': return 'sprt';
+        case 'spirits': return 'sprts';
         case 'coal': return 'coal';
         case 'flour': return 'flour';
         case 'wine': return 'wine';
