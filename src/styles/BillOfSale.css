@@ -111,14 +111,7 @@
         width: min-content;
     }
 
-    .commname.commname {
-        text-align: right;
-        font-weight: bold;
-    }
-
-
     .unitprice {
-        text-align: left;
         border-inline-end-style: double;
         border-inline-end-width: 3px;
     }

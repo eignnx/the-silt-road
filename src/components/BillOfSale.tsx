@@ -1,5 +1,5 @@
 import { Dispatch, useState } from 'react';
-import { COMMODITIES, Commodity, commodityUnit, Inventory } from '../model/Commodities';
+import { COMMODITIES, Commodity, commodityShortName, commodityUnit, Inventory } from '../model/Commodities';
 import { Market, marketPrice } from '../model/Markets';
 import { useFetcher, useLoaderData } from 'react-router-dom';
 import { InventoryCmpRow, MarketViewLoaderData } from '../routes/MarketView';
@@ -88,8 +88,8 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                     </th>
                 </tr>
                 <tr>
-                    <th scope="col" rowSpan={2}>Commodity</th>
-                    <th scope="col" rowSpan={2}>Unit Price</th>
+                    <th scope="col" rowSpan={2}>Good</th>
+                    <th scope="col" rowSpan={2}>Price</th>
                     <th scope="col" rowSpan={2}>Owned</th>
                     <th scope="col" colSpan={4}>Transaction</th>
                     <th scope="col" rowSpan={2}>Avail.</th>
@@ -106,9 +106,12 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                     const txnQty = currentTxn[comm] ?? 0;
                     const txnPrice = Math.abs(marketPrice(market, comm).unitPrice * txnQty);
 
+                    const commShort = titleCase(commodityShortName(comm));
+                    const commLong = titleCase(comm) !== commShort ? titleCase(comm) : undefined;
+
                     return (playerQty || marketQty) ?
                         <tr>
-                            <th scope="row" className="commname">{titleCase(comm)}</th>
+                            <th scope="row" className="commname" title={commLong}>{commShort}</th>
                             <td className="unitprice">{marketPrice(market, comm).toString()}</td>
                             <td className='numeric'>{playerQty ?? "⸺"}</td>
                             <td>

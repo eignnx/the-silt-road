@@ -112,6 +112,35 @@ export function dollars2024To1860(dollars_2024: number): number {
     return factor * dollars_2024;
 }
 
+export function commodityShortName(comm: Commodity): string {
+    switch (comm) {
+        case 'feed': return 'feed';
+        case 'grain': return 'grain';
+        case 'textiles': return 'txtl';
+        case 'ammunition': return 'amm';
+        case 'firearms': return 'arms';
+        case 'heavy machinery': return 'hvmch';
+        case 'medical supplies': return 'meds';
+        case 'potatoes': return 'ptoe';
+        case 'sugar': return 'sugr';
+        case 'salt': return 'salt';
+        case 'tobacco': return 'tbcco';
+        case 'lumber': return 'lmbr';
+        case 'spirits': return 'sprt';
+        case 'coal': return 'coal';
+        case 'flour': return 'flour';
+        case 'wine': return 'wine';
+        case 'salted meat': return 'sltdmt';
+        case 'cheese': return 'chse';
+        case 'wool': return 'wool';
+        case 'iron': return 'iron';
+        case 'copper': return 'cppr';
+        case 'nickel': return 'nckl';
+        case 'gold': return 'gold';
+        case 'clothing': return 'clthg';
+    }
+}
+
 export class UnitPriceSummary {
     static basePrice1860(commodity: Commodity): UnitPriceSummary {
         return new UnitPriceSummary(

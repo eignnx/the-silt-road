@@ -1,4 +1,4 @@
-import { COMMODITIES, Commodity } from '../model/Commodities';
+import { COMMODITIES, Commodity, commodityShortName } from '../model/Commodities';
 import { InventoryCmpRow } from '../routes/MarketView';
 import "../styles/TradeLedger.css";
 import { titleCase } from '../utils';
@@ -114,13 +114,12 @@ export default function TradeLedger({ orderedCommodities }: Props) {
                     </th>
                 </tr>
                 <tr className="text-size-smaller">
-                    <th></th>
+                    <th rowSpan={2}>Good</th>
                     {townOrder.map(town => (
                         <th colSpan={townSubCols}>{town}</th>
                     ))}
                 </tr>
                 <tr className="text-size-smaller">
-                    <th></th>
                     {Array.from({ length: townCount }).map(() => (
                         <>
                             <th>Qty.</th>
@@ -131,9 +130,12 @@ export default function TradeLedger({ orderedCommodities }: Props) {
                 </tr>
             </thead>
             <tbody>
-                {orderedCommodities.map(comm => (
-                    <tr>
-                        <th scope="row" className="commname">{titleCase(comm)}</th>
+                {orderedCommodities.map(comm => {
+                    const commShort = titleCase(commodityShortName(comm));
+                    const commLong = titleCase(comm) !== commShort ? titleCase(comm) : undefined;
+
+                    return <tr>
+                        <th scope="row" className="commname" title={commLong}>{commShort}</th>
                         {townOrder.map(town => {
                             const commRow = commRows[comm];
                             if (commRow === undefined) return;
@@ -152,8 +154,8 @@ export default function TradeLedger({ orderedCommodities }: Props) {
                                 </>;
                             }
                         })}
-                    </tr>
-                ))}
+                    </tr>;
+                })}
             </tbody>
             <tfoot>
 
