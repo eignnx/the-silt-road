@@ -103,12 +103,11 @@ export default function BillOfSale() {
                     </th>
                 </tr>
                 <tr>
-
                     <th scope="col" rowSpan={2}>Commodity</th>
+                    <th scope="col" rowSpan={2}>Unit Price</th>
                     <th scope="col" rowSpan={2}>Owned</th>
                     <th scope="col" colSpan={4}>Transaction</th>
                     <th scope="col" rowSpan={2}>Avail.</th>
-                    <th scope="col" rowSpan={2}>Unit Price</th>
                 </tr>
                 <tr className='obligations-headers'>
                     <th scope="col" colSpan={2}>Client Obligations</th>
@@ -124,7 +123,8 @@ export default function BillOfSale() {
 
                     return (playerQty || marketQty) ?
                         <tr>
-                            <th scope="row">{titleCase(comm)}</th>
+                            <th scope="row" className="commname">{titleCase(comm)}</th>
+                            <td className="unitprice">{marketPrice(market, comm).toString()}</td>
                             <td className='numeric'>{playerQty ?? "⸺"}</td>
                             <td>
                                 <button
@@ -166,7 +166,6 @@ export default function BillOfSale() {
                                 </button>
                             </td>
                             <td className='numeric'>{marketQty ?? "⸺"}</td>
-                            <td>{marketPrice(market, comm).toString()}</td>
                         </tr> : null;
                 })}
             </tbody>

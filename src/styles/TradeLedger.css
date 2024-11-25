@@ -11,11 +11,17 @@
 
     background-color: var(--bg-clr);
 
+    transition: transform 400ms ease-in-out;
+    transform: translate(-95%, -2%) rotate(3deg);
+
+    &:hover {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
     thead h3 {
         font-size: 30pt;
         margin: 0;
         margin-block-start: 0.25rem;
-        margin-block-end: -1rem;
         padding-block: 0;
         font-family: var(--fnt-cursive);
 
@@ -31,7 +37,7 @@
 
     tbody td:nth-child(3n) {
         border-inline-end-style: double;
-        border-inline-end-width: 4px;
+        border-inline-end-width: 3px;
     }
 
     tbody {
@@ -49,5 +55,14 @@
 
     tbody td {
         text-align: center;
+    }
+
+    .commname {
+        font-size: x-small;
+        color: var(--clr-dark-lighter);
+        text-align: right;
+        /* font-family: var(--fnt-impact); */
+        font-variant: small-caps;
+        vertical-align: middle;
     }
 }

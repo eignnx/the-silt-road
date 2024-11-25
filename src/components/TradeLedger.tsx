@@ -104,7 +104,7 @@ export default function TradeLedger() {
 
     const townCount = Object.keys(tradeLedger).length;
     const townSubCols = 3;
-    const cols = townCount * townSubCols;
+    const cols = townCount * townSubCols + 1;
 
     return (
         <table className='document trade-ledger'>
@@ -115,11 +115,13 @@ export default function TradeLedger() {
                     </th>
                 </tr>
                 <tr className="text-size-smaller">
+                    <th></th>
                     {townOrder.map(town => (
                         <th colSpan={townSubCols}>{town}</th>
                     ))}
                 </tr>
                 <tr className="text-size-smaller">
+                    <th></th>
                     {Array.from({ length: townCount }).map(() => (
                         <>
                             <th>Qty.</th>
@@ -132,6 +134,7 @@ export default function TradeLedger() {
             <tbody>
                 {commRows.map(row => (
                     <tr>
+                        <th scope="row" className="commname">{titleCase(row.comm)}</th>
                         {townOrder.map(town => {
                             if (row.towns[town]) {
                                 const { price, qty } = row.towns[town];

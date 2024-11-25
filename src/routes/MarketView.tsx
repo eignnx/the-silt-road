@@ -72,8 +72,8 @@ export default function MarketView() {
         <h2>{currentTown}</h2>
         <h3>{market.name}</h3>
         <section id="billofsale-and-tradeledger">
-            <TradeLedger />
             <BillOfSale />
+            <TradeLedger />
         </section>
     </>);
 };

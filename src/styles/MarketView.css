@@ -6,7 +6,6 @@ h2 {
     text-decoration: underline;
 }
 
-
 th.header-flavor-text {
     padding: 0.75rem;
     border: none;
@@ -118,14 +117,16 @@ tbody>tr:nth-of-type(odd) {
     width: min-content;
 }
 
-.commname {
-    text-align: left;
+.commname.commname {
+    text-align: right;
     font-weight: bold;
 }
 
 
 .unitprice {
-    text-align: right;
+    text-align: left;
+    border-inline-end-style: double;
+    border-inline-end-width: 3px;
 }
 
 .inventory-row {
@@ -148,7 +149,7 @@ tbody>tr:nth-of-type(odd) {
 #billofsale-and-tradeledger {
     display: flex;
     align-items: start;
-    gap: 1rem;
+    gap: 0.25rem;
 
     isolation: isolate;
 
@@ -157,11 +158,11 @@ tbody>tr:nth-of-type(odd) {
         z-index: -1;
     }
 
-    thead {
+    table thead {
         height: 7rem;
     }
 
     tbody>tr {
-        height: 2.5rem;
+        height: 2.25rem;
     }
 }
