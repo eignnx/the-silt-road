@@ -12,7 +12,7 @@
     background-color: var(--bg-clr);
 
     transition: transform 400ms ease-in-out;
-    transform: translate(-95%, -2%) rotate(3deg);
+    transform: translate(-20rem, -2%) rotate(2deg);
 
     &:hover {
         transform: translate(0, 0) rotate(0deg);
