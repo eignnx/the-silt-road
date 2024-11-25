@@ -5,6 +5,8 @@ import { useFetcher, useLoaderData } from 'react-router-dom';
 import { MarketViewLoaderData } from '../routes/MarketView';
 import { titleCase } from '../utils';
 
+import "../styles/BillOfSale.css";
+
 type InventoryCmpRow = { comm: Commodity, playerQty?: number, marketQty?: number; };
 
 function computeOrderedInventories(playerInventory: Inventory, market: Market, currentTxn: Inventory): InventoryCmpRow[] {

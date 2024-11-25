@@ -1,0 +1,142 @@
+.bill-of-sale {
+    p {
+        font-style: italic;
+    }
+
+    th.header-flavor-text {
+        padding: 0.75rem;
+        border: none;
+        width: min-content;
+        color: var(--clr-dark-lighter);
+        font-size: x-small;
+        font-variant: small-caps;
+
+        &:first-of-type {
+            text-align: left;
+        }
+
+        &:last-of-type {
+            text-align: right;
+        }
+    }
+
+
+    .title {
+        border: none;
+        font-family: var(--fnt-impact);
+        font-weight: 400;
+        font-size: xx-large;
+        text-transform: uppercase;
+        padding: 0.5rem;
+    }
+
+    tfoot {
+        border-top: 4px double var(--clr-dark-lighter);
+
+        p {
+            color: var(--clr-dark-lighter);
+            font-style: normal;
+            font-variant: small-caps;
+            font-size: x-small;
+            text-justify: distribute;
+            text-align: center;
+            margin-block: 0.3rem;
+            line-height: 85%;
+        }
+
+        th:has(p) {
+            width: min-content;
+        }
+
+        th {
+            text-align: center;
+        }
+    }
+
+    .date-of-sale {
+        font-family: "Mrs Saint Delafield", cursive;
+        font-weight: bold;
+        color: var(--ink-blue);
+    }
+
+    tbody>tr:nth-of-type(odd) {
+        background-color: rgba(142, 142, 142, 0.1);
+    }
+
+    .transaction-td {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.2rem;
+    }
+
+    .signature-section>div {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+
+        &>.signature-label {
+            font-variant: small-caps;
+            font-size: x-small;
+        }
+
+        &>.signature {
+            font-family: "Mrs Saint Delafield", cursive;
+            text-decoration: underline;
+            padding-inline-end: 0.5rem;
+            color: var(--ink-blue);
+            font-weight: bold;
+        }
+
+        .printed-signature {
+            font-size: smaller;
+            text-decoration: underline;
+            padding-inline-end: 1rem;
+            color: black;
+        }
+    }
+
+    .commname,
+    .playerqty,
+    .sellbtn,
+    .txnqty,
+    .buybtn,
+    .marketqty,
+    .unitprice {
+        text-align: center;
+        padding-inline: 0.2rem;
+    }
+
+    .sellbtn,
+    .buybtn {
+        width: min-content;
+    }
+
+    .commname.commname {
+        text-align: right;
+        font-weight: bold;
+    }
+
+
+    .unitprice {
+        text-align: left;
+        border-inline-end-style: double;
+        border-inline-end-width: 3px;
+    }
+
+    .inventory-row {
+        align-items: center;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 1fr);
+        width: 100%;
+
+        &>button {
+            width: min-content
+        }
+    }
+
+    .price-too-expensive {
+        color: red;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+    }
+}
