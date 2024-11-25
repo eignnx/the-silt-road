@@ -1,43 +1,26 @@
-import { useState } from 'react';
+import { Dispatch, useState } from 'react';
 import { COMMODITIES, Commodity, commodityUnit, Inventory } from '../model/Commodities';
 import { Market, marketPrice } from '../model/Markets';
 import { useFetcher, useLoaderData } from 'react-router-dom';
-import { MarketViewLoaderData } from '../routes/MarketView';
+import { InventoryCmpRow, MarketViewLoaderData } from '../routes/MarketView';
 import { titleCase } from '../utils';
 
 import "../styles/BillOfSale.css";
 
-type InventoryCmpRow = { comm: Commodity, playerQty?: number, marketQty?: number; };
+type Props = {
+    orderedInventories: InventoryCmpRow[];
+    currentTxn: Inventory,
+    setCurrentTxn: Dispatch<React.SetStateAction<Inventory>>;
+};
 
-function computeOrderedInventories(playerInventory: Inventory, market: Market, currentTxn: Inventory): InventoryCmpRow[] {
-    const orderedInventories: InventoryCmpRow[] = [];
+export default function BillOfSale({ orderedInventories, currentTxn, setCurrentTxn }: Props) {
 
-    for (const comm of COMMODITIES) {
-        const playerQty = (playerInventory[comm] ?? 0) + (currentTxn[comm] ?? 0);
-        const marketQty = (market.inventory[comm] ?? 0) - (currentTxn[comm] ?? 0);
-        orderedInventories.push({
-            comm,
-            playerQty: playerQty > 0 ? playerQty : undefined,
-            marketQty: marketQty > 0 ? marketQty : undefined,
-        });
-    }
-
-    // Sort inventory by commodity name:
-    orderedInventories.sort((a, b) => a.comm.localeCompare(b.comm));
-
-    return orderedInventories;
-}
-
-
-export default function BillOfSale() {
     const {
-        playerInventory, market, currentTown, playerBankBalance, playerInfo
+        market, currentTown, playerBankBalance, playerInfo
     } = useLoaderData() as MarketViewLoaderData;
 
     const fetcher = useFetcher();
 
-    const [currentTxn, setCurrentTxn] = useState<Inventory>({});
-    const orderedInventories = computeOrderedInventories(playerInventory, market, currentTxn);
 
     function addSale(comm: Commodity, qty: number = 1) {
         setCurrentTxn(oldTxn => ({

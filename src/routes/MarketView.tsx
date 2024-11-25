@@ -1,5 +1,5 @@
 import { useLoaderData } from 'react-router-dom';
-import { Commodity, Inventory } from '../model/Commodities';
+import { COMMODITIES, Commodity, Inventory } from '../model/Commodities';
 import { changeMarketInventory, getMarket, Market } from '../model/Markets';
 import { addToPlayerInventory as changePlayerInventory, getPlayerInventory } from '../model/PlayerInventory';
 
@@ -9,6 +9,7 @@ import { PLAYER_INFO, PlayerInfo } from '../model/PlayerInfo';
 import { WORLD_MAP } from '../model/Towns';
 import BillOfSale from '../components/BillOfSale';
 import TradeLedger from '../components/TradeLedger';
+import { useState } from 'react';
 
 
 export type MarketViewLoaderData = {
@@ -65,15 +66,49 @@ export async function marketViewAction({ request }: { request: Request; }) {
 }
 
 export default function MarketView() {
-    const { market, currentTown } = useLoaderData() as MarketViewLoaderData;
+    const { market, currentTown, playerInventory } = useLoaderData() as MarketViewLoaderData;
+    const [currentTxn, setCurrentTxn] = useState<Inventory>({});
+
+    const orderedInventories = computeOrderedInventories(playerInventory, market, currentTxn);
+    const orderedCommodities = orderedInventories.flatMap(row => (
+        (row.marketQty || row.playerQty) ? [row.comm] : []
+    ));
 
     return (<>
         <h1>Market</h1>
         <h2>{currentTown}</h2>
         <h3>{market.name}</h3>
         <section id="billofsale-and-tradeledger">
-            <BillOfSale />
-            <TradeLedger />
+            <BillOfSale
+                orderedInventories={orderedInventories}
+                currentTxn={currentTxn}
+                setCurrentTxn={setCurrentTxn}
+            />
+            <TradeLedger
+                orderedCommodities={orderedCommodities}
+            />
         </section>
     </>);
 };
+
+
+export type InventoryCmpRow = { comm: Commodity, playerQty?: number, marketQty?: number; };
+
+export function computeOrderedInventories(playerInventory: Inventory, market: Market, currentTxn: Inventory): InventoryCmpRow[] {
+    const orderedInventories: InventoryCmpRow[] = [];
+
+    for (const comm of COMMODITIES) {
+        const playerQty = (playerInventory[comm] ?? 0) + (currentTxn[comm] ?? 0);
+        const marketQty = (market.inventory[comm] ?? 0) - (currentTxn[comm] ?? 0);
+        orderedInventories.push({
+            comm,
+            playerQty: playerQty > 0 ? playerQty : undefined,
+            marketQty: marketQty > 0 ? marketQty : undefined,
+        });
+    }
+
+    // Sort inventory by commodity name:
+    orderedInventories.sort((a, b) => a.comm.localeCompare(b.comm));
+
+    return orderedInventories;
+}

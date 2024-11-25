@@ -1,4 +1,5 @@
 import { COMMODITIES, Commodity } from '../model/Commodities';
+import { InventoryCmpRow } from '../routes/MarketView';
 import "../styles/TradeLedger.css";
 import { titleCase } from '../utils';
 
@@ -14,9 +15,8 @@ type TradeLedgerData = {
     };
 };
 
-type CommodityRow = {
-    comm: Commodity,
-    towns: {
+type CommodityRows = {
+    [comm in Commodity]?: {
         [townName: string]: {
             price: number,
             qty: number,
@@ -24,7 +24,12 @@ type CommodityRow = {
     };
 };
 
-export default function TradeLedger() {
+type Props = {
+    // Aligns rows of ledger's commodity column with the commodity rows in bill of sale.
+    orderedCommodities: Commodity[],
+};
+
+export default function TradeLedger({ orderedCommodities }: Props) {
     const tradeLedger: TradeLedgerData = {
         "Rattsville": {
             dataAge: 3,
@@ -71,23 +76,17 @@ export default function TradeLedger() {
         },
     };
 
-    const commRows: CommodityRow[] = [];
+    const commRows: CommodityRows = {};
     for (const comm of COMMODITIES) {
-        const row = {
-            comm,
-            towns: {} as { [town: string]: { price: number, qty: number; }; }
-        };
+        commRows[comm] = {};
 
         for (const town in tradeLedger) {
             const commInv = tradeLedger[town].inventory[comm];
             if (commInv) {
-                row.towns[town] = commInv;
+                commRows[comm]![town] = commInv;
             }
         }
-
-        commRows.push(row);
     }
-    commRows.sort((a, b) => a.comm.localeCompare(b.comm));
 
     function cmpTownsByDataAge(
         [_t1, dataAge1]: [string, number],
@@ -132,12 +131,14 @@ export default function TradeLedger() {
                 </tr>
             </thead>
             <tbody>
-                {commRows.map(row => (
+                {orderedCommodities.map(comm => (
                     <tr>
-                        <th scope="row" className="commname">{titleCase(row.comm)}</th>
+                        <th scope="row" className="commname">{titleCase(comm)}</th>
                         {townOrder.map(town => {
-                            if (row.towns[town]) {
-                                const { price, qty } = row.towns[town];
+                            const commRow = commRows[comm];
+                            if (commRow === undefined) return;
+                            else if (commRow[town]) {
+                                const { price, qty } = commRow[town];
                                 return <>
                                     <td className="handwritten">{qty}</td>
                                     <td className="handwritten">${price.toFixed(2)}</td>
