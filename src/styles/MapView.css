@@ -1,5 +1,7 @@
 #map-view {
     &.document {
+        transform: perspective(36in) rotateX(10deg) rotateY(-1deg) rotateZ(1deg);
+
         background-color: var(--clr-light);
         color: var(--clr-dark);
         width: 100ch;
