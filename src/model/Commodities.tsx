@@ -146,27 +146,24 @@ export class UnitPriceSummary {
         return new UnitPriceSummary(
             commodity,
             commodityBasePrice1860(commodity),
-            commodityUnit(commodity),
         );
     }
 
     constructor(
         public commodity: Commodity,
         public unitPrice: number,
-        public unit: { short: string, long: string; },
     ) { }
 
     deviate(deviationPct: number): UnitPriceSummary {
         return new UnitPriceSummary(
             this.commodity,
             this.unitPrice * (1.0 + deviationPct),
-            this.unit,
         );
     }
 
     toString(): string {
         const unitPrice = commodityBasePrice1860(this.commodity);
-        const u = this.unit.short;
+        const u = commodityUnit(this.commodity).short;
         if (unitPrice < 0.01) {
             return `${(this.unitPrice * 100 * 100).toFixed(0)}¢ / 100${u}`;
         } else if (unitPrice < 1.00) {

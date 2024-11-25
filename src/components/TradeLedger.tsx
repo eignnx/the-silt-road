@@ -1,25 +1,17 @@
-import { COMMODITIES, Commodity, commodityShortName } from '../model/Commodities';
-import { InventoryCmpRow } from '../routes/MarketView';
-import "../styles/TradeLedger.css";
+import { useLoaderData } from 'react-router-dom';
+import { COMMODITIES, Commodity, commodityShortName, UnitPriceSummary } from '../model/Commodities';
 import { titleCase } from '../utils';
+import { TRADE_LEDGER, TradeLedger as TradeLedgerData } from '../model/TradeLedger';
 
-type TradeLedgerData = {
-    [townName: string]: {
-        dataAge: number,
-        inventory: {
-            [comm in Commodity]?: {
-                price: number,
-                qty: number,
-            }
-        };
-    };
-};
+import "../styles/TradeLedger.css";
+import { MarketViewLoaderData } from '../routes/MarketView';
+import { marketPrice } from '../model/Markets';
 
 type CommodityRows = {
     [comm in Commodity]?: {
         [townName: string]: {
-            price: number,
-            qty: number,
+            unitPrice: number,
+            qtyOnHand: number,
         };
     };
 };
@@ -30,78 +22,37 @@ type Props = {
 };
 
 export default function TradeLedger({ orderedCommodities }: Props) {
-    const tradeLedger: TradeLedgerData = {
-        "Rattsville": {
-            dataAge: 3,
-            inventory: {
-                "ammunition": {
-                    price: 12.80,
-                    qty: 2,
-                },
-                "clothing": {
-                    price: 3.90,
-                    qty: 230,
-                },
-                "tobacco": {
-                    price: 4.10,
-                    qty: 3213,
-                }
-            }
-        },
-        "Buzzard's Gulch": {
-            dataAge: 4,
-            inventory: {
-                "heavy machinery": {
-                    price: 13.95,
-                    qty: 35,
-                },
-                "nickel": {
-                    price: 18.70,
-                    qty: 60,
-                }
-            }
-        },
-        "Damnation": {
-            dataAge: 10,
-            inventory: {
-                "ammunition": {
-                    price: 14.50,
-                    qty: 8,
-                },
-                "gold": {
-                    price: 28.70,
-                    qty: 3,
-                }
-            }
-        },
-    };
+    const { tradeLedger, market, currentTown } = useLoaderData() as MarketViewLoaderData;
 
     const commRows: CommodityRows = {};
     for (const comm of COMMODITIES) {
         commRows[comm] = {};
 
-        for (const town in tradeLedger) {
-            const commInv = tradeLedger[town].inventory[comm];
+        for (const town in tradeLedger.townVisits) {
+            const townVisit = tradeLedger.townVisits[town] ?? {};
+            console.log(townVisit);
+            const commInv = townVisit.marketSnapshot?.[comm];
             if (commInv) {
                 commRows[comm]![town] = commInv;
             }
         }
     }
 
-    function cmpTownsByDataAge(
-        [_t1, dataAge1]: [string, number],
-        [_t2, dataAge2]: [string, number],
+    function cmpTownsLastVisitDate(
+        [_t1, lastVisitDate1]: [string, number],
+        [_t2, lastVisitDate2]: [string, number],
     ): number {
-        return dataAge1 - dataAge2;
+        return -(lastVisitDate1 - lastVisitDate2);
     }
 
     const townOrder: string[] =
-        Object.entries(tradeLedger)
-            .map(([town, info]) => [town, info.dataAge] as [string, number])
-            .sort(cmpTownsByDataAge)
+        Object.entries(tradeLedger.townVisits)
+            .filter(([town, _]) => town !== currentTown)
+            .map(([town, info]) => [town, info.lastVisitedDate] as [string, number])
+            .sort(cmpTownsLastVisitDate)
             .map(([town, _]: [string, any]) => town);
 
-    const townCount = Object.keys(tradeLedger).length;
+    const townCount = townOrder.length;
     const townSubCols = 3;
     const cols = townCount * townSubCols + 1;
 
@@ -116,7 +67,7 @@ export default function TradeLedger({ orderedCommodities }: Props) {
                 <tr className="text-size-smaller">
                     <th rowSpan={2}>Good</th>
                     {townOrder.map(town => (
-                        <th colSpan={townSubCols}>{town}</th>
+                        (town !== currentTown) ? <th colSpan={townSubCols}>{town}</th> : null
                     ))}
                 </tr>
                 <tr className="text-size-smaller">
@@ -137,14 +88,25 @@ export default function TradeLedger({ orderedCommodities }: Props) {
                     return <tr>
                         <th scope="row" className="commname" title={commLong}>{commShort}</th>
                         {townOrder.map(town => {
+
+                            // Skip listing for current town.
+                            if (town === currentTown) return null;
+
                             const commRow = commRows[comm];
-                            if (commRow === undefined) return;
-                            else if (commRow[town]) {
-                                const { price, qty } = commRow[town];
+                            if (commRow === undefined) return null;
+                            else if (commRow[town] !== undefined) {
+                                const { unitPrice: price, qtyOnHand: qty } = commRow[town];
+
+
+                                const priceHere = marketPrice(market, comm).unitPrice;
+                                const pctPriceDiff = 100 * (price - priceHere) / price;
+
                                 return <>
                                     <td className="handwritten">{qty}</td>
-                                    <td className="handwritten">${price.toFixed(2)}</td>
-                                    <td className="handwritten">+15%</td>
+                                    <td className="handwritten">{new UnitPriceSummary(comm, price).toString()}</td>
+                                    <td className="handwritten">
+                                        {pctPriceDiff < 0 ? "-" : "+"}{Math.abs(pctPriceDiff).toFixed(0)}%
+                                    </td>
                                 </>;
                             } else {
                                 return <>

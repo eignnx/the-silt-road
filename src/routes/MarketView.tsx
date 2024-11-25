@@ -9,6 +9,7 @@ import { PLAYER_INFO, PlayerInfo } from '../model/PlayerInfo';
 import { WORLD_MAP } from '../model/Towns';
 import BillOfSale from '../components/BillOfSale';
 import TradeLedger from '../components/TradeLedger';
+import { TRADE_LEDGER, TradeLedger as TradeLedgerData } from '../model/TradeLedger';
 import { useState } from 'react';
 
 
@@ -18,16 +19,21 @@ export type MarketViewLoaderData = {
     market: Market;
     playerBankBalance: number;
     playerInfo: PlayerInfo;
+    tradeLedger: TradeLedgerData;
 };
 
 export async function marketViewLoader(): Promise<MarketViewLoaderData> {
     const currentTown = await WORLD_MAP.getPlayerLocation();
+
+    // TODO: Use `Promise.all` to paralellize this. Low priority cause none of 
+    //       these calls are actually async rn.
     return {
         playerInventory: getPlayerInventory(),
         market: await getMarket(currentTown),
         currentTown,
         playerBankBalance: await BANK.getAcctBalance(PLAYER_ACCT),
         playerInfo: await PLAYER_INFO.getPlayerInfo(),
+        tradeLedger: await TRADE_LEDGER.load(),
     };
 }
 

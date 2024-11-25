@@ -1,11 +1,12 @@
-import { Dispatch, useState } from 'react';
-import { COMMODITIES, Commodity, commodityShortName, commodityUnit, Inventory } from '../model/Commodities';
-import { Market, marketPrice } from '../model/Markets';
+import { Dispatch } from 'react';
+import { Commodity, commodityShortName, commodityUnit, Inventory } from '../model/Commodities';
+import { marketPrice } from '../model/Markets';
 import { useFetcher, useLoaderData } from 'react-router-dom';
 import { InventoryCmpRow, MarketViewLoaderData } from '../routes/MarketView';
 import { titleCase } from '../utils';
 
 import "../styles/BillOfSale.css";
+import { TRADE_LEDGER } from '../model/TradeLedger';
 
 type Props = {
     orderedInventories: InventoryCmpRow[];
@@ -21,8 +22,20 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
 
     const fetcher = useFetcher();
 
+    function processCurrentTxn(): { [comm in Commodity]?: { price: number, qty: number; } } {
+        return Object.fromEntries(
+            Object.entries(currentTxn)
+                .map(([comm, qty]) => (
+                    [comm, {
+                        qty,
+                        price: marketPrice(market, comm as Commodity)
+                    }]
+                ))
+        );
+    }
 
     function addSale(comm: Commodity, qty: number = 1) {
+        TRADE_LEDGER.recordTransaction(processCurrentTxn());
         setCurrentTxn(oldTxn => ({
             ...oldTxn,
             [comm]: (oldTxn[comm] ?? 0) - qty
@@ -30,6 +43,7 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
     }
 
     function addPurchase(comm: Commodity, qty: number = 1) {
+        TRADE_LEDGER.recordTransaction(processCurrentTxn());
         setCurrentTxn(oldTxn => ({
             ...oldTxn,
             [comm]: (oldTxn[comm] ?? 0) + qty
@@ -53,6 +67,7 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
         );
         setCurrentTxn({});
     }
+
     return (
         <table className='document bill-of-sale'>
             <thead>

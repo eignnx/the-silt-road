@@ -2,6 +2,8 @@ import { redirect, useLoaderData, useNavigate, useSubmit } from 'react-router-do
 import { WORLD_MAP, WorldMap } from "../model/Towns";
 import "../styles/MapView.css";
 import { useEffect, useState } from 'react';
+import { TRADE_LEDGER } from '../model/TradeLedger';
+import { getMarkets } from '../model/Markets';
 
 type LoaderRetTy = {
     worldMap: WorldMap;
@@ -17,7 +19,12 @@ export async function mapViewAction({ request }: { request: any; }) {
     const { _action, ...formData } = await request.json();
 
     if (_action === "playerTravelToTown") {
-        WORLD_MAP.setPlayerLocation(formData.dest);
+        const { dest } = formData;
+        WORLD_MAP.setPlayerLocation(dest);
+
+        // Update trade ledger
+        TRADE_LEDGER.recordTownVisit(dest, 100);
+
         return redirect("");
     } else {
         throw new Error(`SILT_ROAD: unknown action request data: ${formData}`);
