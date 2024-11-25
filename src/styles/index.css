@@ -4,7 +4,7 @@
   --clr-dark: rgb(51, 38, 11);
   --clr-light: rgb(228, 203, 170);
   --clr-dark-lighter: color(from var(--clr-dark) srgb r g b / 60%);
-  --ink-blue: rgb(38, 38, 79);
+  --ink-blue: rgb(29, 29, 87);
   --clr-dirt: rgb(94, 82, 77);
 
   /* Fonts */
@@ -93,17 +93,25 @@ meter {
 .handwritten {
   font-family: var(--fnt-handwritten);
   font-weight: 600;
-  font-size: x-large;
+  font-size: large;
   line-height: 0.75em;
-  color: var(--ink-blue);
+  color: rgb(73, 73, 73);
+  /* color: var(--ink-blue); */
   padding-inline: 0.2rem;
+  margin-block: 0;
   text-align: left;
+  font-weight: 100;
 }
 
 .fineprint {
   color: var(--clr-dark-lighter);
   font-size: x-small;
   font-variant: small-caps;
+}
+
+.signature {
+  font-family: var(--fnt-cursive);
+  color: var(--ink-blue);
 }
 
 table {
