@@ -30,7 +30,6 @@ export default function TradeLedger({ orderedCommodities }: Props) {
 
         for (const town in tradeLedger.townVisits) {
             const townVisit = tradeLedger.townVisits[town] ?? {};
-            console.log(townVisit);
             const commInv = townVisit.marketSnapshot?.[comm];
             if (commInv) {
                 commRows[comm]![town] = commInv;
