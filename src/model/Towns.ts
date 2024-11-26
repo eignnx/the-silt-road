@@ -20,6 +20,10 @@ function generateWorldMap(): WorldMap {
             { name: "Damnation", coords: { x: 50, y: 90 } },
             { name: "Cornucopia Falls", coords: { x: 15, y: 70 } },
             { name: "Langston", coords: { x: 95, y: 20 } },
+            { name: "Buzzard's Gulch", coords: { x: 35, y: 65 } },
+            { name: "Slag Hill", coords: { x: 20, y: 75 } },
+            { name: "Ambrose", coords: { x: 45, y: 85 } },
+            { name: "Whitinicky", coords: { x: 55, y: 15 } },
         ]
     };
 }
