@@ -1,38 +1,40 @@
 import { redirect, useLoaderData, useNavigate, useSubmit } from 'react-router-dom';
 import { WORLD_MAP, WorldMap } from "../model/Towns";
-import "../styles/MapView.css";
-import { useEffect, useState } from 'react';
 import { TRADE_LEDGER } from '../model/TradeLedger';
-import { getMarkets } from '../model/Markets';
 
-type LoaderRetTy = {
+import "../styles/MapView.css";
+
+export type LoaderData = {
     worldMap: WorldMap;
 };
 
-export async function mapViewLoader(): Promise<LoaderRetTy> {
+export async function mapViewLoader(): Promise<LoaderData> {
     return {
         worldMap: await WORLD_MAP.getWorldMap()
     };
 }
 
-export async function mapViewAction({ request }: { request: any; }) {
+export async function mapViewAction({ request }: { request: Request; }) {
     const { _action, ...formData } = await request.json();
 
     if (_action === "playerTravelToTown") {
-        const { dest } = formData;
+        const { dest, currentTown } = formData;
         WORLD_MAP.setPlayerLocation(dest);
 
-        // Update trade ledger
-        TRADE_LEDGER.recordTownVisit(dest, 100);
+        // Update trade ledger. Note that we're LEAVING this town. We wanna
+        // take a snapshot of the place we're leaving since the market wont
+        // be changed by the player anymore (till they return at least).
+        TRADE_LEDGER.recordTownVisit(currentTown, 100);
 
-        return redirect("");
+        return redirect(""); // Stay on current page.
     } else {
         throw new Error(`SILT_ROAD: unknown action request data: ${formData}`);
     }
 }
 
 export default function MapView() {
-    const { worldMap } = useLoaderData() as LoaderRetTy;
+    const { worldMap } = useLoaderData() as LoaderData;
+    const currentTown = worldMap.playerLocation;
 
     const submit = useSubmit();
     const navigator = useNavigate();
@@ -45,7 +47,7 @@ export default function MapView() {
     function handleTownClick(dest: string) {
         if (!playerInTown(dest)) {
             submit(
-                { _action: "playerTravelToTown", dest },
+                { _action: "playerTravelToTown", dest, currentTown },
                 {
                     encType: "application/json",
                     method: "POST",
