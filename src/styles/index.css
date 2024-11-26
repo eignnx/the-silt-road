@@ -7,7 +7,7 @@
   --ink-blue: rgb(29, 29, 87);
   --clr-dirt: rgb(94, 82, 77);
   --clr-ink-red: color-mix(in oklab, maroon 75%, red);
-  --clr-ink-green: green;
+  --clr-ink-green: darkgreen;
 
   /* Fonts */
   --fnt-cursive: "Mrs Saint Delafield", cursive;
