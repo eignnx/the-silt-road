@@ -112,32 +112,32 @@ export function dollars2024To1860(dollars_2024: number): number {
     return factor * dollars_2024;
 }
 
-export function commodityShortName(comm: Commodity): string {
+export function commodityAbbreviatedName(comm: Commodity): string {
     switch (comm) {
         case 'feed': return 'feed';
         case 'grain': return 'grain';
-        case 'textiles': return 'txtl';
-        case 'ammunition': return 'amm';
+        case 'textiles': return 'txtl.';
+        case 'ammunition': return 'amm.';
         case 'firearms': return 'arms';
-        case 'heavy machinery': return 'mchnr';
+        case 'heavy machinery': return 'mchnr.';
         case 'medical supplies': return 'meds';
-        case 'potatoes': return 'ptoe';
-        case 'sugar': return 'sugr';
+        case 'potatoes': return 'ptoe.';
+        case 'sugar': return 'sugr.';
         case 'salt': return 'salt';
-        case 'tobacco': return 'tbcco';
-        case 'lumber': return 'lmbr';
-        case 'spirits': return 'sprts';
+        case 'tobacco': return 'tbcco.';
+        case 'lumber': return 'lmbr.';
+        case 'spirits': return 'sprts.';
         case 'coal': return 'coal';
         case 'flour': return 'flour';
         case 'wine': return 'wine';
-        case 'salted meat': return 'sltdmt';
-        case 'cheese': return 'chse';
+        case 'salted meat': return 'sltdmt.';
+        case 'cheese': return 'chse.';
         case 'wool': return 'wool';
         case 'iron': return 'iron';
-        case 'copper': return 'cppr';
-        case 'nickel': return 'nckl';
+        case 'copper': return 'cppr.';
+        case 'nickel': return 'nckl.';
         case 'gold': return 'gold';
-        case 'clothing': return 'clthg';
+        case 'clothing': return 'clthg.';
     }
 }
 

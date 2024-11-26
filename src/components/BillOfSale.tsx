@@ -1,5 +1,5 @@
 import { Dispatch } from 'react';
-import { Commodity, commodityShortName, commodityUnit, Inventory } from '../model/Commodities';
+import { Commodity, commodityAbbreviatedName, commodityUnit, Inventory } from '../model/Commodities';
 import { marketPrice } from '../model/Markets';
 import { useFetcher, useLoaderData } from 'react-router-dom';
 import { InventoryCmpRow, MarketViewLoaderData } from '../routes/MarketView';
@@ -123,7 +123,7 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                         const marketUnitPrice = marketPrice(market, comm).unitPrice;
                         const txnPrice = Math.abs(marketUnitPrice * txnQty);
 
-                        const commShort = titleCase(commodityShortName(comm));
+                        const commShort = titleCase(commodityAbbreviatedName(comm));
                         const commLong = titleCase(comm) !== commShort ? titleCase(comm) : undefined;
 
 

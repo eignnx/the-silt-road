@@ -1,5 +1,5 @@
 import { useLoaderData } from 'react-router-dom';
-import { COMMODITIES, Commodity, commodityShortName, UnitPriceSummary } from '../model/Commodities';
+import { COMMODITIES, Commodity, commodityAbbreviatedName, UnitPriceSummary } from '../model/Commodities';
 import { titleCase } from '../utils';
 import { TRADE_LEDGER, TradeLedger as TradeLedgerData } from '../model/TradeLedger';
 
@@ -91,7 +91,7 @@ export default function TradeLedger({ orderedCommodities }: Props) {
             </thead>
             <tbody>
                 {orderedCommodities.map(comm => {
-                    const commShort = titleCase(commodityShortName(comm));
+                    const commShort = titleCase(commodityAbbreviatedName(comm));
                     const commLong = titleCase(comm) !== commShort ? titleCase(comm) : undefined;
 
                     return <tr>

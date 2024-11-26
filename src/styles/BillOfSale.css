@@ -110,7 +110,13 @@
 
     .commname {
         text-align: center;
-        font-weight: bold;
+        font-weight: 300;
+        text-transform: uppercase;
+        font-size: large;
+        padding-inline: 0.5rem;
+        /* text-decoration: underline; */
+        /* color: var(--clr-dark-lighter); */
+        font-family: var(--fnt-impact);
 
         border-inline-start-style: double;
         border-inline-start-width: 3px;
