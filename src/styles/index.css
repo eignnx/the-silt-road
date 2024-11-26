@@ -78,20 +78,6 @@ meter {
   width: 100%;
 }
 
-.document {
-  box-shadow:
-    1px 1px 10px rgba(0, 0, 0, 0.468),
-    inset 0 0 100px 25px rgb(117 86 44 / 50%),
-    inset 0 0 10px 5px rgba(138, 62, 18, 0.25);
-}
-
-.document-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  width: 900px;
-  gap: 1rem;
-}
-
 .handwritten {
   font-family: var(--fnt-handwritten);
   font-weight: 600;
@@ -116,11 +102,25 @@ meter {
   color: var(--ink-blue);
 }
 
-table {
-  border: 1px solid var(--clr-dark-lighter);
-  border-collapse: collapse;
+.document {
+  box-shadow:
+    1px 1px 10px rgba(0, 0, 0, 0.468),
+    inset 0 0 100px 25px rgb(117 86 44 / 50%),
+    inset 0 0 10px 5px rgba(138, 62, 18, 0.25);
   background: var(--clr-light);
   color: var(--clr-dark);
+  overflow: hidden;
+}
+
+.document-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  width: 900px;
+  gap: 1rem;
+}
+
+table {
+  border-collapse: collapse;
   margin-block: 1rem;
 
   button {

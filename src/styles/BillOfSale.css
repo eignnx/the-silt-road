@@ -1,4 +1,6 @@
 .bill-of-sale {
+    padding-inline: 2rem;
+
     p {
         font-style: italic;
     }
@@ -19,7 +21,6 @@
             text-align: right;
         }
     }
-
 
     .title {
         border: none;
@@ -102,30 +103,37 @@
         cursor: pointer;
     }
 
-    .commname,
-    .playerqty,
-    .sellbtn,
-    .txnqty,
-    .buybtn,
-    .marketqty,
-    .unitprice {
-        text-align: center;
-        padding-inline: 0.2rem;
-    }
-
     .sellbtn,
     .buybtn {
         width: min-content;
     }
 
-    .unitprice {
-        border-inline-end-style: double;
-        border-inline-end-width: 3px;
+    .commname {
+        text-align: center;
+        font-weight: bold;
+
+        border-inline-start-style: double;
+        border-inline-start-width: 3px;
     }
 
-    .market-price-cmp-to-cargo-cost>div {
-        text-align: center;
-        font-size: xx-small;
+    .unitprice {
+        position: relative;
+    }
+
+    .market-price-cmp-to-cargo-cost {
+        position: absolute;
+        right: 0;
+
+        &>.written-in-right-margin {
+            position: absolute;
+            offset-anchor: left;
+            transform: rotate(-15deg);
+
+            div {
+                text-align: center;
+                font-size: xx-small;
+            }
+        }
     }
 
     .sale-will-profit {
