@@ -52,7 +52,7 @@ export function generateMarket(town: string): Market {
     }
 
     let marketName = randChoice(
-        (town.length < 8)
+        (town.length < 12)
             ? [
                 `Markets at ${town}`,
                 `${town} General Market`,
