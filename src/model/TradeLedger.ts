@@ -1,5 +1,6 @@
-import { Commodity } from './Commodities';
+import { Commodity, commodityBasePrice1860 } from './Commodities';
 import { getMarket, marketPrice } from './Markets';
+import { getPlayerInventory } from './PlayerInventory';
 
 const RESOURCE_KEY = "SILT_ROAD:tradeLedger";
 
@@ -30,17 +31,32 @@ export type MarketSnapshot = {
 };
 
 
-const DEFAULT: TradeLedger = {
-    inventoryAvgPrices: {},
-    townVisits: {},
-};
+async function DEFAULT(): Promise<TradeLedger> {
+    const inventoryAvgPrices = {} as { [comm in Commodity]?: { price: number, qty: number; } };
+
+    const inv = await getPlayerInventory();
+
+    for (const commKey in inv) {
+        const comm = commKey as Commodity;
+        inventoryAvgPrices[comm] = {
+            price: commodityBasePrice1860(comm),
+            qty: inv[comm]!,
+        };
+    }
+
+    return {
+        inventoryAvgPrices,
+        townVisits: {},
+    };
+    ;
+}
 
 async function load(): Promise<TradeLedger> {
     const retrieval = localStorage.getItem(RESOURCE_KEY);
     if (retrieval !== null) {
         return JSON.parse(retrieval);
     } else {
-        return await replace(DEFAULT);
+        return await replace(await DEFAULT());
     }
 }
 
