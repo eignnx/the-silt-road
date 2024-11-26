@@ -72,13 +72,15 @@ export async function marketViewAction({ request }: { request: Request; }) {
 }
 
 export default function MarketView() {
-    const { market, currentTown, playerInventory } = useLoaderData() as MarketViewLoaderData;
+    const { market, currentTown, playerInventory, tradeLedger } = useLoaderData() as MarketViewLoaderData;
     const [currentTxn, setCurrentTxn] = useState<Inventory>({});
 
     const orderedInventories = computeOrderedInventories(playerInventory, market, currentTxn);
     const orderedCommodities = orderedInventories.flatMap(row => (
         (row.marketQty || row.playerQty) ? [row.comm] : []
     ));
+
+    const townVisitCount = Object.keys(tradeLedger.townVisits).length;
 
     return (<>
         <h1>Market</h1>
@@ -90,9 +92,9 @@ export default function MarketView() {
                 currentTxn={currentTxn}
                 setCurrentTxn={setCurrentTxn}
             />
-            <TradeLedger
+            {townVisitCount > 0 && <TradeLedger
                 orderedCommodities={orderedCommodities}
-            />
+            />}
         </section>
     </>);
 };
