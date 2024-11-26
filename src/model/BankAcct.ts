@@ -1,4 +1,4 @@
-const RESOURCE_KEY = `SILT_ROAD:bank`;
+import { MakeStorage } from './storage-template';
 
 type Bank = {
     [owner: string]: number;
@@ -11,26 +11,20 @@ const DEFAULT_BANK: Bank = {
     [PLAYER_ACCT]: DEFAULT_PLAYER_BALANCE,
 };
 
-async function getBank(): Promise<Bank> {
-    const fetched = localStorage.getItem(RESOURCE_KEY);
-    return JSON.parse(fetched ?? JSON.stringify(DEFAULT_BANK));
-}
-
-async function replaceBank(newBank: Bank): Promise<Bank> {
-    localStorage.setItem(RESOURCE_KEY, JSON.stringify(newBank));
-    return newBank;
-}
-
-
 export const BANK = {
     SINK: "$SINK",
     SOURCE: "$SOURCE",
+
+    ...MakeStorage({
+        resourceKey: "bank",
+        seedValue: DEFAULT_BANK,
+    }),
 
     async getAcctBalance(accountName: string): Promise<number> {
         if (accountName === this.SINK || accountName === this.SOURCE)
             throw new Error(`Cannot get balance of ${accountName}`);
 
-        const bank = await getBank();
+        const bank = await this.get();
         if (accountName in bank) {
             return bank[accountName];
         } else {
@@ -42,9 +36,9 @@ export const BANK = {
         if (accountName === this.SINK) return newBalance;
         if (accountName === this.SOURCE) throw new Error(`Cannot set balance of ${accountName}`);
 
-        const bank = await getBank();
+        const bank = await this.get();
         bank[accountName] = newBalance;
-        await replaceBank(bank);
+        await this.replace(bank);
         return newBalance;
     },
 
