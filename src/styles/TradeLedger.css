@@ -67,4 +67,9 @@
         border-inline-end-style: double;
         border-inline-end-width: 3px;
     }
+
+    .data-age-display {
+        font-size: x-small;
+        text-align: center;
+    }
 }

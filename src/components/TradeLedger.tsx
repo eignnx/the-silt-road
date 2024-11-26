@@ -65,12 +65,22 @@ export default function TradeLedger({ orderedCommodities }: Props) {
                     </th>
                 </tr>
                 <tr className="text-size-smaller">
-                    <th rowSpan={2}>Good</th>
-                    {townOrder.map(town => (
-                        (town !== currentTown) ? <th colSpan={townSubCols}>{town}</th> : null
-                    ))}
+                    <th>✯</th>
+                    {townOrder.map(town => {
+                        const currentDate = 120; // TODO: impl time passage
+                        const sinceLastVisit = currentDate - tradeLedger.townVisits[town]?.lastVisitedDate;
+                        return <th colSpan={townSubCols}>
+                            <div>
+                                {town}
+                            </div>
+                            <div className="data-age-display handwritten">
+                                ({sinceLastVisit} days ago)
+                            </div>
+                        </th>;
+                    })}
                 </tr>
                 <tr className="text-size-smaller">
+                    <th>Good</th>
                     {Array.from({ length: townCount }).map(() => (
                         <>
                             <th>Qty.</th>
