@@ -202,14 +202,13 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colSpan={2} rowSpan={3} className='legal-blurb'>
-                            ✯✯✯
-                            <p>All sales considered final no sooner than time of purchase.</p>
-                            <p>Arbitration services available in case of dispute.</p>
-                            <p>Fruadulant representation punishable under U.S. Dept. of Commerce Reg. 471 § 3.6</p>
+                        <th rowSpan={2}>
                             ✯✯✯
                         </th>
                         <th colSpan={4}>Total Bill</th>
+                        <th rowSpan={2}>
+                            ✯✯✯
+                        </th>
                         <th colSpan={2}>
                             Date of Sale
                         </th>
@@ -242,7 +241,7 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                         </td>
                     </tr>
                     <tr>
-                        <td colSpan={4} className='signature-section'>
+                        <td colSpan={5} className='signature-section'>
                             <div>
                                 <span className='signature-label'>Client:</span>
                                 <span className='signature'>{playerInfo.playerName}</span>
@@ -252,7 +251,7 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                                 <span className='printed-signature'>{market.name}</span>
                             </div>
                         </td>
-                        <td colSpan={2}>
+                        <td colSpan={3}>
                             <div>
 
                                 <button
@@ -277,6 +276,13 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                                 </button>
                             </div>
                         </td>
+                    </tr>
+                    <tr>
+                        <th colSpan={8} className='legal-blurb'>
+                            <p>All sales considered final no sooner than time of purchase.</p>
+                            <p>Arbitration services available in case of dispute.</p>
+                            <p>Fruadulant representation punishable under U.S. Dept. of Commerce Reg. 471 § 3.6</p>
+                        </th>
                     </tr>
                 </tfoot>
             </table>
