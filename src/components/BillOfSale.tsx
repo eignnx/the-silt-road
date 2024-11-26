@@ -17,7 +17,7 @@ type Props = {
 export default function BillOfSale({ orderedInventories, currentTxn, setCurrentTxn }: Props) {
 
     const {
-        market, currentTown, playerBankBalance, playerInfo
+        market, currentTown, playerBankBalance, playerInfo, tradeLedger
     } = useLoaderData() as MarketViewLoaderData;
 
     const fetcher = useFetcher();
@@ -28,7 +28,7 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                 .map(([comm, qty]) => (
                     [comm, {
                         qty,
-                        price: marketPrice(market, comm as Commodity)
+                        price: marketPrice(market, comm as Commodity).unitPrice
                     }]
                 ))
         );
@@ -119,15 +119,44 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
 
                     // The number of units being transferred (negative means sale to market).
                     const txnQty = currentTxn[comm] ?? 0;
-                    const txnPrice = Math.abs(marketPrice(market, comm).unitPrice * txnQty);
+                    const marketUnitPrice = marketPrice(market, comm).unitPrice;
+                    const txnPrice = Math.abs(marketUnitPrice * txnQty);
 
                     const commShort = titleCase(commodityShortName(comm));
                     const commLong = titleCase(comm) !== commShort ? titleCase(comm) : undefined;
 
+
+                    const invLookupPrice = tradeLedger.inventoryAvgPrices[comm]?.price;
+                    const priceVsCargoAvg = 100 * (marketUnitPrice - (invLookupPrice ?? 0)) / marketUnitPrice;
+                    const priceVsCargoAvgSign = priceVsCargoAvg < 0 ? "-" : "+";
+
+                    const shouldDisplayCmpWithCargo =
+                        invLookupPrice !== undefined
+                        && (Math.abs(priceVsCargoAvg) > 0.1)
+                        && (playerQty ?? 0) > 0;
+
                     return (playerQty || marketQty) ?
                         <tr>
                             <th scope="row" className="commname" title={commLong}>{commShort}</th>
-                            <td className="unitprice">{marketPrice(market, comm).toString()}</td>
+                            <td className="unitprice">
+                                <span className="flex-between">
+                                    <span>{marketPrice(market, comm).toString()}</span>
+                                    {shouldDisplayCmpWithCargo && <span
+                                        className="market-price-cmp-to-cargo-cost"
+                                    >
+                                        <div className={[
+                                            "handwritten",
+                                            priceVsCargoAvg > 0 ? "sale-will-profit" : "sale-wont-profit"
+                                        ].join(" ")}>
+                                            {priceVsCargoAvgSign}
+                                            {Math.abs(priceVsCargoAvg).toFixed(0)}
+                                            %
+                                        </div>
+                                        <div className="handwritten">vs.</div>
+                                        <div className="handwritten">cargo</div>
+                                    </span>}
+                                </span>
+                            </td>
                             <td className='numeric'>{playerQty ?? "⸺"}</td>
                             <td>
                                 <button

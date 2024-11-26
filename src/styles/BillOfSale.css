@@ -123,6 +123,21 @@
         border-inline-end-width: 3px;
     }
 
+    .market-price-cmp-to-cargo-cost>div {
+        text-align: center;
+        font-size: xx-small;
+    }
+
+    .sale-will-profit {
+        color: green;
+    }
+
+    .sale-wont-profit {
+        color: var(--clr-red);
+        font-weight: bold;
+    }
+
+
     .inventory-row {
         align-items: center;
         display: grid;
@@ -135,7 +150,7 @@
     }
 
     .price-too-expensive {
-        color: red;
+        color: var(--clr-red);
         text-decoration: underline;
         text-decoration-thickness: 2px;
     }
