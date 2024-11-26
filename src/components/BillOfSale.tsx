@@ -51,11 +51,9 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
     }
 
     let totalBill = 0;
-    let saleQty = 0;
     for (const commKey in currentTxn) {
         const comm = commKey as Commodity;
         totalBill += marketPrice(market, comm).unitPrice * (currentTxn[comm] ?? 0);
-        saleQty += currentTxn[comm] ?? 0;
     }
 
     const tooExpensiveForPlayer = totalBill > playerBankBalance;
@@ -149,11 +147,11 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                                 </td>
                                 {txnQty === 0 ? (
                                     <>
-                                        <td>⸺</td>
-                                        <td>⸺</td>
+                                        <td className="txn-obligation">⸺</td>
+                                        <td className="txn-obligation">⸺</td>
                                     </>
                                 ) : <>
-                                    <td>
+                                    <td className="txn-obligation">
                                         {"☞ "}
                                         {txnQty < 0 ? (
                                             <span className="txnqty numeric">{Math.abs(txnQty)} {commodityUnit(comm).short}</span>
@@ -161,7 +159,7 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                                             <span className="txnprice">${txnPrice.toFixed(2)}</span>
                                         )}
                                     </td>
-                                    <td>
+                                    <td className="txn-obligation">
                                         {txnQty > 0 ? (
                                             <span className="txnqty numeric">{Math.abs(txnQty)} {commodityUnit(comm).short}</span>
                                         ) : (

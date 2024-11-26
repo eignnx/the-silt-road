@@ -96,11 +96,8 @@
         }
     }
 
-    .commname {
-        font-variant: small-caps;
-        font-size: small;
-        font-weight: 100;
-        cursor: pointer;
+    .txn-obligation {
+        min-width: 3.75rem;
     }
 
     .sellbtn,
@@ -114,9 +111,9 @@
         text-transform: uppercase;
         font-size: large;
         padding-inline: 0.5rem;
-        /* text-decoration: underline; */
-        /* color: var(--clr-dark-lighter); */
         font-family: var(--fnt-impact);
+
+        cursor: pointer;
 
         border-inline-start-style: double;
         border-inline-start-width: 3px;
