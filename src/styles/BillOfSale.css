@@ -129,11 +129,11 @@
     }
 
     .sale-will-profit {
-        color: green;
+        color: var(--clr-ink-green);
     }
 
     .sale-wont-profit {
-        color: var(--clr-red);
+        color: var(--clr-ink-red);
         font-weight: bold;
     }
 
@@ -150,7 +150,7 @@
     }
 
     .price-too-expensive {
-        color: var(--clr-red);
+        color: var(--clr-ink-red);
         text-decoration: underline;
         text-decoration-thickness: 2px;
     }
