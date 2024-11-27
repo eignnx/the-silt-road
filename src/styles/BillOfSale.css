@@ -140,6 +140,10 @@
             offset-anchor: left;
             transform: rotate(-15deg);
 
+            div:first-of-type {
+                font-size: small;
+            }
+
             div {
                 text-align: center;
                 font-size: xx-small;
