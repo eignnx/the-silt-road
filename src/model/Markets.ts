@@ -81,7 +81,7 @@ export function marketPrice(market: Market, comm: Commodity): UnitPriceSummary {
 }
 
 async function DEFAULT_MARKETS(): Promise<AllMarkets> {
-    const worldMap = await WORLD_MAP.getWorldMap();
+    const worldMap = await WORLD_MAP.get();
     const markets: AllMarkets = {};
     for (const town of worldMap.towns) {
         markets[town.name] = generateMarket(town.name);

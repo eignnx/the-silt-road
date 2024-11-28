@@ -1,3 +1,5 @@
+import { MakeStorage } from './storage-template';
+
 const RESOURCE_KEY = `SILT_ROAD:worldMap`;
 
 export type TownMapPin = {
@@ -28,37 +30,24 @@ function generateWorldMap(): WorldMap {
     };
 }
 
-async function getWorldMap(): Promise<WorldMap> {
-    const fetched = localStorage.getItem(RESOURCE_KEY);
-    if (fetched !== null)
-        return JSON.parse(fetched);
-    else
-        return await replaceWorldMap(generateWorldMap());
-}
-
-async function replaceWorldMap(newWorldMap: WorldMap): Promise<WorldMap> {
-    localStorage.setItem(RESOURCE_KEY, JSON.stringify(newWorldMap));
-    return newWorldMap;
-}
-
-
 export const WORLD_MAP = {
-    async getWorldMap(): Promise<WorldMap> {
-        return await getWorldMap();
-    },
+    ...MakeStorage({
+        resourceKey: "worldMap",
+        seedValue: generateWorldMap(),
+    }),
 
     async getTownMapPins(): Promise<TownMapPin[]> {
         return [];
     },
 
     async getPlayerLocation(): Promise<string> {
-        const worldMap = await getWorldMap();
+        const worldMap = await this.get();
         return worldMap.playerLocation;
     },
 
     async setPlayerLocation(townName: string) {
-        const worldMap = await getWorldMap();
-        replaceWorldMap({
+        const worldMap = await this.get();
+        this.replace({
             ...worldMap,
             playerLocation: townName,
         });

@@ -10,7 +10,7 @@ export type LoaderData = {
 
 export async function mapViewLoader(): Promise<LoaderData> {
     return {
-        worldMap: await WORLD_MAP.getWorldMap()
+        worldMap: await WORLD_MAP.get()
     };
 }
 
