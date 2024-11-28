@@ -32,8 +32,9 @@ export function commodityUnit(commodity: Commodity): { short: string, long: stri
         case "feed":
         case "grain":
         case "potatoes":
-        case "tobacco":
             return { long: "bushel", short: "bsh" };
+        case "tobacco":
+            return { long: "farm-bales", short: "bale" };
         case "medical supplies":
             return { long: "crates", short: "crate" };
         case "clothing":
@@ -55,15 +56,15 @@ export function commodityBasePrice1860(commodity: Commodity): number {
     return dollars2024To1860((() => {
         switch (commodity) {
             case "grain":
-                return 1.10 / 5.0 * 60; // 60lbs per bushel
+                return 1.10 / 5.0 * 60; // 60lbs per bushel (if wheat)
             case "feed":
-                return 0.85 * 1.10 / 5.0 * 60; // 60lbs per bushel
+                return 0.85 * 1.10 / 5.0 * 32; // 32lbs per bushel (if oats)
             case "flour":
                 return 2.75 / 5.0;
-            case "spirits":
-                return 10.50;
-            case "wine":
-                return 14.00;
+            case "spirits": // 12 bottles per case
+                return 10.50 * 12;
+            case "wine": // 12 bottles per case
+                return 14.00 * 12;
             case "sugar":
                 return 3.0 / 2.0;
             case "salt":
@@ -73,13 +74,13 @@ export function commodityBasePrice1860(commodity: Commodity): number {
             case "potatoes":
                 return 0.935 * 60; // 60lbs per bushel
             case 'tobacco':
-                return 2.35 * 60; // Price per pound (60lbs per bushel)
+                return 2.35 * 75; // Price per "farm bale": http://www.aointl.com/files/1414/5796/7368/Glossary_of_Tobacco_Terms.pdf
             case "cheese":
                 return 5.731 * 55.0; // per pound * 55 pounds per wheel
             case "lumber":
                 return 15.55 / 4.0; // Price of home depot 1x12x4ft board
             case "heavy machinery":
-                return 1250.0; // Estimate of price of a plow.
+                return 400; // Current price of Vulcan plow: https://bchmt.org/documents/education/Stock-DrawnEquipmentforTrailWork.pdf
             case "ammunition":
                 return 450.0; // Price of 1000 rounds of .45 ACP
             case "firearms":
@@ -110,6 +111,107 @@ export function commodityBasePrice1860(commodity: Commodity): number {
 export function dollars2024To1860(dollars_2024: number): number {
     const factor = 100.0 / 3803.18;
     return factor * dollars_2024;
+}
+
+export const WEIGHT_UNITS = [
+    "oz",
+    "lbs",
+    "ton", // short ton
+] as const;
+
+export type WeightUnit = typeof WEIGHT_UNITS[number];
+
+export class Weight {
+    constructor(public quantity: number, public unit: WeightUnit) { }
+
+    static fromOz(quantity: number): Weight {
+        return new Weight(quantity, "oz");
+    }
+
+    static fromLbs(quantity: number): Weight {
+        return new Weight(quantity, "lbs");
+    }
+
+    static fromTons(quantity: number): Weight {
+        return new Weight(quantity, "ton");
+    }
+
+    inLbs(): number {
+        switch (this.unit) {
+            case 'oz': return this.quantity / 16;
+            case 'lbs': return this.quantity;
+            case 'ton': return this.quantity * 2000;
+        }
+    }
+
+    inTons(): number {
+        return this.inLbs() / 2000;
+    }
+
+    inOz(): number {
+        return this.inLbs() * 16;
+    }
+
+    times(scalar: number): Weight {
+        return new Weight(scalar * this.quantity, this.unit);
+    }
+
+    toString(): string {
+        if (this.inOz() < 15.5) {
+            return `${this.inOz()}oz`;
+        } else if (this.inTons() >= 1) {
+            return `${this.inTons()}tn`;
+        } else {
+            return `${this.inLbs()}lbs`;
+        }
+    }
+}
+
+export function commodityUnitWeight(comm: Commodity): Weight {
+    switch (comm) {
+        case 'wool':
+            return Weight.fromLbs(1);
+        case "textiles":
+            return Weight.fromOz(2);
+        case 'iron':
+            return Weight.fromLbs(17.35);
+        case 'copper':
+            return Weight.fromLbs(19.75);
+        case 'nickel':
+            return Weight.fromLbs(19.64);
+        case 'gold':
+            return Weight.fromOz(1);
+        case "flour":
+        case 'cheese':
+        case 'salted meat':
+        case "sugar":
+        case "salt":
+            return Weight.fromLbs(1);
+        case "feed": // assuming oats
+            return Weight.fromLbs(32);
+        case "grain": // assuming wheat
+        case "potatoes": // Weirdly also 60? http://webserver.rilin.state.ri.us/Statutes/TITLE47/47-4/47-4-2.HTM
+            return Weight.fromLbs(60);
+        case "tobacco":
+            return Weight.fromLbs(75); // defn of farm-bale: http://www.aointl.com/files/1414/5796/7368/Glossary_of_Tobacco_Terms.pdf
+        case "medical supplies":
+            return Weight.fromLbs(45); // (Made up)
+        case "clothing":
+            return Weight.fromLbs(1.5);
+        case "firearms":
+            return Weight.fromLbs(12); // (Made up)
+        case "heavy machinery":
+            return Weight.fromLbs(130); // Weight of Vulcan plow: https://bchmt.org/documents/education/Stock-DrawnEquipmentforTrailWork.pdf
+        case "lumber":
+            return Weight.fromOz(50); // Maple wood density: 0.6g/cm^3, 1 bd-ft = 144 in^4
+        case "ammunition":
+            return Weight.fromLbs(50);
+        case 'wine':
+        case "spirits": // 12 bottles per case, 750ml per bottle
+            return Weight.fromLbs(20);
+        case "coal":
+            return Weight.fromTons(1);
+    }
 }
 
 export function commodityAbbreviatedName(comm: Commodity): string {
