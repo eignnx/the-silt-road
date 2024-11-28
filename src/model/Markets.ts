@@ -2,8 +2,7 @@ import { randChoice } from '../utils';
 import { COMMODITIES, Commodity, commodityBasePrice1860, Inventory, UnitPriceSummary } from './Commodities';
 import { WORLD_MAP } from './Towns';
 import { genHumanFirstName, genHumanLastName } from '../gen/names';
-
-const RESOURCE_KEY = `SILT_ROAD:markets`;
+import { MakeStorage } from './storage-template';
 
 export type AllMarkets = {
     [townName: string]: Market;
@@ -90,66 +89,61 @@ async function DEFAULT_MARKETS(): Promise<AllMarkets> {
     return markets;
 }
 
-export async function getMarkets(): Promise<AllMarkets> {
-    const retrieval = localStorage.getItem(RESOURCE_KEY);
-    if (retrieval !== null)
-        return JSON.parse(retrieval);
-    else {
-        return await replaceMarkets(await DEFAULT_MARKETS());
-    }
-}
+export const MARKETS = {
+    ...MakeStorage({
+        resourceKey: "markets",
+        seedValue: DEFAULT_MARKETS(),
+    }),
 
-export async function replaceMarkets(newMarkets: AllMarkets): Promise<AllMarkets> {
-    localStorage.setItem(RESOURCE_KEY, JSON.stringify(newMarkets));
-    return newMarkets;
-}
 
-export async function getMarket(town: string): Promise<Market> {
-    const markets = await getMarkets();
-    const market = markets[town];
-    if (market !== undefined)
+    async getMarket(town: string): Promise<Market> {
+        const markets = await this.get();
+        const market = markets[town];
+        if (market !== undefined)
+            return market;
+        else
+            throw new Error(`Unknown town name '${town}'`);
+    },
+
+    async replaceMarket(town: string, newMarket: Market): Promise<Market> {
+        this.replace({
+            ... await this.get(),
+            [town]: newMarket
+        });
+        return newMarket;
+    },
+
+    async updateMarket(town: string, updates: Market): Promise<Market> {
+        const market = await this.getMarket(town);
+        Object.assign(market, updates);
+        return await this.replaceMarket(town, market);
+    },
+
+    async updateMarketInventory(town: string, updates: Inventory): Promise<Market> {
+        const market = await this.getMarket(town);
+        Object.assign(market.inventory, updates);
+        await this.replaceMarket(town, market);
         return market;
-    else
-        throw new Error(`Unknown town name '${town}'`);
-}
+    },
 
-async function setMarket(town: string, newMarket: Market): Promise<Market> {
-    localStorage.setItem(RESOURCE_KEY, JSON.stringify({
-        ... await getMarkets(),
-        [town]: newMarket
-    }));
-    return newMarket;
-}
-
-export async function updateMarket(town: string, updates: Market): Promise<Market> {
-    const market = await getMarket(town);
-    Object.assign(market, updates);
-    return await setMarket(town, market);
-}
-
-export async function updateMarketInventory(town: string, updates: Inventory): Promise<Market> {
-    const market = await getMarket(town);
-    Object.assign(market.inventory, updates);
-    await setMarket(town, market);
-    return market;
-}
-
-/**
- * 
- * @param change A mapping from Commodities to signed integers representing a
- *               change in inventory.
- * @returns 
- */
-export async function changeMarketInventory(town: string, change: Inventory): Promise<Market> {
-    const market = await getMarket(town);
-    for (const [commKey, qtyDelta] of Object.entries(change)) {
-        const comm = commKey as Commodity;
-        const onHandQty = market.inventory[comm] ?? 0;
-        if (onHandQty + qtyDelta < 0) {
-            throw new Error(`Cannot reduce inventory below 0.`);
+    /**
+     * 
+     * @param change A mapping from Commodities to signed integers representing a
+     *               change in inventory.
+     * @returns 
+     */
+    async changeMarketInventory(town: string, change: Inventory): Promise<Market> {
+        const market = await this.getMarket(town);
+        for (const [commKey, qtyDelta] of Object.entries(change)) {
+            const comm = commKey as Commodity;
+            const onHandQty = market.inventory[comm] ?? 0;
+            if (onHandQty + qtyDelta < 0) {
+                throw new Error(`Cannot reduce inventory below 0.`);
+            }
+            market.inventory[comm] = onHandQty + qtyDelta;
         }
-        market.inventory[comm] = onHandQty + qtyDelta;
-    }
-    await setMarket(town, market);
-    return market;
-}
+        await this.replaceMarket(town, market);
+        return market;
+    },
+};
+

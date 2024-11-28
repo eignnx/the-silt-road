@@ -1,6 +1,6 @@
 import { useLoaderData } from 'react-router-dom';
 import { COMMODITIES, Commodity, Inventory } from '../model/Commodities';
-import { changeMarketInventory, getMarket, Market } from '../model/Markets';
+import { Market, MARKETS } from '../model/Markets';
 import { addToPlayerInventory as changePlayerInventory, getPlayerInventory } from '../model/PlayerInventory';
 
 import '../styles/MarketView.css';
@@ -23,14 +23,10 @@ export type MarketViewLoaderData = {
 };
 
 export async function marketViewLoader(): Promise<MarketViewLoaderData> {
-    const currentTown = await WORLD_MAP.getPlayerLocation();
-
-    // TODO: Use `Promise.all` to paralellize this. Low priority cause none of 
-    //       these calls are actually async rn.
     return {
+        market: await MARKETS.getMarket(await WORLD_MAP.getPlayerLocation()),
+        currentTown: await WORLD_MAP.getPlayerLocation(),
         playerInventory: getPlayerInventory(),
-        market: await getMarket(currentTown),
-        currentTown,
         playerBankBalance: await BANK.getAcctBalance(PLAYER_ACCT),
         playerInfo: await PLAYER_INFO.get(),
         tradeLedger: await TRADE_LEDGER.load(),
@@ -65,7 +61,7 @@ export async function marketViewAction({ request }: { request: Request; }) {
     }
 
     changePlayerInventory(playerInvUpdates);
-    await changeMarketInventory(currentTown, marketInvUpdates);
+    await MARKETS.changeMarketInventory(currentTown, marketInvUpdates);
 
 
     return null;

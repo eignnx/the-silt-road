@@ -1,5 +1,5 @@
 import { Commodity, commodityBasePrice1860 } from './Commodities';
-import { getMarket, marketPrice } from './Markets';
+import { MARKETS, marketPrice } from './Markets';
 import { getPlayerInventory } from './PlayerInventory';
 
 const RESOURCE_KEY = "SILT_ROAD:tradeLedger";
@@ -75,7 +75,7 @@ export const TRADE_LEDGER = {
         const ledger = await load();
 
         const marketSnapshot: MarketSnapshot = {};
-        const market = await getMarket(town);
+        const market = await MARKETS.getMarket(town);
 
         for (const commKey in market.inventory) {
             const comm = commKey as Commodity;

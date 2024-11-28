@@ -8,8 +8,14 @@ export function RESET_ALL_STORAGE() {
 }
 
 export function MakeStorage<T>(
-    { resourceKey, seedValue }:
-        { resourceKey: string; seedValue: T; }
+    {
+        resourceKey,
+        seedValue,
+    }:
+        {
+            resourceKey: string;
+            seedValue: T | Promise<T>;
+        }
 ) {
     const object = {
         resourceKey,
@@ -20,7 +26,11 @@ export function MakeStorage<T>(
             if (retreival !== null) {
                 return JSON.parse(retreival) as T;
             } else {
-                this.replace(this.seedValue);
+                if (seedValue instanceof Promise) {
+                    await this.replace(await this.seedValue);
+                } else {
+                    await this.replace(this.seedValue as T);
+                }
                 return this.seedValue;
             }
         },
@@ -33,7 +43,13 @@ export function MakeStorage<T>(
         }
     };
 
-    object.replace(seedValue);
+    if (seedValue instanceof Promise) {
+        // This is scary. I wish we had top-level await
+        seedValue.then(async seed => await object.replace(seed));
+    } else {
+        object.replace(seedValue);
+    }
+
     ALL_STORAGE_RESOURCE_KEYS.push(resourceKey);
 
     return object;
