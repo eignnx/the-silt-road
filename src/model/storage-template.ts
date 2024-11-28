@@ -43,11 +43,13 @@ export function MakeStorage<T>(
         }
     };
 
-    if (seedValue instanceof Promise) {
-        // This is scary. I wish we had top-level await
-        seedValue.then(async seed => await object.replace(seed));
-    } else {
-        object.replace(seedValue);
+    if (localStorage.getItem(`${APP_KEY}:${resourceKey}`) === null) {
+        if (seedValue instanceof Promise) {
+            // This is scary. I wish we had top-level await
+            seedValue.then(async seed => await object.replace(seed));
+        } else {
+            object.replace(seedValue);
+        }
     }
 
     ALL_STORAGE_RESOURCE_KEYS.push(resourceKey);
