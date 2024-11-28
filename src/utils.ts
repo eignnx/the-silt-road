@@ -11,3 +11,11 @@ export function randChoice<T>(arr: T[]): T {
     const idx = Math.floor(Math.random() * arr.length);
     return arr[idx]!;
 }
+
+export function currencyDisplay(amountDollars: number): string {
+    if (amountDollars < 1.00) {
+        return `${(amountDollars * 100).toFixed(0)}¢`;
+    } else {
+        return `$${amountDollars.toFixed(2)}`;
+    }
+}

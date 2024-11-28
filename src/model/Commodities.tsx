@@ -156,6 +156,10 @@ export class Weight {
         return new Weight(scalar * this.quantity, this.unit);
     }
 
+    plus(other: Weight): Weight {
+        return Weight.fromLbs(this.inLbs() + other.inLbs());
+    }
+
     toString(): string {
         if (this.inOz() < 15.5) {
             return `${this.inOz().toFixed(2)} oz`;

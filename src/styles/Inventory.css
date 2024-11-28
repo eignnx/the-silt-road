@@ -93,6 +93,12 @@
         }
     }
 
+    .handwritten {
+        text-transform: none;
+        text-align: center;
+        vertical-align: bottom;
+    }
+
     tfoot {
         border-top-style: double;
         border-top-width: 3px;
@@ -113,8 +119,5 @@
             font-size: x-small;
         }
 
-        .handwritten {
-            text-transform: none;
-        }
     }
 }
