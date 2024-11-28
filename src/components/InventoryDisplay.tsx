@@ -7,7 +7,7 @@ import { LoaderData } from '../routes/CargoView';
 export default function InventoryDisplay() {
     const { inventory, inventoryAvgPrices } = useLoaderData() as LoaderData;
 
-    const MIN_ROWS = 8;
+    const MIN_ROWS = 18;
     const blankRows = Math.max(0, MIN_ROWS - Object.keys(inventory).length);
 
     return (
