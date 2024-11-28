@@ -60,7 +60,7 @@ export default function TradeLedger({ orderedCommodities }: Props) {
             <thead>
                 <tr>
                     <th colSpan={cols}>
-                        <h3>Trade Ledger</h3>
+                        <h3>Recent Market Rates</h3>
                     </th>
                 </tr>
                 <tr className="text-size-smaller">

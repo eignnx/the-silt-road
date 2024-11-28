@@ -1,41 +1,95 @@
 .inventory-display {
-    border: 2px solid rgba(241, 220, 180, 0.26);
-    padding: 0.5rem;
-}
+    padding: 1rem;
+    margin-block-end: 1rem;
 
-.inventory-row {
 
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    hgroup {
+        text-align: center;
+        padding: 0.5rem;
 
-    margin-block: 0.35rem;
-    padding-block: 0.1rem;
+        h3 {
+            font-family: var(--fnt-rubberstamp);
+            font-weight: 100;
 
-    &:nth-child(even) {
-        background-color: rgb(100% 100% 100% / 5%);
+            text-transform: uppercase;
+            font-size: x-large;
+            margin-block-start: 0.15rem;
+            margin-block-end: 0;
+        }
+
+        div {
+            text-transform: uppercase;
+            color: var(--clr-dark-lighter);
+            font-size: smaller;
+        }
     }
 
-    .commodity {
-        font-weight: 600;
-        font-size: 1.2rem;
+    table {
+        padding: 0.5rem;
+        min-width: 50ch;
+        margin: 0;
     }
 
-    &>*:first-child {
-        display: flex;
-        justify-content: start;
+    thead {
+        th {
+            padding: 0.1rem;
+        }
+
+        .heading-explainer {
+            font-size: xx-small;
+            text-transform: uppercase;
+        }
     }
 
-    &>* {
-        display: flex;
-        justify-content: center;
+    counter-reset: cell-number;
+
+    th,
+    .cell-with-counter {
+        counter-increment: cell-number;
+        position: relative;
     }
 
-    form {
-        display: flex;
-        justify-content: end;
+    th::before,
+    .cell-with-counter::before {
+        content: counter(cell-number);
+        font-size: xx-small;
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding-inline: 0.1rem;
+        font-weight: bold;
     }
 
-    button {
-        margin-block: 0;
+    tbody {
+
+
+        th[scope="row"] {
+            text-align: center;
+        }
+    }
+
+    tfoot {
+        border-top-style: double;
+        border-top-width: 3px;
+
+        tr * {
+            padding-block: 0.5rem;
+        }
+
+        td[colspan="2"] {
+            max-width: min-content;
+            text-align: left;
+        }
+
+        div {
+            text-transform: uppercase;
+            padding: 0;
+            line-height: 1;
+            font-size: x-small;
+        }
+
+        .handwritten {
+            text-transform: none;
+        }
     }
 }

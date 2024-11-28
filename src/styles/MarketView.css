@@ -1,6 +1,4 @@
 #billofsale-and-tradeledger {
-    transform: perspective(36in) rotateX(15deg);
-
     display: flex;
     align-items: start;
     gap: 0.25rem;

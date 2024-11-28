@@ -10,11 +10,12 @@
   --clr-ink-green: darkgreen;
 
   /* Fonts */
+  --fnt-slab: "Rokkitt", serif;
   --fnt-cursive: "Mrs Saint Delafield", cursive;
   --fnt-handwritten: "Homemade Apple", cursive;
+  --fnt-woodtype: "Rye", serif;
   --fnt-impact: "Oswald", sans-serif;
   --fnt-rubberstamp: "Rubik Dirt", system-ui;
-  --fnt-slab: "Maiden Orange", serif;
 }
 
 body {
@@ -26,7 +27,7 @@ body {
 }
 
 * {
-  font-family: "Maiden Orange", Georgia, 'Times New Roman', Times, serif;
+  font-family: var(--fnt-slab);
   font-weight: 400;
   font-style: normal;
 }
@@ -41,6 +42,7 @@ h3,
 h4,
 h5,
 h6 {
+  font-family: var(--fnt-woodtype);
   font-weight: 600;
 }
 
@@ -204,5 +206,30 @@ th.section-div-row {
 }
 
 .classified-notice {
-  font-family: "Rubik Dirt", system-ui;
+  font-family: var(--fnt-rubberstamp);
+}
+
+*:popover-open {
+  color: var(--clr-dark-lighter);
+  padding: 0.5rem;
+  background-color: var(--clr-light);
+  text-align: center;
+}
+
+::backdrop {
+  background-color: rgba(26, 20, 14, 0.37);
+}
+
+button[popovertarget] {
+  border-radius: 100%;
+  background-color: transparent;
+  color: var(--clr-dark);
+  aspect-ratio: 1;
+  padding: 0.1rem;
+  margin: 0;
+
+  &:hover {
+    background-color: var(--clr-dark);
+    color: var(--clr-light);
+  }
 }

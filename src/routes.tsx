@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import InventoryEditor, { loader as inventoryEditorLoader, action as inventoryEditorAction } from './routes/InventoryEditor';
+import CargoView, { cargoViewLoader, cargoViewAction } from './routes/CargoView';
 import ErrorPage from './routes/ErrorPage';
 import MainMenu from './routes/MainMenu';
 import Dashboard, { dashboardLoader } from './routes/Dashboard';
@@ -29,9 +29,9 @@ export const router = createBrowserRouter([
             },
             {
                 path: "cargo",
-                element: <InventoryEditor />,
-                loader: inventoryEditorLoader,
-                action: inventoryEditorAction,
+                element: <CargoView />,
+                loader: cargoViewLoader,
+                action: cargoViewAction,
             },
             {
                 path: "caravan",
