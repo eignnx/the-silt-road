@@ -1,3 +1,5 @@
+import { MakeStorage } from './storage-template';
+
 export const DRAFT_ANIMALS = [
     "horse",
     "ox",
@@ -60,7 +62,7 @@ export type Caravan = {
     };
 };
 
-const DEFAULT_PLAYER_CARAVAN = JSON.stringify({
+const DEFAULT_PLAYER_CARAVAN: Caravan = {
     draftAnimals: {
         horse: 2,
         ox: 6,
@@ -69,31 +71,29 @@ const DEFAULT_PLAYER_CARAVAN = JSON.stringify({
         conestoga: 1,
         flatbed: 1,
     },
-});
+};
 
-export async function getPlayerCaravan(): Promise<Caravan> {
-    return JSON.parse(localStorage.getItem(`SILT_ROAD:playerCaravan`) ?? DEFAULT_PLAYER_CARAVAN);
-}
+export const CARAVAN = {
+    ...MakeStorage({
+        resourceKey: "playerCaravan",
+        seedValue: DEFAULT_PLAYER_CARAVAN,
+    }),
 
-export async function updatePlayerCaravan(updates: Partial<Caravan>): Promise<Caravan> {
-    const caravan = await getPlayerCaravan();
-    Object.assign(caravan, updates);
-    localStorage.setItem(`SILT_ROAD:playerCaravan`, JSON.stringify(caravan));
-    return caravan;
-}
+    async change(updates: Partial<Caravan>): Promise<Caravan> {
+        const caravan = await this.get();
 
-export async function addToPlayerCaravan(updates: Partial<Caravan>): Promise<Caravan> {
-    const caravan = await getPlayerCaravan();
-    for (const animal in updates.draftAnimals ?? {}) {
-        const qty = updates.draftAnimals![animal as DraftAnimal]!;
-        caravan.draftAnimals[animal as DraftAnimal] =
-            (caravan.draftAnimals[animal as DraftAnimal] ?? 0) + qty;
+        for (const animal in updates.draftAnimals ?? {}) {
+            const qty = updates.draftAnimals![animal as DraftAnimal]!;
+            caravan.draftAnimals[animal as DraftAnimal] =
+                (caravan.draftAnimals[animal as DraftAnimal] ?? 0) + qty;
+        }
+        for (const wagon in updates.wagons ?? {}) {
+            const qty = updates.wagons![wagon as Wagon]!;
+            caravan.wagons[wagon as Wagon] =
+                (caravan.wagons[wagon as Wagon] ?? 0) + qty;
+        }
+
+        await this.replace(caravan);
+        return caravan;
     }
-    for (const wagon in updates.wagons ?? {}) {
-        const qty = updates.wagons![wagon as Wagon]!;
-        caravan.wagons[wagon as Wagon] =
-            (caravan.wagons[wagon as Wagon] ?? 0) + qty;
-    }
-    localStorage.setItem(`SILT_ROAD:playerCaravan`, JSON.stringify(caravan));
-    return caravan;
-}
+};

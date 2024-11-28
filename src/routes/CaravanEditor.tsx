@@ -1,10 +1,10 @@
 import { Form, useFetcher, useLoaderData } from 'react-router-dom';
-import { addToPlayerCaravan, Caravan, displayWagon, DRAFT_ANIMALS, DraftAnimal, getPlayerCaravan, pluralizeDraftAnimal, Wagon, WAGONS } from '../model/PlayerCaravan';
+import { CARAVAN, Caravan, displayWagon, DRAFT_ANIMALS, DraftAnimal, pluralizeDraftAnimal, Wagon, WAGONS } from '../model/PlayerCaravan';
 import "../styles/CaravanEditor.css";
 import { titleCase } from '../utils';
 
 export async function caravanEditorLoader() {
-    return { caravan: await getPlayerCaravan() };
+    return { caravan: await CARAVAN.get() };
 }
 
 export async function caravanEditorAction({ request }: { request: any; }) {
@@ -13,28 +13,28 @@ export async function caravanEditorAction({ request }: { request: any; }) {
 
     switch (_action) {
         case "addDraftAnimal": {
-            return await addToPlayerCaravan({
+            return await CARAVAN.change({
                 draftAnimals: {
                     [updates.draftAnimalKind]: 1,
                 },
             });
         }
         case "removeDraftAnimal": {
-            return await addToPlayerCaravan({
+            return await CARAVAN.change({
                 draftAnimals: {
                     [updates.draftAnimalKind]: -1,
                 },
             });
         }
         case "addWagon": {
-            return await addToPlayerCaravan({
+            return await CARAVAN.change({
                 wagons: {
                     [updates.wagonKind]: 1,
                 },
             });
         }
         case "removeWagon": {
-            return await addToPlayerCaravan({
+            return await CARAVAN.change({
                 wagons: {
                     [updates.wagonKind]: -1,
                 },
