@@ -80,9 +80,9 @@ export default function MarketView() {
     const townVisitCount = Object.keys(tradeLedger.townVisits).length;
 
     return (<>
-        <h1>Market</h1>
-        <h2>{currentTown}</h2>
-        <h3>{market.name}</h3>
+        <h1>{market.name}</h1>
+        <h2>Wholesale Market</h2>
+        <h3>{currentTown}, Silt County, CO</h3>
         <section id="billofsale-and-tradeledger">
             <BillOfSale
                 orderedInventories={orderedInventories}
