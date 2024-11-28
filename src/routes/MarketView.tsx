@@ -29,7 +29,7 @@ export async function marketViewLoader(): Promise<MarketViewLoaderData> {
         playerInventory: await PLAYER_INVENTORY.get(),
         playerBankBalance: await BANK.getAcctBalance(PLAYER_ACCT),
         playerInfo: await PLAYER_INFO.get(),
-        tradeLedger: await TRADE_LEDGER.load(),
+        tradeLedger: await TRADE_LEDGER.get(),
     };
 }
 

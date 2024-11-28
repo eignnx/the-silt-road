@@ -1,6 +1,7 @@
 import { Commodity, commodityBasePrice1860 } from './Commodities';
 import { MARKETS, marketPrice } from './Markets';
 import { PLAYER_INVENTORY } from './PlayerInventory';
+import { MakeStorage } from './storage-template';
 
 const RESOURCE_KEY = "SILT_ROAD:tradeLedger";
 
@@ -51,28 +52,15 @@ async function DEFAULT(): Promise<TradeLedger> {
     ;
 }
 
-async function load(): Promise<TradeLedger> {
-    const retrieval = localStorage.getItem(RESOURCE_KEY);
-    if (retrieval !== null) {
-        return JSON.parse(retrieval);
-    } else {
-        return await replace(await DEFAULT());
-    }
-}
-
-async function replace(ledger: TradeLedger): Promise<TradeLedger> {
-    localStorage.setItem(RESOURCE_KEY, JSON.stringify(ledger));
-    return ledger;
-}
-
 export const TRADE_LEDGER = {
 
-    async load(): Promise<TradeLedger> {
-        return await load();
-    },
+    ...MakeStorage({
+        resourceKey: "tradeLedger",
+        seedValue: DEFAULT(),
+    }),
 
     async recordTownVisit(town: string, currentDate: number) {
-        const ledger = await load();
+        const ledger = await this.get();
 
         const marketSnapshot: MarketSnapshot = {};
         const market = await MARKETS.getMarket(town);
@@ -90,7 +78,7 @@ export const TRADE_LEDGER = {
             marketSnapshot,
         };
 
-        await replace(ledger);
+        await this.replace(ledger);
     },
 
     /**
@@ -98,7 +86,7 @@ export const TRADE_LEDGER = {
      * @param txn A negative `qty` means player is selling, positive meanse player is purchasing.
      */
     async recordTransaction(txn: { [comm in Commodity]?: { qty: number, price: number; } }) {
-        const ledger = await load();
+        const ledger = await this.get();
 
         for (const commKey in txn) {
             const comm = commKey as Commodity;
@@ -115,7 +103,7 @@ export const TRADE_LEDGER = {
             }
         }
 
-        await replace(ledger);
+        await this.replace(ledger);
     },
 };
 

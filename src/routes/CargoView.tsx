@@ -11,7 +11,7 @@ export type LoaderData = {
 
 export async function cargoViewLoader(): Promise<LoaderData> {
     const inventory = await PLAYER_INVENTORY.get();
-    const tradeLedger = await TRADE_LEDGER.load();
+    const tradeLedger = await TRADE_LEDGER.get();
 
     return {
         inventory,
