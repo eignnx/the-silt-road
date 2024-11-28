@@ -1,7 +1,6 @@
 import { useLoaderData } from 'react-router-dom';
 import { COMMODITIES, Commodity, commodityAbbreviatedName, UnitPriceSummary } from '../model/Commodities';
 import { titleCase } from '../utils';
-import { TRADE_LEDGER, TradeLedger as TradeLedgerData } from '../model/TradeLedger';
 
 import "../styles/TradeLedger.css";
 import { MarketViewLoaderData } from '../routes/MarketView';
@@ -129,7 +128,9 @@ export default function TradeLedger({ orderedCommodities }: Props) {
                 })}
             </tbody>
             <tfoot>
-
+                <tr>
+                    <td colSpan={cols}></td>
+                </tr>
             </tfoot>
         </table>
     );

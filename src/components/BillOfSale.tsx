@@ -1,4 +1,4 @@
-import { Dispatch } from 'react';
+import { Dispatch, useEffect, useRef, useState } from 'react';
 import { Commodity, commodityAbbreviatedName, commodityUnit, Inventory } from '../model/Commodities';
 import { marketPrice } from '../model/Markets';
 import { useFetcher, useLoaderData } from 'react-router-dom';
@@ -66,8 +66,33 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
         setCurrentTxn({});
     }
 
+
+    const [ctrlDown, setCtrlDown] = useState(false);
+
+    function handle(e: KeyboardEvent) {
+        if (e.key === "Control") {
+            console.log(e);
+            setCtrlDown(e.ctrlKey);
+        }
+    }
+
+    useEffect(() => {
+        console.log("adding keyboard event listener");
+
+        document.addEventListener("keydown", handle);
+        document.addEventListener("keyup", handle);
+
+        return () => {
+            console.log("removing keyboard event listener");
+            document.removeEventListener("keydown", handle);
+            document.removeEventListener("keyup", handle);
+        };
+    }, []);
+
     return (
-        <article className='document bill-of-sale'>
+        <article
+            className='document bill-of-sale'
+        >
             <table >
                 <thead>
                     <tr>
@@ -114,7 +139,7 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                     </tr>
                 </thead>
                 <tbody>
-                    {orderedInventories.map(renderTbodyRow)}
+                    {orderedInventories.map(renderTbodyRow(ctrlDown))}
                 </tbody>
                 <tfoot>
                     <tr>
@@ -205,88 +230,90 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
         </article>
     );
 
-    function renderTbodyRow({ comm, playerQty, marketQty }: InventoryCmpRow) {
+    function renderTbodyRow(ctrlDown: boolean) {
+        return ({ comm, playerQty, marketQty }: InventoryCmpRow) => {
 
-        // The number of units being transferred (negative means sale to market).
-        const txnQty = currentTxn[comm] ?? 0;
-        const marketUnitPrice = marketPrice(market, comm).unitPrice;
-        const txnPrice = Math.abs(marketUnitPrice * txnQty);
+            // The number of units being transferred (negative means sale to market).
+            const txnQty = currentTxn[comm] ?? 0;
+            const marketUnitPrice = marketPrice(market, comm).unitPrice;
+            const txnPrice = Math.abs(marketUnitPrice * txnQty);
 
-        const commShort = titleCase(commodityAbbreviatedName(comm));
-        const commLong = titleCase(comm) !== commShort ? titleCase(comm) : undefined;
+            const commShort = titleCase(commodityAbbreviatedName(comm));
+            const commLong = titleCase(comm) !== commShort ? titleCase(comm) : undefined;
 
 
-        const invLookupPrice = tradeLedger.inventoryAvgPrices[comm]?.price;
-        const priceVsCargoAvg = 100 * (marketUnitPrice - (invLookupPrice ?? 0)) / marketUnitPrice;
-        const priceVsCargoAvgSign = priceVsCargoAvg < 0 ? "-" : "+";
+            const invLookupPrice = tradeLedger.inventoryAvgPrices[comm]?.price;
+            const priceVsCargoAvg = 100 * (marketUnitPrice - (invLookupPrice ?? 0)) / marketUnitPrice;
+            const priceVsCargoAvgSign = priceVsCargoAvg < 0 ? "-" : "+";
 
-        const shouldDisplayCmpWithCargo = invLookupPrice !== undefined
-            && (Math.abs(priceVsCargoAvg) > 0.1)
-            && (playerQty ?? 0) > 0;
+            const shouldDisplayCmpWithCargo = invLookupPrice !== undefined
+                && (Math.abs(priceVsCargoAvg) > 0.1)
+                && (playerQty ?? 0) > 0;
 
-        return (playerQty || marketQty) ?
-            <tr>
-                <td className='numeric'>{playerQty ?? "⸺"}</td>
-                <td>
-                    <button
-                        disabled={!playerQty}
-                        onClick={() => addSale(comm)}
-                    >
-                        Sell
-                    </button>
-                </td>
-                {txnQty === 0 ? (
-                    <>
-                        <td className="txn-obligation">⸺</td>
-                        <td className="txn-obligation">⸺</td>
-                    </>
-                ) : <>
-                    <td className="txn-obligation">
-                        {"☞ "}
-                        {txnQty < 0 ? (
-                            <span className="txnqty numeric">{Math.abs(txnQty)} {commodityUnit(comm).short}</span>
-                        ) : (
-                            <span className="txnprice">${txnPrice.toFixed(2)}</span>
-                        )}
+            return (playerQty || marketQty) ?
+                <tr>
+                    <td className='numeric'>{playerQty ?? "⸺"}</td>
+                    <td>
+                        <button
+                            disabled={!playerQty}
+                            onClick={() => addSale(comm)}
+                        >
+                            Sell{ctrlDown && <span className="btn-10x"> x10</span>}
+                        </button>
                     </td>
-                    <td className="txn-obligation">
-                        {txnQty > 0 ? (
-                            <span className="txnqty numeric">{Math.abs(txnQty)} {commodityUnit(comm).short}</span>
-                        ) : (
-                            <span className="txnprice">${txnPrice.toFixed(2)}</span>
-                        )}
-                        {" ☜"}
+                    {txnQty === 0 ? (
+                        <>
+                            <td className="txn-obligation">⸺</td>
+                            <td className="txn-obligation">⸺</td>
+                        </>
+                    ) : <>
+                        <td className="txn-obligation">
+                            {"☞ "}
+                            {txnQty < 0 ? (
+                                <span className="txnqty numeric">{Math.abs(txnQty)} {commodityUnit(comm).short}</span>
+                            ) : (
+                                <span className="txnprice">${txnPrice.toFixed(2)}</span>
+                            )}
+                        </td>
+                        <td className="txn-obligation">
+                            {txnQty > 0 ? (
+                                <span className="txnqty numeric">{Math.abs(txnQty)} {commodityUnit(comm).short}</span>
+                            ) : (
+                                <span className="txnprice">${txnPrice.toFixed(2)}</span>
+                            )}
+                            {" ☜"}
+                        </td>
+                    </>}
+                    <td>
+                        <button
+                            disabled={!marketQty}
+                            onClick={() => addPurchase(comm)}
+                        >
+                            Buy{ctrlDown && <span className="btn-10x"> x10</span>}
+                        </button>
                     </td>
-                </>}
-                <td>
-                    <button
-                        disabled={!marketQty}
-                        onClick={() => addPurchase(comm)}
-                    >
-                        Buy
-                    </button>
-                </td>
-                <td className='numeric'>{marketQty ?? "⸺"}</td>
-                <th scope="row" className="commname" title={commLong}>{commShort}</th>
-                <td className="unitprice">
-                    {shouldDisplayCmpWithCargo && <div
-                        className="market-price-cmp-to-cargo-cost"
-                    >
-                        <div className="written-in-right-margin">
-                            <div className={[
-                                "handwritten",
-                                priceVsCargoAvg > 0 ? "sale-will-profit" : "sale-wont-profit"
-                            ].join(" ")}>
-                                {priceVsCargoAvgSign}
-                                {Math.abs(priceVsCargoAvg).toFixed(0)}
-                                %
+                    <td className='numeric'>{marketQty ?? "⸺"}</td>
+                    <th scope="row" className="commname" title={commLong}>{commShort}</th>
+                    <td className="unitprice">
+                        {shouldDisplayCmpWithCargo && <div
+                            className="market-price-cmp-to-cargo-cost"
+                        >
+                            <div className="written-in-right-margin">
+                                <div className={[
+                                    "handwritten",
+                                    priceVsCargoAvg > 0 ? "sale-will-profit" : "sale-wont-profit"
+                                ].join(" ")}>
+                                    {priceVsCargoAvgSign}
+                                    {Math.abs(priceVsCargoAvg).toFixed(0)}
+                                    %
+                                </div>
+                                <div className="handwritten">vs.</div>
+                                <div className="handwritten">cargo</div>
                             </div>
-                            <div className="handwritten">vs.</div>
-                            <div className="handwritten">cargo</div>
-                        </div>
-                    </div>}
-                    <span>{marketPrice(market, comm).toString()}</span>
-                </td>
-            </tr> : null;
+                        </div>}
+                        <span>{marketPrice(market, comm).toString()}</span>
+                    </td>
+                </tr> : null;
+        };
     }
 }

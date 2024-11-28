@@ -1,5 +1,6 @@
 .bill-of-sale {
-    padding-inline: 2rem;
+    padding-inline: 2.5rem;
+    width: min-content;
 
     p {
         font-style: italic;
@@ -167,10 +168,20 @@
         grid-template-columns: repeat(auto-fit, 1fr);
         width: 100%;
 
-        &>button {
-            width: min-content
-        }
     }
+
+    button {
+        width: min-content;
+        font-size: x-small;
+        position: relative;
+        width: 2.5rem;
+        height: 1.5rem;
+    }
+
+    button:has(.btn-10x) {
+        font-size: 6pt;
+    }
+
 
     .price-too-expensive {
         color: var(--clr-ink-red);

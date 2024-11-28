@@ -11,12 +11,12 @@
 
     background-color: var(--bg-clr);
 
-    transition: transform 400ms ease-in-out;
+    /* transition: transform 400ms ease-in-out;
     transform: translate(calc(-1 * min(20rem, 50%)), -2%) rotate(2deg);
 
     &:hover {
         transform: translate(0, 0) rotate(0deg);
-    }
+    } */
 
     thead h3 {
         font-size: 30pt;
@@ -46,6 +46,11 @@
             border-block-color: var(--clr-blue);
             border-inline-color: var(--clr-red);
         }
+
+        tr:last-child th,
+        tr:last-child td {
+            border-bottom: none;
+        }
     }
 
     .text-size-smaller {
@@ -59,7 +64,7 @@
     .commname {
         font-size: x-small;
         text-align: right;
-        font-weight: 100;
+        font-weight: 600;
         font-variant: small-caps;
         vertical-align: middle;
 
@@ -71,5 +76,10 @@
     .data-age-display {
         font-size: x-small;
         text-align: center;
+    }
+
+    tfoot {
+        height: 3rem;
+        border-top: 3px double var(--clr-dark);
     }
 }
