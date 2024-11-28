@@ -1,4 +1,4 @@
-import { getPlayerInventory } from '../model/PlayerInventory';
+import { PLAYER_INVENTORY } from '../model/PlayerInventory';
 import InventoryDisplay from '../components/InventoryDisplay';
 import "../styles/Inventory.css";
 import { Commodity, Inventory } from '../model/Commodities';
@@ -10,7 +10,7 @@ export type LoaderData = {
 };
 
 export async function cargoViewLoader(): Promise<LoaderData> {
-    const inventory = getPlayerInventory();
+    const inventory = await PLAYER_INVENTORY.get();
     const tradeLedger = await TRADE_LEDGER.load();
 
     return {

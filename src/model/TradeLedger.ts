@@ -1,6 +1,6 @@
 import { Commodity, commodityBasePrice1860 } from './Commodities';
 import { MARKETS, marketPrice } from './Markets';
-import { getPlayerInventory } from './PlayerInventory';
+import { PLAYER_INVENTORY } from './PlayerInventory';
 
 const RESOURCE_KEY = "SILT_ROAD:tradeLedger";
 
@@ -34,7 +34,7 @@ export type MarketSnapshot = {
 async function DEFAULT(): Promise<TradeLedger> {
     const inventoryAvgPrices = {} as { [comm in Commodity]?: { price: number, qty: number; } };
 
-    const inv = await getPlayerInventory();
+    const inv = await PLAYER_INVENTORY.get();
 
     for (const commKey in inv) {
         const comm = commKey as Commodity;

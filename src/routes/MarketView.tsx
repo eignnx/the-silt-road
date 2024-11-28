@@ -1,7 +1,7 @@
 import { useLoaderData } from 'react-router-dom';
 import { COMMODITIES, Commodity, Inventory } from '../model/Commodities';
 import { Market, MARKETS } from '../model/Markets';
-import { addToPlayerInventory as changePlayerInventory, getPlayerInventory } from '../model/PlayerInventory';
+import { PLAYER_INVENTORY } from '../model/PlayerInventory';
 
 import '../styles/MarketView.css';
 import { BANK, PLAYER_ACCT } from '../model/BankAcct';
@@ -26,7 +26,7 @@ export async function marketViewLoader(): Promise<MarketViewLoaderData> {
     return {
         market: await MARKETS.getMarket(await WORLD_MAP.getPlayerLocation()),
         currentTown: await WORLD_MAP.getPlayerLocation(),
-        playerInventory: getPlayerInventory(),
+        playerInventory: await PLAYER_INVENTORY.get(),
         playerBankBalance: await BANK.getAcctBalance(PLAYER_ACCT),
         playerInfo: await PLAYER_INFO.get(),
         tradeLedger: await TRADE_LEDGER.load(),
@@ -60,7 +60,7 @@ export async function marketViewAction({ request }: { request: Request; }) {
         }
     }
 
-    changePlayerInventory(playerInvUpdates);
+    await PLAYER_INVENTORY.update(playerInvUpdates);
     await MARKETS.changeMarketInventory(currentTown, marketInvUpdates);
 
 

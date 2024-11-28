@@ -1,4 +1,5 @@
 import { Commodity, Inventory } from './Commodities';
+import { MakeStorage } from './storage-template';
 
 const DEFAULT_PLAYER_INVENTORY: Inventory = {
     feed: 430,
@@ -6,23 +7,25 @@ const DEFAULT_PLAYER_INVENTORY: Inventory = {
     textiles: 145,
 };
 
-export function getPlayerInventory(): Inventory {
-    const retreival = localStorage.getItem(`SILT_ROAD:playerInventory`) ?? JSON.stringify(DEFAULT_PLAYER_INVENTORY);
-    return JSON.parse(retreival);
-}
+export const PLAYER_INVENTORY = {
+    ...MakeStorage({
+        resourceKey: "playerInventory",
+        seedValue: DEFAULT_PLAYER_INVENTORY,
+    }),
 
-export function updatePlayerInventory(updates: Inventory): Inventory {
-    const inventory = getPlayerInventory();
-    Object.assign(inventory, updates);
-    localStorage.setItem(`SILT_ROAD:playerInventory`, JSON.stringify(inventory));
-    return inventory;
-}
+    async update(updates: Inventory): Promise<Inventory> {
+        const inventory = await this.get();
+        Object.assign(inventory, updates);
+        this.replace(inventory);
+        return inventory;
+    },
 
-export function addToPlayerInventory(updates: Inventory): Inventory {
-    const inventory = getPlayerInventory();
-    for (const [comm, qty] of Object.entries(updates)) {
-        inventory[comm as Commodity] = (inventory[comm as Commodity] ?? 0) + qty;
-    }
-    localStorage.setItem(`SILT_ROAD:playerInventory`, JSON.stringify(inventory));
-    return inventory;
-}
+    async addToPlayerInventory(updates: Inventory): Promise<Inventory> {
+        const inventory = await this.get();
+        for (const [comm, qty] of Object.entries(updates)) {
+            inventory[comm as Commodity] = (inventory[comm as Commodity] ?? 0) + qty;
+        }
+        this.replace(inventory);
+        return inventory;
+    },
+};
