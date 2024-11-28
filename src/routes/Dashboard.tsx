@@ -11,7 +11,7 @@ type LoaderRetTy = {
 export async function dashboardLoader(): Promise<LoaderRetTy> {
     return {
         playerAccountBalance: await BANK.getAcctBalance(PLAYER_ACCT),
-        playerInfo: await PLAYER_INFO.getPlayerInfo(),
+        playerInfo: await PLAYER_INFO.get(),
     };
 }
 

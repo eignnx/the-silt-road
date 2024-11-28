@@ -32,7 +32,7 @@ export async function marketViewLoader(): Promise<MarketViewLoaderData> {
         market: await getMarket(currentTown),
         currentTown,
         playerBankBalance: await BANK.getAcctBalance(PLAYER_ACCT),
-        playerInfo: await PLAYER_INFO.getPlayerInfo(),
+        playerInfo: await PLAYER_INFO.get(),
         tradeLedger: await TRADE_LEDGER.load(),
     };
 }
