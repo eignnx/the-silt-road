@@ -12,11 +12,14 @@ export default function InventoryDisplay() {
 
     return (
         <article className="document inventory-display">
-
             <hgroup>
                 <h3>Cargo Manifest</h3>
                 <div>Memorandum</div>
             </hgroup>
+            <div className="heading-flavor-text">
+                <span>Form 57-D</span>
+                <span>Date of survey: <span className="handwritten">5/21</span></span>
+            </div>
             <table >
                 <thead>
                     <tr>
@@ -30,7 +33,7 @@ export default function InventoryDisplay() {
                             <div {...{ popover: "auto" }}
                                 id="investment-popover"
                                 className="heading-explainer">
-                                total expenditure on cargo category
+                                *total expenditure on cargo category
                             </div>
 
                         </th>

@@ -24,6 +24,31 @@
         }
     }
 
+    position: relative;
+
+    .heading-flavor-text {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+
+        display: flex;
+        justify-content: space-between;
+
+        &>* {
+            text-transform: uppercase;
+            font-size: x-small;
+            color: var(--clr-dark-lighter);
+            margin-inline: 1rem;
+            margin-block: 0.5rem;
+            padding: 0;
+        }
+
+        & .handwritten {
+            font-size: small;
+        }
+    }
+
     table {
         padding: 0.5rem;
         min-width: 50ch;
