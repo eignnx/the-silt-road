@@ -1,5 +1,5 @@
 import { useLoaderData } from 'react-router-dom';
-import { commodityUnit } from '../model/Commodities';
+import { commodityUnit, commodityUnitWeight } from '../model/Commodities';
 import { titleCase } from '../utils';
 import { Commodity } from '../model/Commodities';
 import { LoaderData } from '../routes/CargoView';
@@ -49,7 +49,7 @@ export default function InventoryDisplay() {
                             <th scope="row">{titleCase(comm)}</th>
                             <td>{qty} {commodityUnit(comm).short}</td>
                             <td>${investment.toFixed(2)}</td>
-                            <td>35lbs</td>
+                            <td>{commodityUnitWeight(comm).times(qty).toString()}</td>
                         </tr>;
                     })}
                     {Array.from({ length: blankRows }).map(() => (

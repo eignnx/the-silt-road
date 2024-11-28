@@ -158,11 +158,11 @@ export class Weight {
 
     toString(): string {
         if (this.inOz() < 15.5) {
-            return `${this.inOz()}oz`;
+            return `${this.inOz().toFixed(2)} oz`;
         } else if (this.inTons() >= 1) {
-            return `${this.inTons()}tn`;
+            return `${this.inTons().toFixed(1)} tn`;
         } else {
-            return `${this.inLbs()}lbs`;
+            return `${this.inLbs().toFixed(1)} lbs`;
         }
     }
 }

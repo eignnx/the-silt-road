@@ -2,6 +2,7 @@ import { NavLink, Outlet, useLoaderData } from 'react-router-dom';
 import '../styles/Dashboard.css';
 import { BANK, PLAYER_ACCT } from '../model/BankAcct';
 import { PLAYER_INFO, PlayerInfo } from '../model/PlayerInfo';
+import { RESET_ALL_STORAGE } from '../model/storage-template';
 
 type LoaderRetTy = {
     playerAccountBalance: number;
@@ -45,7 +46,7 @@ export default function Dashboard() {
                     ))}
                 </nav>
                 <section>
-                    <table>
+                    <table className="document">
                         <thead>
                             <tr><td colSpan={2}>{playerInfo.companyName}</td></tr>
                             <tr><td colSpan={2}>Owner: {playerInfo.playerName}</td></tr>
@@ -77,6 +78,11 @@ export default function Dashboard() {
                             <td>12</td>
                         </tr>
                     </table>
+                </section>
+                <section>
+                    <button
+                        onClick={RESET_ALL_STORAGE}
+                    >Clear All Save Data</button>
                 </section>
             </aside>
             <main className='dashboard-outlet'>

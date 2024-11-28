@@ -2,9 +2,9 @@ import { Commodity, Inventory } from './Commodities';
 import { MakeStorage } from './storage-template';
 
 const DEFAULT_PLAYER_INVENTORY: Inventory = {
-    feed: 430,
-    grain: 600,
-    textiles: 145,
+    feed: 3,
+    grain: 2,
+    textiles: 20,
 };
 
 export const PLAYER_INVENTORY = {

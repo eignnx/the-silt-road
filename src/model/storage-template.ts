@@ -3,7 +3,7 @@ const ALL_STORAGE_RESOURCE_KEYS: string[] = [];
 
 export function RESET_ALL_STORAGE() {
     for (const resourceKey of ALL_STORAGE_RESOURCE_KEYS) {
-        localStorage.removeItem(resourceKey);
+        localStorage.removeItem(`${APP_KEY}:${resourceKey}`);
     }
 }
 
