@@ -23,7 +23,12 @@ export const PLAYER_INVENTORY = {
     async addToPlayerInventory(updates: Inventory): Promise<Inventory> {
         const inventory = await this.get();
         for (const [comm, qty] of Object.entries(updates)) {
-            inventory[comm as Commodity] = (inventory[comm as Commodity] ?? 0) + qty;
+            const newQty = (inventory[comm as Commodity] ?? 0) + qty;
+            if (newQty >= 0) {
+                inventory[comm as Commodity] = newQty;
+            } else {
+                throw new Error(`Cannot take Player Inventory quantity for ${comm} below zero to ${newQty}`);
+            }
         }
         this.replace(inventory);
         return inventory;

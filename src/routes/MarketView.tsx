@@ -60,9 +60,10 @@ export async function marketViewAction({ request }: { request: Request; }) {
         }
     }
 
-    await PLAYER_INVENTORY.update(playerInvUpdates);
+    console.log("playerInventoryUpdates", playerInvUpdates);
+    await PLAYER_INVENTORY.addToPlayerInventory(playerInvUpdates);
+    console.log("marketInventoryUpdates", marketInvUpdates);
     await MARKETS.changeMarketInventory(currentTown, marketInvUpdates);
-
 
     return null;
 }
@@ -102,8 +103,18 @@ export function computeOrderedInventories(playerInventory: Inventory, market: Ma
     const orderedInventories: InventoryCmpRow[] = [];
 
     for (const comm of COMMODITIES) {
-        const playerQty = (playerInventory[comm] ?? 0) + (currentTxn[comm] ?? 0);
-        const marketQty = (market.inventory[comm] ?? 0) - (currentTxn[comm] ?? 0);
+        const txnQty = currentTxn[comm] ?? 0;
+
+        let playerQty;
+        let marketQty;
+        if (txnQty < 0) {
+            playerQty = (playerInventory[comm] ?? 0) + txnQty;
+            marketQty = (market.inventory[comm] ?? 0);
+        } else {
+            playerQty = (playerInventory[comm] ?? 0);
+            marketQty = (market.inventory[comm] ?? 0) - txnQty;
+        }
+
         orderedInventories.push({
             comm,
             playerQty: playerQty > 0 ? playerQty : undefined,

@@ -30,7 +30,6 @@ function generateWorldMap(): WorldMap {
 
 async function getWorldMap(): Promise<WorldMap> {
     const fetched = localStorage.getItem(RESOURCE_KEY);
-    console.trace(fetched);
     if (fetched !== null)
         return JSON.parse(fetched);
     else

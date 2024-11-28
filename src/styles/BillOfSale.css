@@ -106,7 +106,7 @@
     }
 
     .txn-obligation {
-        min-width: 3.75rem;
+        min-width: 3rem;
     }
 
     .sellbtn,
@@ -174,7 +174,7 @@
         width: min-content;
         font-size: x-small;
         position: relative;
-        width: 2.5rem;
+        width: 2.75rem;
         height: 1.5rem;
     }
 

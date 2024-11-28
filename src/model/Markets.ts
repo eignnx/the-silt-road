@@ -138,7 +138,8 @@ export const MARKETS = {
             const comm = commKey as Commodity;
             const onHandQty = market.inventory[comm] ?? 0;
             if (onHandQty + qtyDelta < 0) {
-                throw new Error(`Cannot reduce inventory below 0.`);
+                console.error(comm, { onHandQty, qtyDelta });
+                throw new Error(`Cannot reduce inventory below 0`);
             }
             market.inventory[comm] = onHandQty + qtyDelta;
         }

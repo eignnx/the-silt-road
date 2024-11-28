@@ -17,7 +17,7 @@ type Props = {
 export default function BillOfSale({ orderedInventories, currentTxn, setCurrentTxn }: Props) {
 
     const {
-        market, currentTown, playerBankBalance, playerInfo, tradeLedger
+        playerInventory, market, currentTown, playerBankBalance, playerInfo, tradeLedger
     } = useLoaderData() as MarketViewLoaderData;
 
     const fetcher = useFetcher();
@@ -35,19 +35,31 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
     }
 
     function addSale(comm: Commodity, qty: number = 1) {
-        TRADE_LEDGER.recordTransaction(processCurrentTxn());
-        setCurrentTxn(oldTxn => ({
-            ...oldTxn,
-            [comm]: (oldTxn[comm] ?? 0) - qty
-        }));
+        setCurrentTxn(oldTxn => {
+            const playerQty = playerInventory[comm] ?? 0;
+            const txnQty = oldTxn[comm] ?? 0;
+            qty = Math.min(qty, playerQty + txnQty);
+
+            console.log("sale", comm, qty);
+            return {
+                ...oldTxn,
+                [comm]: (oldTxn[comm] ?? 0) - qty
+            };
+        });
     }
 
     function addPurchase(comm: Commodity, qty: number = 1) {
-        TRADE_LEDGER.recordTransaction(processCurrentTxn());
-        setCurrentTxn(oldTxn => ({
-            ...oldTxn,
-            [comm]: (oldTxn[comm] ?? 0) + qty
-        }));
+        setCurrentTxn(oldTxn => {
+            const marketQty = market.inventory[comm] ?? 0;
+            const txnQty = oldTxn[comm] ?? 0;
+            qty = Math.min(qty, marketQty - txnQty);
+
+            console.log("purchase", comm, qty);
+            return {
+                ...oldTxn,
+                [comm]: (oldTxn[comm] ?? 0) + qty
+            };
+        });
     }
 
     let totalBill = 0;
@@ -63,6 +75,7 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
             { currentTxn, totalBill, currentTown },
             { method: "POST", encType: "application/json" }
         );
+        TRADE_LEDGER.recordTransaction(processCurrentTxn());
         setCurrentTxn({});
     }
 
@@ -71,7 +84,6 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
 
     function handle(e: KeyboardEvent) {
         if (e.key === "Control") {
-            console.log(e);
             setCtrlDown(e.ctrlKey);
         }
     }
@@ -250,15 +262,20 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                 && (Math.abs(priceVsCargoAvg) > 0.1)
                 && (playerQty ?? 0) > 0;
 
-            return (playerQty || marketQty) ?
+            const qty = !ctrlDown ? 1 : 10;
+
+            const sellBtnDisabled = ((playerQty ?? 0) - Math.max(txnQty, 0)) <= 0;
+            const buyBtnDisabled = ((marketQty ?? 0) - Math.min(txnQty, 0)) <= 0;
+
+            return (playerQty || marketQty || txnQty !== 0) ?
                 <tr>
                     <td className='numeric'>{playerQty ?? "⸺"}</td>
                     <td>
                         <button
-                            disabled={!playerQty}
-                            onClick={() => addSale(comm)}
+                            disabled={sellBtnDisabled}
+                            onClick={() => addSale(comm, qty)}
                         >
-                            Sell{ctrlDown && <span className="btn-10x"> x10</span>}
+                            Sell{ctrlDown && <span className="btn-10x"> x10</span>} ☞
                         </button>
                     </td>
                     {txnQty === 0 ? (
@@ -268,7 +285,6 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                         </>
                     ) : <>
                         <td className="txn-obligation">
-                            {"☞ "}
                             {txnQty < 0 ? (
                                 <span className="txnqty numeric">{Math.abs(txnQty)} {commodityUnit(comm).short}</span>
                             ) : (
@@ -281,15 +297,14 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                             ) : (
                                 <span className="txnprice">${txnPrice.toFixed(2)}</span>
                             )}
-                            {" ☜"}
                         </td>
                     </>}
                     <td>
                         <button
-                            disabled={!marketQty}
-                            onClick={() => addPurchase(comm)}
+                            disabled={buyBtnDisabled}
+                            onClick={() => addPurchase(comm, qty)}
                         >
-                            Buy{ctrlDown && <span className="btn-10x"> x10</span>}
+                            ☜ Buy{ctrlDown && <span className="btn-10x"> x10</span>}
                         </button>
                     </td>
                     <td className='numeric'>{marketQty ?? "⸺"}</td>

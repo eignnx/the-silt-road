@@ -66,7 +66,7 @@ export const BANK = {
      * 
      * @param srcAccount 
      * @param dstAccount 
-     * @param amount 
+     * @param amount Must be positive!
      * @throws Error("INSUFFICIENT FUNDS")
      */
     async transfer(srcAccount: string, dstAccount: string, amount: number) {
