@@ -24,8 +24,10 @@ export const PLAYER_INVENTORY = {
         const inventory = await this.get();
         for (const [comm, qty] of Object.entries(updates)) {
             const newQty = (inventory[comm as Commodity] ?? 0) + qty;
-            if (newQty >= 0) {
+            if (newQty > 0) {
                 inventory[comm as Commodity] = newQty;
+            } else if (newQty === 0) {
+                inventory[comm as Commodity] = undefined;
             } else {
                 throw new Error(`Cannot take Player Inventory quantity for ${comm} below zero to ${newQty}`);
             }

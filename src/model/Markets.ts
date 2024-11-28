@@ -137,11 +137,15 @@ export const MARKETS = {
         for (const [commKey, qtyDelta] of Object.entries(change)) {
             const comm = commKey as Commodity;
             const onHandQty = market.inventory[comm] ?? 0;
-            if (onHandQty + qtyDelta < 0) {
+            const newQty = onHandQty + qtyDelta;
+            if (newQty > 0) {
+                market.inventory[comm] = newQty;
+            } else if (newQty === 0) {
+                market.inventory[comm] = undefined;
+            } else if (newQty < 0) {
                 console.error(comm, { onHandQty, qtyDelta });
                 throw new Error(`Cannot reduce inventory below 0`);
             }
-            market.inventory[comm] = onHandQty + qtyDelta;
         }
         await this.replaceMarket(town, market);
         return market;
