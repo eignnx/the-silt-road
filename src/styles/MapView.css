@@ -4,8 +4,8 @@
 
         background-color: var(--clr-light);
         color: var(--clr-dark);
-        width: 100ch;
-        height: 90ch;
+        width: 70ch;
+        height: 60ch;
         vertical-align: auto;
         margin-block: 2rem;
         /* Setup stacking ctx for children */
