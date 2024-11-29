@@ -1,3 +1,4 @@
+import { Weight } from './Commodities';
 import { MakeStorage } from './storage-template';
 
 export const DRAFT_ANIMALS = [
@@ -23,10 +24,32 @@ export function pluralizeDraftAnimal(draftAnimal: DraftAnimal, qty: number): str
     }
 }
 
+export type DraftAnimalStats = {
+    maxHaulingWeight: Weight;
+    basePrice: number;
+};
+
+export function draftAnimalStats(animal: DraftAnimal): DraftAnimalStats {
+    switch (animal) {
+        case 'horse': return {
+            maxHaulingWeight: Weight.fromTons(1),
+            basePrice: 150.00,
+        };
+        case 'ox': return {
+            maxHaulingWeight: Weight.fromTons(1.75),
+            basePrice: 130.00,
+        };
+        case 'mule': return {
+            maxHaulingWeight: Weight.fromTons(0.65),
+            basePrice: 75.00,
+        };
+    }
+}
+
 export const WAGONS = [
     // The classic covered wagon.
     "conestoga",
-    // The largest cargo wagon. Requires lots of  draught animals.
+    // The largest cargo wagon. Requires lots of draft animals.
     "team wagon",
     // Medium-sized cargo wagon.
     "flatbed",
@@ -50,6 +73,36 @@ export function displayWagon(wagon: Wagon): string {
             return "cart";
         case "chuck wagon":
             return "chuck wagon";
+    }
+}
+
+export type WagonStats = {
+    cargoCapacity: Weight;
+    basePrice: number;
+};
+
+export function wagonStats(wagon: Wagon): WagonStats {
+    switch (wagon) {
+        case 'conestoga': return {
+            cargoCapacity: Weight.fromTons(8),
+            basePrice: 250.00,
+        };
+        case 'team wagon': return {
+            cargoCapacity: Weight.fromTons(10),
+            basePrice: 325.00,
+        };
+        case 'flatbed': return {
+            cargoCapacity: Weight.fromTons(5),
+            basePrice: 130.00,
+        };
+        case 'cart': return {
+            cargoCapacity: Weight.fromTons(0.75),
+            basePrice: 45.00,
+        };
+        case 'chuck wagon': return {
+            cargoCapacity: Weight.fromTons(1.25),
+            basePrice: 85.00,
+        };
     }
 }
 
@@ -95,5 +148,17 @@ export const CARAVAN = {
 
         await this.replace(caravan);
         return caravan;
+    },
+
+    async cargoCapacity(): Promise<Weight> {
+        const { wagons } = await this.get();
+        let total = Weight.fromLbs(0);
+        for (const wagonKey in wagons) {
+            const wagon = wagonKey as Wagon;
+            const qty = wagons[wagon] ?? 0;
+            const cap = wagonStats(wagon).cargoCapacity;
+            total = total.plus(cap.times(qty));
+        }
+        return total;
     }
 };

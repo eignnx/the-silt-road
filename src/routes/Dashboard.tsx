@@ -3,21 +3,28 @@ import '../styles/Dashboard.css';
 import { BANK, PLAYER_ACCT } from '../model/BankAcct';
 import { PLAYER_INFO, PlayerInfo } from '../model/PlayerInfo';
 import { RESET_ALL_STORAGE } from '../model/storage-template';
+import { Commodity, commodityUnitWeight, Inventory, Weight } from '../model/Commodities';
+import { PLAYER_INVENTORY } from '../model/PlayerInventory';
+import { CARAVAN } from '../model/PlayerCaravan';
 
 type LoaderRetTy = {
     playerAccountBalance: number;
     playerInfo: PlayerInfo;
+    playerInventory: Inventory;
+    caravanCapacity: Weight;
 };
 
 export async function dashboardLoader(): Promise<LoaderRetTy> {
     return {
         playerAccountBalance: await BANK.getAcctBalance(PLAYER_ACCT),
         playerInfo: await PLAYER_INFO.get(),
+        playerInventory: await PLAYER_INVENTORY.get(),
+        caravanCapacity: await CARAVAN.cargoCapacity(),
     };
 }
 
 export default function Dashboard() {
-    const { playerAccountBalance, playerInfo } = useLoaderData() as LoaderRetTy;
+    const { playerAccountBalance, playerInfo, playerInventory, caravanCapacity } = useLoaderData() as LoaderRetTy;
 
     const links = {
         map: 'Map',
@@ -28,8 +35,14 @@ export default function Dashboard() {
         "wagon-shop": "Wagon Shop",
     };
 
-    const cargoWeight = 1200;
-    const cargoCapacity = 4475;
+    let cargoWeight = 0;
+    for (const commKey in playerInventory) {
+        const comm = commKey as Commodity;
+        const qty = playerInventory[comm] ?? 0;
+        cargoWeight += commodityUnitWeight(comm).times(qty).inLbs();
+    }
+
+    const cargoCapacity = caravanCapacity.inLbs();
 
     return (
         <div className="dashboard-wrapper">
