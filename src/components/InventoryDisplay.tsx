@@ -31,7 +31,7 @@ export default function InventoryDisplay() {
                 <span>Form 57-CM</span>
                 <span>Date of survey: <span className="handwritten">5/21</span></span>
             </div>
-            <table >
+            <table>
                 <thead>
                     <tr>
                         <th>Good</th>

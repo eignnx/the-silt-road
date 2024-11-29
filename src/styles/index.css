@@ -6,6 +6,7 @@
   --clr-dark-lighter: color(from var(--clr-dark) srgb r g b / 60%);
   --ink-blue: rgb(29, 29, 87);
   --clr-dirt: rgb(94, 82, 77);
+  --clr-disabled-text: rgba(68, 60, 55, 0.36);
   --clr-ink-red: color-mix(in oklab, maroon 75%, red);
   --clr-ink-green: darkgreen;
 
@@ -47,24 +48,27 @@ h6 {
 }
 
 button {
-  background-color: var(--clr-dark);
-  color: var(--clr-light);
+  background-color: transparent;
+  color: var(--clr-dark);
   font-variant: small-caps;
-  border: none;
+  border: 1px solid var(--clr-dark);
   border-radius: 3px;
   padding: 0.3rem;
-  transition: color 200ms, background-color 200ms;
-
+  transition: color 200ms, background-color 200ms, border-color 200ms;
+  display: flex;
+  align-items: center;
 }
 
 button:hover {
-  background-color: rgb(133, 92, 69);
+  background-color: var(--clr-dark);
+  color: var(--clr-light);
   cursor: pointer;
 }
 
 button:disabled {
   background-color: rgba(75, 58, 36, 0.446);
-  color: rgba(68, 60, 55, 0.601);
+  color: var(--clr-disabled-text);
+  border-color: var(--clr-disabled-text);
 }
 
 form>* {
