@@ -6,6 +6,7 @@ import { Commodity, commodityUnitWeight, Inventory, Weight } from '../../model/C
 import { PLAYER_INVENTORY } from '../../model/PlayerInventory';
 import { CARAVAN } from '../../model/PlayerCaravan';
 import './Dashboard.css';
+import CargoMeter from '../../components/CargoMeter';
 
 type LoaderRetTy = {
     playerAccountBalance: number;
@@ -74,16 +75,10 @@ export default function Dashboard() {
                         <tr>
                             <td colSpan={2}>
                                 <div>Cargo & Capacity</div>
-                                <div>{cargoWeight}lbs / {cargoCapacity}lbs</div>
-                                <div>
-                                    <meter
-                                        min={0}
-                                        max={cargoCapacity}
-                                        value={cargoWeight}
-                                        optimum={0}
-                                        high={cargoCapacity * 0.9}
-                                    >{cargoWeight}/{cargoCapacity}</meter>
-                                </div>
+                                <CargoMeter
+                                    cargo={Weight.fromLbs(cargoWeight)}
+                                    capacity={Weight.fromLbs(cargoCapacity)}
+                                />
                             </td>
                         </tr>
                         <tr>

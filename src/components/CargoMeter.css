@@ -1,0 +1,49 @@
+.cargo-meter {
+    width: 100%;
+    margin-block: 0.25rem;
+
+    .meter-guage {
+        --meter-height: 0.25rem;
+        height: var(--meter-height);
+        background-color: rgb(255, 237, 211);
+        position: relative;
+
+        border-radius: 0.3rem;
+        margin-block-end: 0.25rem;
+
+        & * {
+            border-radius: 0.3rem;
+        }
+
+        .filling-bar {
+            height: var(--meter-height);
+            background-color: var(--clr-ink-green);
+            width: calc(min(var(--full-pct), 100) * 1%);
+            position: absolute;
+            left: 0;
+        }
+
+        .overfilling-bar {
+            height: var(--meter-height);
+            background-color: rgb(255, 171, 135);
+            animation: 500ms ease infinite alternate blink-warning;
+
+            --overfilled: calc(max(0, var(--full-pct) - 100));
+
+            width: calc(1% * min(100, sqrt(var(--overfilled))));
+            position: absolute;
+            right: 0;
+            z-index: 10;
+        }
+    }
+}
+
+@keyframes blink-warning {
+    from {
+        box-shadow: 0 0 20px 15px red;
+    }
+
+    to {
+        box-shadow: 0 0 10px 5px red;
+    }
+}
