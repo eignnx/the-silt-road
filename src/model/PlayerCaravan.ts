@@ -96,7 +96,7 @@ export function wagonStats(wagon: Wagon): WagonStats {
             basePrice: 130.00,
         };
         case 'cart': return {
-            cargoCapacity: Weight.fromTons(0.75),
+            cargoCapacity: Weight.fromLbs(350),
             basePrice: 45.00,
         };
         case 'chuck wagon': return {
@@ -117,12 +117,10 @@ export type Caravan = {
 
 const DEFAULT_PLAYER_CARAVAN: Caravan = {
     draftAnimals: {
-        horse: 2,
-        ox: 6,
+        mule: 1,
     },
     wagons: {
-        conestoga: 1,
-        flatbed: 1,
+        cart: 1,
     },
 };
 
