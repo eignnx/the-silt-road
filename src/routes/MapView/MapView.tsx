@@ -1,8 +1,8 @@
 import { redirect, useLoaderData, useNavigate, useSubmit } from 'react-router-dom';
-import { WORLD_MAP, WorldMap } from "../model/Towns";
-import { TRADE_LEDGER } from '../model/TradeLedger';
+import { WORLD_MAP, WorldMap } from "../../model/Towns";
+import { TRADE_LEDGER } from '../../model/TradeLedger';
 
-import "../styles/MapView.css";
+import "./MapView.css";
 
 export type LoaderData = {
     worldMap: WorldMap;

@@ -6,7 +6,7 @@ import Dashboard, { dashboardLoader } from './routes/Dashboard';
 import MarketView, { marketViewAction, marketViewLoader } from './routes/MarketView/MarketView';
 import CaravanEditor, { caravanEditorAction, caravanEditorLoader } from './routes/CaravanEditor';
 import EmployeesView, { employeesViewAction, employeesViewLoader } from './routes/EmployeesView';
-import MapView, { mapViewAction, mapViewLoader } from './routes/MapView';
+import MapView, { mapViewAction, mapViewLoader } from './routes/MapView/MapView';
 import WagonShopPage, { wagonShopAction, wagonShopLoader } from './routes/WagonShop';
 
 export const router = createBrowserRouter([
