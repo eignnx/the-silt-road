@@ -1,12 +1,11 @@
 import { Dispatch, useEffect, useRef, useState } from 'react';
-import { Commodity, commodityAbbreviatedName, commodityUnit, Inventory } from '../model/Commodities';
-import { marketPrice } from '../model/Markets';
 import { useFetcher, useLoaderData } from 'react-router-dom';
-import { InventoryCmpRow, MarketViewLoaderData } from '../routes/MarketView/MarketView';
-import { titleCase } from '../utils';
-
-import "../styles/BillOfSale.css";
-import { TRADE_LEDGER } from '../model/TradeLedger';
+import { Commodity, commodityAbbreviatedName, commodityUnit, Inventory } from '../../model/Commodities';
+import { marketPrice } from '../../model/Markets';
+import { TRADE_LEDGER } from '../../model/TradeLedger';
+import { InventoryCmpRow, MarketViewLoaderData } from './MarketView';
+import { titleCase } from '../../utils';
+import "./BillOfSale.css";
 
 type Props = {
     orderedInventories: InventoryCmpRow[];
