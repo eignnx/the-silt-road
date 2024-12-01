@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import CargoView, { cargoViewLoader, cargoViewAction } from './routes/CargoView/CargoView';
-import ErrorPage from './routes/ErrorPage';
+import ErrorPage from './routes/ErrorPage/ErrorPage';
 import MainMenu from './routes/MainMenu/MainMenu';
 import Dashboard, { dashboardLoader } from './routes/Dashboard/Dashboard';
 import MarketView, { marketViewAction, marketViewLoader } from './routes/MarketView/MarketView';
