@@ -251,7 +251,7 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
             const txnPrice = Math.abs(marketUnitPrice * txnQty);
 
             const commShort = titleCase(commodityAbbreviatedName(comm));
-            const commLong = titleCase(comm) !== commShort ? titleCase(comm) : undefined;
+            const commLong = titleCase(comm);
 
 
             const invLookupPrice = tradeLedger.inventoryAvgPrices[comm]?.price;
@@ -308,7 +308,7 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                         </button>
                     </td>
                     <td className='numeric'>{marketQty ?? "⸺"}</td>
-                    <th scope="row" className="commname" title={commLong}>{commShort}</th>
+                    <th scope="row" className="commname">{commLong}</th>
                     <td className="unitprice">
                         {shouldDisplayCmpWithCargo && <div
                             className="market-price-cmp-to-cargo-cost"

@@ -118,7 +118,7 @@
         text-align: center;
         font-weight: 300;
         text-transform: uppercase;
-        font-size: large;
+        width: min-content;
         padding-inline: 0.5rem;
         font-family: var(--fnt-impact);
 
