@@ -61,6 +61,7 @@ button {
     border-color var(--btn-transition-speed);
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 button:hover {
