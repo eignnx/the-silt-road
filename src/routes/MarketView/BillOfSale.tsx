@@ -263,8 +263,10 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
 
             const qty = !ctrlDown ? 1 : 10;
 
-            const sellBtnDisabled = ((playerQty ?? 0) - Math.max(txnQty, 0)) <= 0;
-            const buyBtnDisabled = ((marketQty ?? 0) - Math.min(txnQty, 0)) <= 0;
+            const qtyBeingSold = Math.max(0, -txnQty);
+            const qtyBeingBought = Math.max(0, txnQty);
+            const sellBtnDisabled = !((playerQty ?? 0) > 0 || qtyBeingBought > 0);
+            const buyBtnDisabled = !((marketQty ?? 0) > 0 || qtyBeingSold > 0);
 
             return (playerQty || marketQty || txnQty !== 0) ?
                 <tr>
