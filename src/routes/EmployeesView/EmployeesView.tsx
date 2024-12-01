@@ -1,8 +1,7 @@
 import { useLoaderData } from 'react-router-dom';
-
-import "../styles/EmployeesView.css";
-import { PLAYER_INFO } from '../model/PlayerInfo';
-import { titleCase } from '../utils';
+import { PLAYER_INFO } from '../../model/PlayerInfo';
+import { titleCase } from '../../utils';
+import "./EmployeesView.css";
 
 type LoaderRetTy = { companyName: string; };
 
