@@ -76,7 +76,7 @@ export function commodityBasePrice1860(commodity: Commodity): number {
             case 'tobacco':
                 return 2.35 * 75; // Price per "farm bale": http://www.aointl.com/files/1414/5796/7368/Glossary_of_Tobacco_Terms.pdf
             case "cheese":
-                return 5.731 * 55.0; // per pound * 55 pounds per wheel
+                return 5.731; // per pound
             case "lumber":
                 return 15.55 / 4.0; // Price of home depot 1x12x4ft board
             case "heavy machinery":
