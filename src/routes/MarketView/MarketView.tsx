@@ -1,16 +1,16 @@
-import { useLoaderData } from 'react-router-dom';
-import { COMMODITIES, Commodity, Inventory } from '../model/Commodities';
-import { Market, MARKETS } from '../model/Markets';
-import { PLAYER_INVENTORY } from '../model/PlayerInventory';
-
-import '../styles/MarketView.css';
-import { BANK, PLAYER_ACCT } from '../model/BankAcct';
-import { PLAYER_INFO, PlayerInfo } from '../model/PlayerInfo';
-import { WORLD_MAP } from '../model/Towns';
-import BillOfSale from '../components/BillOfSale';
-import TradeLedger from '../components/TradeLedger';
-import { TRADE_LEDGER, TradeLedger as TradeLedgerData } from '../model/TradeLedger';
 import { useState } from 'react';
+import { useLoaderData } from 'react-router-dom';
+import { COMMODITIES, Commodity, Inventory } from '../../model/Commodities';
+import { Market, MARKETS } from '../../model/Markets';
+import { PLAYER_INVENTORY } from '../../model/PlayerInventory';
+import { BANK, PLAYER_ACCT } from '../../model/BankAcct';
+import { PLAYER_INFO, PlayerInfo } from '../../model/PlayerInfo';
+import { WORLD_MAP } from '../../model/Towns';
+import BillOfSale from '../../components/BillOfSale';
+import TradeLedger from '../../components/TradeLedger';
+import { TRADE_LEDGER, TradeLedger as TradeLedgerData } from '../../model/TradeLedger';
+
+import './MarketView.css';
 
 
 export type MarketViewLoaderData = {

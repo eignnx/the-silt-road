@@ -1,10 +1,10 @@
 import { useLoaderData } from 'react-router-dom';
 import { COMMODITIES, Commodity, commodityAbbreviatedName, UnitPriceSummary } from '../model/Commodities';
+import { marketPrice } from '../model/Markets';
 import { titleCase } from '../utils';
+import { MarketViewLoaderData } from '../routes/MarketView/MarketView';
 
 import "../styles/TradeLedger.css";
-import { MarketViewLoaderData } from '../routes/MarketView';
-import { marketPrice } from '../model/Markets';
 
 type CommodityRows = {
     [comm in Commodity]?: {
