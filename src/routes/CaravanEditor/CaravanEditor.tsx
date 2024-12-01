@@ -1,7 +1,7 @@
 import { Form, useFetcher, useLoaderData } from 'react-router-dom';
-import { CARAVAN, Caravan, displayWagon, DRAFT_ANIMALS, DraftAnimal, pluralizeDraftAnimal, Wagon, WAGONS } from '../model/PlayerCaravan';
-import "../styles/CaravanEditor.css";
-import { titleCase } from '../utils';
+import { CARAVAN, Caravan, displayWagon, DRAFT_ANIMALS, DraftAnimal, pluralizeDraftAnimal, Wagon, WAGONS } from '../../model/PlayerCaravan';
+import { titleCase } from '../../utils';
+import "./CaravanEditor.css";
 
 export async function caravanEditorLoader() {
     return { caravan: await CARAVAN.get() };

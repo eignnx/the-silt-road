@@ -1,10 +1,10 @@
 import { createBrowserRouter } from 'react-router-dom';
 import CargoView, { cargoViewLoader, cargoViewAction } from './routes/CargoView/CargoView';
 import ErrorPage from './routes/ErrorPage';
-import MainMenu from './routes/MainMenu';
+import MainMenu from './routes/MainMenu/MainMenu';
 import Dashboard, { dashboardLoader } from './routes/Dashboard/Dashboard';
 import MarketView, { marketViewAction, marketViewLoader } from './routes/MarketView/MarketView';
-import CaravanEditor, { caravanEditorAction, caravanEditorLoader } from './routes/CaravanEditor';
+import CaravanEditor, { caravanEditorAction, caravanEditorLoader } from './routes/CaravanEditor/CaravanEditor';
 import EmployeesView, { employeesViewAction, employeesViewLoader } from './routes/EmployeesView/EmployeesView';
 import MapView, { mapViewAction, mapViewLoader } from './routes/MapView/MapView';
 import WagonShopPage, { wagonShopAction, wagonShopLoader } from './routes/WagonShop/WagonShop';
