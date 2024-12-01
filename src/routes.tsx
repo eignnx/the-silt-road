@@ -7,7 +7,7 @@ import MarketView, { marketViewAction, marketViewLoader } from './routes/MarketV
 import CaravanEditor, { caravanEditorAction, caravanEditorLoader } from './routes/CaravanEditor';
 import EmployeesView, { employeesViewAction, employeesViewLoader } from './routes/EmployeesView/EmployeesView';
 import MapView, { mapViewAction, mapViewLoader } from './routes/MapView/MapView';
-import WagonShopPage, { wagonShopAction, wagonShopLoader } from './routes/WagonShop';
+import WagonShopPage, { wagonShopAction, wagonShopLoader } from './routes/WagonShop/WagonShop';
 
 export const router = createBrowserRouter([
     {

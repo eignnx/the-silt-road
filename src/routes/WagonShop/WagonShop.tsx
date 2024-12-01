@@ -1,7 +1,7 @@
 import { useLoaderData } from 'react-router-dom';
-import { displayWagon, Wagon } from '../model/PlayerCaravan';
-import { titleCase } from '../utils';
-import "../styles/WagonShop.css";
+import { displayWagon, Wagon } from '../../model/PlayerCaravan';
+import { titleCase } from '../../utils';
+import "./WagonShop.css";
 
 type LoaderData = {};
 
