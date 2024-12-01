@@ -1,11 +1,11 @@
 import { NavLink, Outlet, useLoaderData } from 'react-router-dom';
-import '../styles/Dashboard.css';
-import { BANK, PLAYER_ACCT } from '../model/BankAcct';
-import { PLAYER_INFO, PlayerInfo } from '../model/PlayerInfo';
-import { RESET_ALL_STORAGE } from '../model/storage-template';
-import { Commodity, commodityUnitWeight, Inventory, Weight } from '../model/Commodities';
-import { PLAYER_INVENTORY } from '../model/PlayerInventory';
-import { CARAVAN } from '../model/PlayerCaravan';
+import { BANK, PLAYER_ACCT } from '../../model/BankAcct';
+import { PLAYER_INFO, PlayerInfo } from '../../model/PlayerInfo';
+import { RESET_ALL_STORAGE } from '../../model/storage-template';
+import { Commodity, commodityUnitWeight, Inventory, Weight } from '../../model/Commodities';
+import { PLAYER_INVENTORY } from '../../model/PlayerInventory';
+import { CARAVAN } from '../../model/PlayerCaravan';
+import './Dashboard.css';
 
 type LoaderRetTy = {
     playerAccountBalance: number;
