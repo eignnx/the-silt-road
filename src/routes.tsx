@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import CargoView, { cargoViewLoader, cargoViewAction } from './routes/CargoView';
+import CargoView, { cargoViewLoader, cargoViewAction } from './routes/CargoView/CargoView';
 import ErrorPage from './routes/ErrorPage';
 import MainMenu from './routes/MainMenu';
 import Dashboard, { dashboardLoader } from './routes/Dashboard';

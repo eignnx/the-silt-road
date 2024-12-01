@@ -1,10 +1,9 @@
 import { useLoaderData } from 'react-router-dom';
-import { commodityUnit, commodityUnitWeight, Weight } from '../model/Commodities';
-import { currencyDisplay, titleCase } from '../utils';
-import { Commodity } from '../model/Commodities';
-import { LoaderData } from '../routes/CargoView';
-
-import "../styles/Inventory.css";
+import { commodityUnit, commodityUnitWeight, Weight } from '../../model/Commodities';
+import { currencyDisplay, titleCase } from '../../utils';
+import { Commodity } from '../../model/Commodities';
+import { LoaderData } from './CargoView';
+import "./Inventory.css";
 
 export default function InventoryDisplay() {
     const { inventory, inventoryAvgPrices } = useLoaderData() as LoaderData;

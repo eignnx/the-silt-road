@@ -1,8 +1,8 @@
-import { PLAYER_INVENTORY } from '../model/PlayerInventory';
-import InventoryDisplay from '../components/InventoryDisplay';
-import "../styles/Inventory.css";
-import { Commodity, Inventory } from '../model/Commodities';
-import { TRADE_LEDGER } from '../model/TradeLedger';
+import InventoryDisplay from './InventoryDisplay';
+import { Commodity, Inventory } from '../../model/Commodities';
+import { TRADE_LEDGER } from '../../model/TradeLedger';
+import { PLAYER_INVENTORY } from '../../model/PlayerInventory';
+import "./Inventory.css";
 
 export type LoaderData = {
     inventory: Inventory,
