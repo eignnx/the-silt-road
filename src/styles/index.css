@@ -54,7 +54,11 @@ button {
   border: 1px solid var(--clr-dark);
   border-radius: 3px;
   padding: 0.3rem;
-  transition: color 200ms, background-color 200ms, border-color 200ms;
+  --btn-transition-speed: 100ms;
+  transition:
+    color var(--btn-transition-speed),
+    background-color var(--btn-transition-speed),
+    border-color var(--btn-transition-speed);
   display: flex;
   align-items: center;
 }
