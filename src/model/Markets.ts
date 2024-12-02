@@ -51,24 +51,23 @@ export function generateMarket(town: string): Market {
     }
 
     let marketName = randChoice(
-        (town.length < 12)
-            ? [
-                `Markets at ${town}`,
-                `${town} General Market`,
-                `${town} Plaza`,
-                `${town} Co-Op.`,
-                `${town}'s Market`,
-                `${town}'s Trade Goods`,
-                `Traders at ${town}`,
-            ]
-            : [
-                `${genHumanLastName()} ${randChoice([
-                    " & Son's",
-                    "'s Market",
-                    "'s Trade Goods",
-                ])}`,
-                `Trader ${genHumanFirstName()}'s`
-            ]
+        [
+            `Markets at ${town}`,
+            `${town} General Market`,
+            `${town} Plaza`,
+            `${town} Farmers' Cooperative`,
+            `${town}'s Market`,
+            `${town}'s Trade Goods`,
+            `Markets at ${town}`,
+            `${town} Wholesaler`,
+            `${town} General Wares`,
+            `${genHumanLastName()}${randChoice([
+                " & Sons",
+                "'s Wholesale Retailer",
+                "'s Trade Goods",
+                `'s Farm & Tackle`,
+            ])}`,
+        ]
     );
 
     return { name: marketName, inventory, priceDeviations };
