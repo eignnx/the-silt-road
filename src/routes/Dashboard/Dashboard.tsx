@@ -7,6 +7,7 @@ import { PLAYER_INVENTORY } from '../../model/PlayerInventory';
 import { CARAVAN } from '../../model/PlayerCaravan';
 import './Dashboard.css';
 import CargoMeter from '../../components/CargoMeter';
+import React, { SetStateAction, useContext, useState } from 'react';
 
 type LoaderRetTy = {
     playerAccountBalance: number;
@@ -24,8 +25,20 @@ export async function dashboardLoader(): Promise<LoaderRetTy> {
     };
 }
 
+type TxnWeightCtx = {
+    setTxnWeight: React.Dispatch<React.SetStateAction<Weight>>;
+    overCapacity: boolean;
+};
+
+export const SetTxnWeight = React.createContext<TxnWeightCtx>({
+    setTxnWeight: () => { },
+    overCapacity: false,
+});
+
 export default function Dashboard() {
     const { playerAccountBalance, playerInfo, playerInventory, caravanCapacity } = useLoaderData() as LoaderRetTy;
+
+    const [txnWeight, setTxnWeight] = useState(Weight.fromLbs(0));
 
     const links = {
         map: 'Map',
@@ -36,14 +49,15 @@ export default function Dashboard() {
         "wagon-shop": "Wagon Shop",
     };
 
-    let cargoWeight = 0;
+    let cargoWeight = Weight.fromLbs(0);
     for (const commKey in playerInventory) {
         const comm = commKey as Commodity;
         const qty = playerInventory[comm] ?? 0;
-        cargoWeight += commodityUnitWeight(comm).times(qty).inLbs();
+        cargoWeight = cargoWeight.plus(commodityUnitWeight(comm).times(qty));
     }
 
-    const cargoCapacity = caravanCapacity.inLbs();
+    cargoWeight = cargoWeight.plus(txnWeight);
+    const overCapacity = cargoWeight.inLbs() > caravanCapacity.inLbs();
 
     return (
         <div className="dashboard-wrapper">
@@ -76,8 +90,8 @@ export default function Dashboard() {
                             <td colSpan={2}>
                                 <div>Cargo & Capacity</div>
                                 <CargoMeter
-                                    cargo={Weight.fromLbs(cargoWeight)}
-                                    capacity={Weight.fromLbs(cargoCapacity)}
+                                    cargo={cargoWeight}
+                                    capacity={caravanCapacity}
                                 />
                             </td>
                         </tr>
@@ -94,9 +108,11 @@ export default function Dashboard() {
                 </section>
             </aside>
             <main className='dashboard-outlet'>
-                <div>
-                    <Outlet />
-                </div>
+                <SetTxnWeight.Provider value={{ overCapacity, setTxnWeight }}>
+                    <div>
+                        <Outlet />
+                    </div>
+                </SetTxnWeight.Provider>
             </main>
         </div>
     );

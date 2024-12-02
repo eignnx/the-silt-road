@@ -1,11 +1,13 @@
-import { Dispatch, useEffect, useRef, useState } from 'react';
+import { Dispatch, useContext, useEffect, useRef, useState } from 'react';
 import { useFetcher, useLoaderData } from 'react-router-dom';
-import { Commodity, commodityAbbreviatedName, commodityUnit, Inventory } from '../../model/Commodities';
+import { Commodity, commodityAbbreviatedName, commodityUnit, commodityUnitWeight, Inventory, Weight } from '../../model/Commodities';
 import { marketPrice } from '../../model/Markets';
 import { TRADE_LEDGER } from '../../model/TradeLedger';
 import { InventoryCmpRow, MarketViewLoaderData } from './MarketView';
 import { titleCase } from '../../utils';
 import "./BillOfSale.css";
+import { SetTxnWeight } from '../Dashboard/Dashboard';
+import { CARAVAN } from '../../model/PlayerCaravan';
 
 type Props = {
     orderedInventories: InventoryCmpRow[];
@@ -20,6 +22,8 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
     } = useLoaderData() as MarketViewLoaderData;
 
     const fetcher = useFetcher();
+
+    const { overCapacity, setTxnWeight } = useContext(SetTxnWeight);
 
     function processCurrentTxn(): { [comm in Commodity]?: { price: number, qty: number; } } {
         return Object.fromEntries(
@@ -39,6 +43,7 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
             const txnQty = oldTxn[comm] ?? 0;
             qty = Math.min(qty, playerQty + txnQty);
 
+            setTxnWeight(oldWeight => oldWeight.plus(commodityUnitWeight(comm).times(-qty)));
             console.log("sale", comm, qty);
             return {
                 ...oldTxn,
@@ -53,12 +58,18 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
             const txnQty = oldTxn[comm] ?? 0;
             qty = Math.min(qty, marketQty - txnQty);
 
+            setTxnWeight(oldWeight => oldWeight.plus(commodityUnitWeight(comm).times(+qty)));
             console.log("purchase", comm, qty);
             return {
                 ...oldTxn,
                 [comm]: (oldTxn[comm] ?? 0) + qty
             };
         });
+    }
+
+    function voidTransaction() {
+        setCurrentTxn({});
+        setTxnWeight(Weight.fromLbs(0));
     }
 
     let totalBill = 0;
@@ -68,6 +79,10 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
     }
 
     const tooExpensiveForPlayer = totalBill > playerBankBalance;
+    const emptyTxn = Object.keys(currentTxn).length === 0;
+    const confirmTransactionBtnDisabled =
+        tooExpensiveForPlayer || emptyTxn || overCapacity;
+    const confirmBtnDisabledExplanation = tooExpensiveForPlayer ? "You lack the funds to make this purchase." : overCapacity ? "You lack the cargo capacity to make this purchase." : undefined;
 
     function submitForm() {
         fetcher.submit(
@@ -176,7 +191,7 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                                 <td
                                     colSpan={2}
                                     className={tooExpensiveForPlayer ? "price-too-expensive" : ""}
-                                    title={tooExpensiveForPlayer ? "You lack the funds to make this purchase!" : undefined}
+                                    title={confirmBtnDisabledExplanation}
                                 >
                                     ${Math.abs(totalBill).toFixed(2)}
                                 </td>
@@ -209,8 +224,8 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                                 <button
                                     type="submit"
                                     onClick={submitForm}
-                                    disabled={tooExpensiveForPlayer || Object.keys(currentTxn).length === 0}
-                                    title={tooExpensiveForPlayer ? "You lack the funds to make this purchase!" : undefined}
+                                    disabled={confirmTransactionBtnDisabled}
+                                    title={confirmBtnDisabledExplanation}
                                     style={{ width: "100%" }}
                                 >
                                     Confirm Transaction ✓
@@ -220,11 +235,10 @@ export default function BillOfSale({ orderedInventories, currentTxn, setCurrentT
                                 <button
                                     type="reset"
                                     disabled={totalBill === 0}
-                                    onClick={() => setCurrentTxn({})}
+                                    onClick={voidTransaction}
                                     style={{ width: "100%" }}
                                 >
                                     Void Transaction ✗
-
                                 </button>
                             </div>
                         </td>
