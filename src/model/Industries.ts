@@ -9,83 +9,83 @@ type DemandsSupplies<T> = {
 };
 
 export const INDUSTRIES_DEMANDS_SUPPLIES = {
-    WagonShop: {
+    "Wagon Shop": {
         demands: ["lumber", "iron"],
         supplies: [],
     },
-    LivestockAuction: {
+    "Livestock Auction": {
         demands: ["grain"],
         supplies: [],
     },
-    Warehouse: {
+    "Warehouse": {
         demands: [],
         supplies: [],
     },
-    Refinery: {
+    "Refinery": {
         demands: ["heavy machinery", "coal"],
         supplies: ["iron", "nickel", "copper"],
     },
-    LumberMill: {
+    "Lumber Mill": {
         demands: ["heavy machinery"],
         supplies: ["lumber"],
     },
-    Tavern: {
+    "Tavern": {
         demands: ["wine", "spirits", "cheese", "salted meat"],
         supplies: [],
     },
-    CoalMine: {
+    "Coal Mine": {
         demands: ["heavy machinery"],
         supplies: ["coal"],
     },
-    IronMine: {
+    "Iron Mine": {
         demands: ["heavy machinery"],
         supplies: ["iron"],
     },
-    CopperMine: {
+    "Copper Mine": {
         demands: ["heavy machinery"],
         supplies: ["copper"],
     },
-    NickelMine: {
+    "Nickel Mine": {
         demands: ["heavy machinery"],
         supplies: ["nickel"],
     },
-    GoldMine: {
+    "Gold Mine": {
         demands: ["heavy machinery"],
         supplies: ["gold"],
     },
-    Blacksmith: {
+    "Blacksmith": {
         demands: ["iron"],
         supplies: ["heavy machinery"],
     },
-    Weaver: {
+    "Weaver": {
         demands: ["wool"],
         supplies: ["textiles"],
     },
-    Tailor: {
+    "Tailor": {
         demands: ["textiles"],
         supplies: ["clothing"],
     },
-    Farm: {
+    "Farm": {
         demands: ["heavy machinery"],
         supplies: ["grain", "potatoes"],
     },
-    Mill: {
+    "Mill": {
         demands: ["grain"],
         supplies: ["flour"],
     },
-    Brewery: {
+    "Brewery": {
         demands: ["grain", "potatoes"],
         supplies: ["spirits"],
     },
-    Winery: {
+    "Winery": {
         demands: [],
         supplies: ["wine", "cheese"],
     },
-    Butcher: {
+    "Butcher": {
         demands: ["salt"],
         supplies: ["salted meat"],
     },
-    TrainStation: {
+    "Train Station": {
         demands: ["coal"],
         supplies: [
             "salt", "sugar", "cheese", "salted meat", "ammunition", "firearms",
