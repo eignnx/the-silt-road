@@ -1,0 +1,83 @@
+digraph Industries {
+    // concentrate="true";
+    // compound="true";
+    // esep="1.5";
+    overlap="compress";
+    beautify="true";
+    mindist="5.0";
+    node [style="filled", fontname="sans-serif", fontsize="10", width="0.5"];
+    subgraph Resources {
+        node [shape="ellipse", fillcolor="#ff8484ff"];
+        Ore;
+        Metals;
+        "Heavy Machinery";
+        Wool;
+        Textiles;
+        Clothing;
+        Grain;
+        Flour;
+        "Animal Feed";
+    }
+    subgraph cluster_Production {
+        node [shape="box", fillcolor="#84ff84ff"];
+        label="Production";
+        Mines;
+        Refineries;
+        "Heavy Industry";
+        "Domestic Goods";
+        "Wool Farms";
+        "Textile Factories";
+        "Clothing Factories";
+        "Grain Farm";
+        "Mill";
+    }
+    subgraph cluster_Distribution {
+        node [shape="box3d", fillcolor="#8484ffff"];
+        label="Distribution";
+        "Metals Warehouse";
+        "Machinery Wholesaler";
+        "Goods Wholesaler";
+        "Textile Wholesaler";
+        "Clothing Wholesaler";
+        "Grain Warehouse";
+    }
+    subgraph cluster_Retail {
+        node [shape="box", fillcolor="#ff84ffff"];
+        label="Retail";
+        "General Stores";
+        "Farm Stores";
+    }
+    subgraph cluster_Consumers {
+        node [shape="ellipse", fillcolor="#ffff84ff"];
+        label="Consumers";
+        "Households";
+    }
+    Mines -> Ore -> Refineries -> Metals -> "Metals Warehouse";
+    "Metals Warehouse" -> "Heavy Industry";
+    "Heavy Industry" -> {
+            "Heavy Machinery" -> "Machinery Wholesaler";
+            "Domestic Goods" -> "Goods Wholesaler";
+        };
+    "Machinery Wholesaler" -> {
+            Mines;
+            Refineries;
+            "Metals Warehouse";
+            "Goods Wholesaler";
+        };
+    "Goods Wholesaler" -> "General Stores";
+    "General Stores" -> {
+            "Households";
+            "Wool Farms";
+        };
+    "Wool Farms" -> Wool -> "Textile Factories" -> Textiles;
+    Textiles -> "Textile Wholesaler" -> "General Stores";
+    "Textile Wholesaler" -> "Clothing Factories" -> Clothing;
+    Clothing -> "Clothing Wholesaler" -> "General Stores";
+    "Grain Farm" -> Grain -> "Mill" -> Flour -> "Grain Warehouse";
+    "Grain Farm" -> "Animal Feed" -> "Grain Warehouse";
+    "Grain Warehouse" -> "Farm Stores";
+    "Farm Stores" -> {
+            "Grain Farm";
+            "Wool Farms";
+        };
+}

@@ -3,14 +3,14 @@ import { Commodity } from './Commodities';
 import { MakeStorage } from './storage-template';
 import { WORLD_MAP } from './Towns';
 
-type DemandsSupplies<T> = {
-    demands: T[],
-    supplies: T[],
+export type DemandsSupplies<T> = {
+    demands: T,
+    supplies: T,
 };
 
 export const INDUSTRIES_DEMANDS_SUPPLIES = {
     "Wagon Shop": {
-        demands: ["lumber", "iron"],
+        demands: ["lumber", "iron", "tools"],
         supplies: [],
     },
     "Livestock Auction": {
@@ -22,11 +22,11 @@ export const INDUSTRIES_DEMANDS_SUPPLIES = {
         supplies: [],
     },
     "Refinery": {
-        demands: ["heavy machinery", "coal"],
+        demands: ["tools", "coal"],
         supplies: ["iron", "nickel", "copper"],
     },
     "Lumber Mill": {
-        demands: ["heavy machinery"],
+        demands: ["tools"],
         supplies: ["lumber"],
     },
     "Tavern": {
@@ -34,28 +34,28 @@ export const INDUSTRIES_DEMANDS_SUPPLIES = {
         supplies: [],
     },
     "Coal Mine": {
-        demands: ["heavy machinery"],
+        demands: ["tools"],
         supplies: ["coal"],
     },
     "Iron Mine": {
-        demands: ["heavy machinery"],
+        demands: ["tools"],
         supplies: ["iron"],
     },
     "Copper Mine": {
-        demands: ["heavy machinery"],
+        demands: ["tools"],
         supplies: ["copper"],
     },
     "Nickel Mine": {
-        demands: ["heavy machinery"],
+        demands: ["tools"],
         supplies: ["nickel"],
     },
     "Gold Mine": {
-        demands: ["heavy machinery"],
+        demands: ["tools"],
         supplies: ["gold"],
     },
     "Blacksmith": {
-        demands: ["iron"],
-        supplies: ["heavy machinery"],
+        demands: ["iron", "coal"],
+        supplies: ["tools"],
     },
     "Weaver": {
         demands: ["wool"],
@@ -66,8 +66,12 @@ export const INDUSTRIES_DEMANDS_SUPPLIES = {
         supplies: ["clothing"],
     },
     "Farm": {
-        demands: ["heavy machinery"],
+        demands: ["tools"],
         supplies: ["grain", "potatoes"],
+    },
+    "Feed Mill": {
+        demands: ["grain"],
+        supplies: ["feed"],
     },
     "Mill": {
         demands: ["grain"],
@@ -89,7 +93,7 @@ export const INDUSTRIES_DEMANDS_SUPPLIES = {
         demands: ["coal"],
         supplies: [
             "salt", "sugar", "cheese", "salted meat", "ammunition", "firearms",
-            "heavy machinery", "clothing", "lumber", "wine",
+            "tools", "clothing", "lumber", "wine",
         ],
     },
 } as const;
@@ -107,7 +111,9 @@ async function DEFAULT(): Promise<TownBusinesses> {
         const population = randInt(100, 2000);
         let workers = 0.40 * population; // Assume 40% of population works.
         while (workers > 0) {
-            townBusinesses[townName].push(randChoice(objectKeys(INDUSTRIES_DEMANDS_SUPPLIES)));
+            const newBusiness = randChoice(objectKeys(INDUSTRIES_DEMANDS_SUPPLIES));
+            if (townBusinesses[townName].includes(newBusiness)) continue;
+            townBusinesses[townName].push(newBusiness);
             workers -= randInt(50, 250);
         }
     }

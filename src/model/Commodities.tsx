@@ -1,5 +1,5 @@
 export const COMMODITIES = [
-    "feed", "grain", "textiles", "ammunition", "firearms", "heavy machinery",
+    "feed", "grain", "textiles", "ammunition", "firearms", "tools",
     "medical supplies", "potatoes", "sugar", "salt", "tobacco", "lumber",
     "spirits", "coal", "flour", "wine", "salted meat", "cheese", "wool",
     "iron", "copper", "nickel", "gold", "clothing"
@@ -39,7 +39,7 @@ export function commodityUnit(commodity: Commodity): { short: string, long: stri
             return { long: "crates", short: "crate" };
         case "clothing":
         case "firearms":
-        case "heavy machinery":
+        case "tools":
             return { long: "pieces", short: "pc" };
         case "lumber":
             return { long: "board-feet", short: "bdft" };
@@ -79,7 +79,7 @@ export function commodityBasePrice1860(commodity: Commodity): number {
                 return 5.731; // per pound
             case "lumber":
                 return 15.55 / 4.0; // Price of home depot 1x12x4ft board
-            case "heavy machinery":
+            case "tools":
                 return 400; // Current price of Vulcan plow: https://bchmt.org/documents/education/Stock-DrawnEquipmentforTrailWork.pdf
             case "ammunition":
                 return 450.0; // Price of 1000 rounds of .45 ACP
@@ -204,7 +204,7 @@ export function commodityUnitWeight(comm: Commodity): Weight {
             return Weight.fromLbs(1.5);
         case "firearms":
             return Weight.fromLbs(12); // (Made up)
-        case "heavy machinery":
+        case "tools":
             return Weight.fromLbs(130); // Weight of Vulcan plow: https://bchmt.org/documents/education/Stock-DrawnEquipmentforTrailWork.pdf
         case "lumber":
             return Weight.fromOz(50); // Maple wood density: 0.6g/cm^3, 1 bd-ft = 144 in^4
@@ -225,7 +225,7 @@ export function commodityAbbreviatedName(comm: Commodity): string {
         case 'textiles': return 'txtl.';
         case 'ammunition': return 'amm.';
         case 'firearms': return 'arms';
-        case 'heavy machinery': return 'mchnr.';
+        case 'tools': return 'tools';
         case 'medical supplies': return 'meds';
         case 'potatoes': return 'ptoe.';
         case 'sugar': return 'sugr.';
