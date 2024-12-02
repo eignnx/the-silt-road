@@ -19,6 +19,11 @@
   --fnt-rubberstamp: "Rubik Dirt", system-ui;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   background: radial-gradient(var(--clr-dirt), rgb(26, 20, 14));
   color: white;
@@ -45,6 +50,7 @@ h5,
 h6 {
   font-family: var(--fnt-woodtype);
   font-weight: 600;
+  text-align: center;
 }
 
 button {

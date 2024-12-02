@@ -14,6 +14,7 @@ export type WorldMap = {
 
 
 function generateWorldMap(): WorldMap {
+    console.log("GENERATING MAP");
     return {
         playerLocation: "Rattsville",
         towns: [
@@ -37,7 +38,8 @@ export const WORLD_MAP = {
     }),
 
     async getTownMapPins(): Promise<TownMapPin[]> {
-        return [];
+        const worldMap = await this.get();
+        return worldMap.towns;
     },
 
     async getPlayerLocation(): Promise<string> {

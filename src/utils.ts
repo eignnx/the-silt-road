@@ -12,10 +12,22 @@ export function randChoice<T>(arr: T[]): T {
     return arr[idx]!;
 }
 
+export function randInt(low: number, high: number): number {
+    return Math.floor(Math.random() * (high - low) + low);
+}
+
 export function currencyDisplay(amountDollars: number): string {
     if (amountDollars < 1.00) {
         return `${(amountDollars * 100).toFixed(0)}¢`;
     } else {
         return `$${amountDollars.toFixed(2)}`;
     }
+}
+
+export function objectKeys<O extends Object>(obj: O): (keyof O)[] {
+    return Object.keys(obj) as (keyof O)[];
+}
+
+export function objectEntries<O extends Object>(obj: O): [keyof O, O[keyof O]][] {
+    return Object.entries(obj) as [keyof O, O[keyof O]][];
 }

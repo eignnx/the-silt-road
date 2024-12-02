@@ -8,6 +8,7 @@ import CaravanEditor, { caravanEditorAction, caravanEditorLoader } from './route
 import EmployeesView, { employeesViewAction, employeesViewLoader } from './routes/EmployeesView/EmployeesView';
 import MapView, { mapViewAction, mapViewLoader } from './routes/MapView/MapView';
 import WagonShopPage, { wagonShopAction, wagonShopLoader } from './routes/WagonShop/WagonShop';
+import TownView, { townViewAction, townViewLoader } from './routes/TownView/TownView';
 
 export const router = createBrowserRouter([
     {
@@ -56,6 +57,12 @@ export const router = createBrowserRouter([
                 element: <WagonShopPage />,
                 loader: wagonShopLoader,
                 action: wagonShopAction,
+            },
+            {
+                path: "town",
+                element: <TownView />,
+                loader: townViewLoader,
+                action: townViewAction,
             },
         ]
     },

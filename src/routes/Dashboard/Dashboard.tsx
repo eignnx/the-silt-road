@@ -47,6 +47,7 @@ export default function Dashboard() {
         caravan: 'Caravan',
         employees: 'Employees',
         "wagon-shop": "Wagon Shop",
+        "town": "Town Overview",
     };
 
     let cargoWeight = Weight.fromLbs(0);
