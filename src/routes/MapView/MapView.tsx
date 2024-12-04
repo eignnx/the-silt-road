@@ -54,7 +54,7 @@ export default function MapView() {
                 }
             );
         } else {
-            navigator("../market");
+            navigator("../town");
         }
     }
 
