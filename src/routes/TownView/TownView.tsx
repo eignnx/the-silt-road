@@ -57,17 +57,32 @@ export default function TownView() {
                 </div>
             ))}
         </section>
-        <section>
-            <h3>Supplies & Demands</h3>
-            <ul>
-                {objectEntries(townDemandsSupplies.netSupplies)
-                    .sort((a, b) => (a[1] ?? 0) - (b[1] ?? 0))
-                    .map(([comm, qty]) => (
-                        (qty === undefined) ? null
-                            : (qty > 0) ? <li>Supplies {qty}x {titleCase(comm)}</li>
-                                : <li>Demands {-qty}x {titleCase(comm)}</li>
-                    ))}
-            </ul>
+        <section className="supplies-demands-section">
+            <table className="document">
+                <thead>
+                    <tr>
+                        <th colSpan={3}> <h3>Supplies & Demands</h3> </th>
+                    </tr>
+                    <tr>
+                        <th>Good</th>
+                        <th>Rel. Amt.</th>
+                        <th>Net</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {objectEntries(townDemandsSupplies.netSupplies)
+                        .sort((a, b) => (a[1] ?? 0) - (b[1] ?? 0))
+                        .map(([comm, qtyUndef]) => {
+                            const qty = qtyUndef ?? 0;
+
+                            return <tr>
+                                <th scope="row">{titleCase(comm)}</th>
+                                <td>{Math.abs(qty)}</td>
+                                <td>{qty > 0 ? "Supplied" : "Demanded"}</td>
+                            </tr>;
+                        })}
+                </tbody>
+            </table>
         </section>
     </div>;
 }

@@ -41,4 +41,13 @@
         box-shadow: 0.25rem 0.25rem 1rem black;
 
     }
+
+    .supplies-demands-section {
+        display: flex;
+        justify-content: center;
+    }
+
+    .document {
+        min-width: 40ch;
+    }
 }
