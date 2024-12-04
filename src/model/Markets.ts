@@ -18,6 +18,8 @@ export type PriceDeviations = {
     [comm in Commodity]: number;
 };
 
+const MARKET_DEVIATION = 0.05; // +/- 5% (max of 10% difference between two markets)
+
 export function generateMarket(town: string): Market {
     const inventory: Inventory = {};
     const priceDeviations: PriceDeviations = {} as PriceDeviations;
@@ -31,7 +33,7 @@ export function generateMarket(town: string): Market {
         let deviation = Math.random();
         deviation *= deviation * deviation; // Bias towards smaller values.
         deviation = deviation * 2 - 1; // Between -1 and 1.
-        deviation *= 0.30; // Between -30% and 30%.
+        deviation *= MARKET_DEVIATION;
         priceDeviations[comm] = deviation;
 
         // 65% chance that this commodity is NOT available.
