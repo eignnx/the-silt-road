@@ -72,8 +72,8 @@ export default function TownView() {
                 <tbody>
                     {objectEntries(townDemandsSupplies.netSupplies)
                         .sort((a, b) => (a[1] ?? 0) - (b[1] ?? 0))
-                        .map(([comm, qtyUndef]) => {
-                            const qty = qtyUndef ?? 0;
+                        .map(([comm, qty]) => {
+                            if (qty === undefined || qty === 0) return null;
 
                             return <tr>
                                 <th scope="row">{titleCase(comm)}</th>
