@@ -58,10 +58,29 @@ export default function TownView() {
             ))}
         </section>
         <section>
-            <h3>Labor Costs</h3>
-            {objectEntries(laborCostOfCommodities() ?? {}).map(([comm, cost]) => (
-                <p>{comm}: {cost}</p>
-            ))}
+            <table className="document">
+                <thead>
+                    <tr>
+                        <th colSpan={2}>
+                            <h3>Labor Costs</h3>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Good</th>
+                        <th>Labor (hours)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {objectEntries(laborCostOfCommodities() ?? {}).map(([comm, cost]) => (
+                        <tr>
+                            <th scope="row">{titleCase(comm)}</th>
+                            <td>
+                                {Math.round(100 * (cost ?? -1)) / 100}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </section>
         <section className="supplies-demands-section">
             <table className="document">
