@@ -1,7 +1,9 @@
 import { objectEntries, objectKeys, randChoice, randInt } from '../utils';
-import { Commodity } from './Commodities';
+import { COMMODITIES, Commodity } from './Commodities';
 import { MakeStorage } from './storage-template';
 import { WORLD_MAP } from './Towns';
+
+import { solveByGaussianElimination, NumberMatrix, NumberVector, prettyPrint, SolutionType, Vector, SparseNumberMatrix } from "@josh-brown/vector";
 
 export type DemandsSupplies<T> = {
     demands: T,
@@ -194,3 +196,59 @@ export const TOWN_BUSINESSES = {
         seedValue: DEFAULT(),
     }),
 };
+
+export function laborCostOfCommodities(): { [comm in Commodity]?: number } | null {
+    const commodityIndicies: { [comm in Commodity]?: number } = {};
+    const indiciesCommodities: Commodity[] = [];
+
+    function getOrInsertIdx(comm: Commodity): number {
+        if (comm in commodityIndicies) {
+            return commodityIndicies[comm]!;
+        } else {
+            const idx = indiciesCommodities.length;
+            indiciesCommodities.push(comm);
+            return commodityIndicies[comm] = idx;
+        }
+    }
+
+    const rows = [];
+    const bArr = [];
+
+    for (const [industry, info] of objectEntries(INDUSTRIES_DEMANDS_SUPPLIES)) {
+        let row: Vector<number> = NumberVector.builder().zeros(COMMODITIES.length);
+        for (const demand of info.production.demands) {
+            const idx = getOrInsertIdx(demand);
+            row = row.set(idx, row.getEntry(idx) - 1);
+        }
+        for (const supply of info.production.supplies) {
+            const idx = getOrInsertIdx(supply);
+            row = row.set(idx, row.getEntry(idx) + 1);
+        }
+        rows.push(row);
+
+        bArr.push(-info.laborHoursPerProduct);
+    }
+
+
+    const m = SparseNumberMatrix.builder().fromRowVectors(rows);
+    const b = NumberVector.builder().fromArray(bArr);
+
+    console.log("M", prettyPrint(m));
+    console.log("b", prettyPrint(b));
+    console.log("commodity indicies", indiciesCommodities);
+
+    const soln = solveByGaussianElimination(m, b);
+
+    switch (soln.solutionType) {
+        case SolutionType.UNIQUE:
+            const entries = soln
+                .solution
+                .toArray()
+                .map((cost, commIdx) => [indiciesCommodities[commIdx]!, cost]);
+            return Object.fromEntries(entries);
+        case SolutionType.UNDERDETERMINED:
+        case SolutionType.OVERDETERMINED:
+            console.error("Could not solve production matrix", soln);
+            return null;
+    }
+}

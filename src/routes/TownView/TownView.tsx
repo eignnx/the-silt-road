@@ -1,5 +1,5 @@
 import { useLoaderData } from 'react-router-dom';
-import { Business, DemandsSupplies, INDUSTRIES_DEMANDS_SUPPLIES, TOWN_BUSINESSES } from '../../model/Industries';
+import { Business, DemandsSupplies, INDUSTRIES_DEMANDS_SUPPLIES, laborCostOfCommodities, TOWN_BUSINESSES } from '../../model/Industries';
 import { WORLD_MAP } from '../../model/Towns';
 
 import "./TownView.css";
@@ -55,6 +55,12 @@ export default function TownView() {
                 <div className="building">
                     <h3>{business}</h3>
                 </div>
+            ))}
+        </section>
+        <section>
+            <h3>Labor Costs</h3>
+            {objectEntries(laborCostOfCommodities() ?? {}).map(([comm, cost]) => (
+                <p>{comm}: {cost}</p>
             ))}
         </section>
         <section className="supplies-demands-section">
