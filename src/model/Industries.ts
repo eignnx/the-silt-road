@@ -1,4 +1,4 @@
-import { objectKeys, randChoice, randInt } from '../utils';
+import { objectEntries, objectKeys, randChoice, randInt } from '../utils';
 import { Commodity } from './Commodities';
 import { MakeStorage } from './storage-template';
 import { WORLD_MAP } from './Towns';
@@ -8,95 +8,163 @@ export type DemandsSupplies<T> = {
     supplies: T,
 };
 
+type IndustryInfo = {
+    laborHoursPerProduct: number;
+    production: DemandsSupplies<Commodity[]>;
+};
+
 export const INDUSTRIES_DEMANDS_SUPPLIES = {
     "Wagon Shop": {
-        demands: ["lumber", "iron", "tools"],
-        supplies: [],
+        laborHoursPerProduct: 1,
+        production: {
+            demands: ["lumber", "iron", "tools"] as Commodity[],
+            supplies: [] as Commodity[],
+        }
     },
     "Livestock Auction": {
-        demands: ["grain"],
-        supplies: [],
+        laborHoursPerProduct: 1,
+        production: {
+            demands: ["grain"] as Commodity[],
+            supplies: [] as Commodity[],
+        },
     },
     "Warehouse": {
-        demands: [],
-        supplies: [],
+        laborHoursPerProduct: 1,
+        production: {
+            demands: [] as Commodity[],
+            supplies: [] as Commodity[],
+        },
     },
     "Refinery": {
-        demands: ["tools", "coal"],
-        supplies: ["iron", "nickel", "copper"],
+        laborHoursPerProduct: 5,
+        production: {
+            demands: ["tools", "coal"] as Commodity[],
+            supplies: ["iron", "nickel", "copper"] as Commodity[],
+        },
     },
     "Lumber Mill": {
-        demands: ["tools"],
-        supplies: ["lumber"],
+        laborHoursPerProduct: 0.5,
+        production: {
+            demands: ["tools"] as Commodity[],
+            supplies: ["lumber"] as Commodity[],
+        },
     },
     "Tavern": {
-        demands: ["wine", "spirits", "cheese", "salted meat"],
-        supplies: [],
+        laborHoursPerProduct: 1,
+        production: {
+            demands: ["wine", "spirits", "cheese", "salted meat"] as Commodity[],
+            supplies: [] as Commodity[],
+        },
     },
     "Coal Mine": {
-        demands: ["tools"],
-        supplies: ["coal"],
+        laborHoursPerProduct: 4,
+        production: {
+            demands: ["tools"] as Commodity[],
+            supplies: ["coal"] as Commodity[],
+        },
     },
     "Iron Mine": {
-        demands: ["tools"],
-        supplies: ["iron"],
+        laborHoursPerProduct: 4,
+        production: {
+            demands: ["tools"] as Commodity[],
+            supplies: ["iron"] as Commodity[],
+        },
     },
     "Copper Mine": {
-        demands: ["tools"],
-        supplies: ["copper"],
+        laborHoursPerProduct: 4,
+        production: {
+            demands: ["tools"] as Commodity[],
+            supplies: ["copper"] as Commodity[],
+        },
     },
     "Nickel Mine": {
-        demands: ["tools"],
-        supplies: ["nickel"],
+        laborHoursPerProduct: 5,
+        production: {
+            demands: ["tools"] as Commodity[],
+            supplies: ["nickel"] as Commodity[],
+        },
     },
     "Gold Mine": {
-        demands: ["tools"],
-        supplies: ["gold"],
+        laborHoursPerProduct: 2, // per ounce
+        production: {
+            demands: ["tools"] as Commodity[],
+            supplies: ["gold"] as Commodity[],
+        },
     },
     "Blacksmith": {
-        demands: ["iron", "coal"],
-        supplies: ["tools"],
+        laborHoursPerProduct: 5,
+        production: {
+            demands: ["iron", "coal"] as Commodity[],
+            supplies: ["tools"] as Commodity[],
+        },
     },
     "Weaver": {
-        demands: ["wool"],
-        supplies: ["textiles"],
+        laborHoursPerProduct: 1,
+        production: {
+            demands: ["wool"] as Commodity[],
+            supplies: ["textiles"] as Commodity[],
+        },
     },
     "Tailor": {
-        demands: ["textiles"],
-        supplies: ["clothing"],
+        laborHoursPerProduct: 10,
+        production: {
+            demands: ["textiles"] as Commodity[],
+            supplies: ["clothing"] as Commodity[],
+        },
     },
     "Farm": {
-        demands: ["tools"],
-        supplies: ["grain", "potatoes"],
+        laborHoursPerProduct: 52 * 5 * 8 / 1000, // Assume 1000 bushels grown in 1 year.
+        production: {
+            demands: ["tools"] as Commodity[],
+            supplies: ["grain", "potatoes"] as Commodity[],
+        },
     },
     "Feed Mill": {
-        demands: ["grain"],
-        supplies: ["feed"],
+        laborHoursPerProduct: 1,
+        production: {
+            demands: ["grain"] as Commodity[],
+            supplies: ["feed"] as Commodity[],
+        },
     },
     "Mill": {
-        demands: ["grain"],
-        supplies: ["flour"],
+        laborHoursPerProduct: 8 / 300, // In 1 8-hour shift, 300lbs produced?
+        production: {
+            demands: ["grain"] as Commodity[],
+            supplies: ["flour"] as Commodity[],
+        },
     },
     "Brewery": {
-        demands: ["grain", "potatoes"],
-        supplies: ["spirits"],
+        laborHoursPerProduct: 8 / 2, // Assume 2 cases per day?
+        production: {
+            demands: ["grain", "potatoes"] as Commodity[],
+            supplies: ["spirits"] as Commodity[],
+        },
     },
     "Winery": {
-        demands: [],
-        supplies: ["wine", "cheese"],
+        laborHoursPerProduct: 8 / 1, // Assume 1 case per day?
+        production: {
+            demands: [] as Commodity[],
+            supplies: ["wine", "cheese"] as Commodity[],
+        },
     },
     "Butcher": {
-        demands: ["salt"],
-        supplies: ["salted meat"],
+        laborHoursPerProduct: 8 / 20, // 20lbs per day
+        production: {
+            demands: ["salt"] as Commodity[],
+            supplies: ["salted meat"] as Commodity[],
+        },
     },
     "Train Station": {
-        demands: ["coal"],
-        supplies: [
-            "salt", "sugar", "cheese", "salted meat", "ammunition", "firearms",
-            "tools", "clothing", "lumber", "wine",
-        ],
+        laborHoursPerProduct: 8 * 15, // It takes 15 people 8 hours to bring in and unload a train?
+        production: {
+            demands: ["coal"] as Commodity[],
+            supplies: [
+                "salt", "sugar", "cheese", "salted meat", "ammunition", "firearms",
+                "tools", "clothing", "lumber", "wine",
+            ] as Commodity[],
+        },
     },
-} as const;
+};
 
 export type Business = keyof typeof INDUSTRIES_DEMANDS_SUPPLIES;
 

@@ -30,7 +30,7 @@ function computeTownDemandsAndSupplies(townBusinesses: Business[]): { netSupplie
     };
 
     for (const business of townBusinesses) {
-        const { demands, supplies } = INDUSTRIES_DEMANDS_SUPPLIES[business];
+        const { demands, supplies } = INDUSTRIES_DEMANDS_SUPPLIES[business].production;
         for (const comm of demands) {
             townDemandsSupplies.netSupplies[comm] = (townDemandsSupplies.netSupplies[comm] ?? 0) - 1;
         }
