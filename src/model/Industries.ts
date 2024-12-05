@@ -180,7 +180,7 @@ async function DEFAULT(): Promise<TownBusinesses> {
         townBusinesses[townName] = [];
         const population = randInt(100, 2000);
         let workers = 0.40 * population; // Assume 40% of population works.
-        while (workers > 0) {
+        for (let iters = 0; workers > 0 && iters < 100; iters++) {
             const newBusiness = randChoice(objectKeys(INDUSTRIES_DEMANDS_SUPPLIES));
             if (townBusinesses[townName].includes(newBusiness)) continue;
             townBusinesses[townName].push(newBusiness);
