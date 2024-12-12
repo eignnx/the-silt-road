@@ -3,9 +3,10 @@ import { Business, DemandsSupplies, INDUSTRIES_DEMANDS_SUPPLIES, laborCostOfComm
 import { WORLD_MAP } from '../../model/Towns';
 
 import "./TownView.css";
-import { Commodity, Inventory } from '../../model/Commodities';
-import { objectEntries, titleCase } from '../../utils';
+import { Commodity, Inventory, UnitPriceSummary } from '../../model/Commodities';
+import { currencyDisplay, objectEntries, titleCase } from '../../utils';
 import { link } from 'fs';
+import { SolutionType } from '@josh-brown/vector';
 
 type LoaderData = {
     townBusinesses: Business[],
@@ -47,6 +48,12 @@ export default function TownView() {
 
     const townDemandsSupplies = computeTownDemandsAndSupplies(townBusinesses);
 
+    // Nebraska territory, 1860, daily wages without board (assume 8 hour day)
+    // Source: https://babel.hathitrust.org/cgi/pt?id=chi.12697213&seq=586
+    const GLOBAL_HOURLY_WAGE = 1.37 / 8;
+
+    const laborCostMatrix = laborCostOfCommodities();
+
     return <div className="town-view">
         <h1>{currentTown}</h1>
         <h2>Silt County, CO</h2>
@@ -61,21 +68,29 @@ export default function TownView() {
             <table className="document">
                 <thead>
                     <tr>
-                        <th colSpan={2}>
+                        <th colSpan={3}>
                             <h3>Labor Costs</h3>
                         </th>
                     </tr>
                     <tr>
                         <th>Good</th>
                         <th>Labor (hours)</th>
+                        <th>Cost ($)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {objectEntries(laborCostOfCommodities() ?? {}).map(([comm, cost]) => (
+                    {"err" in laborCostMatrix ? (
+                        <tr>
+                            <td colSpan={3}>Labor Cost Matrix: {laborCostMatrix.err}</td>
+                        </tr>
+                    ) : objectEntries(laborCostMatrix).map(([comm, cost]) => (
                         <tr>
                             <th scope="row">{titleCase(comm)}</th>
                             <td>
                                 {Math.round(100 * (cost ?? -1)) / 100}
+                            </td>
+                            <td>
+                                {(new UnitPriceSummary(comm, (cost ?? -1) * GLOBAL_HOURLY_WAGE)).toString()}
                             </td>
                         </tr>
                     ))}

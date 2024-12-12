@@ -58,20 +58,20 @@ export const INDUSTRIES_DEMANDS_SUPPLIES = {
     //         supplies: [] as Commodity[],
     //     },
     // },
-    // "Coal Mine": {
-    //     laborHoursPerProduct: 4,
-    //     production: {
-    //         demands: ["tools"] as Commodity[],
-    //         supplies: ["coal"] as Commodity[],
-    //     },
-    // },
-    // "Iron Mine": {
-    //     laborHoursPerProduct: 4,
-    //     production: {
-    //         demands: ["tools"] as Commodity[],
-    //         supplies: ["iron"] as Commodity[],
-    //     },
-    // },
+    "Coal Mine": {
+        laborHoursPerProduct: 4,
+        production: {
+            demands: ["tools"] as Commodity[],
+            supplies: ["coal", "coal", "coal", "coal"] as Commodity[],
+        },
+    },
+    "Iron Mine": {
+        laborHoursPerProduct: 4,
+        production: {
+            demands: ["tools"] as Commodity[],
+            supplies: ["iron", "iron", "iron"] as Commodity[],
+        },
+    },
     // "Copper Mine": {
     //     laborHoursPerProduct: 4,
     //     production: {
@@ -93,39 +93,46 @@ export const INDUSTRIES_DEMANDS_SUPPLIES = {
     //         supplies: ["gold"] as Commodity[],
     //     },
     // },
-    // "Blacksmith": {
-    //     laborHoursPerProduct: 5,
+    "Blacksmith": {
+        laborHoursPerProduct: 5,
+        production: {
+            demands: ["iron", "coal"] as Commodity[],
+            supplies: ["tools", "tools"] as Commodity[],
+        },
+    },
+    // "Sheep Farm": {
+    //     laborHoursPerProduct: 1,
     //     production: {
-    //         demands: ["iron", "coal"] as Commodity[],
-    //         supplies: ["tools", "tools", "tools"] as Commodity[],
+    //         demands: [] as Commodity[],
+    //         supplies: ["wool"] as Commodity[],
     //     },
     // },
-    "Sheep Farm": {
-        laborHoursPerProduct: 1,
+    // "Weaver": {
+    //     laborHoursPerProduct: 1.5,
+    //     production: {
+    //         demands: ["wool", "wool"] as Commodity[],
+    //         supplies: ["textiles"] as Commodity[],
+    //     },
+    // },
+    // "Tailor": {
+    //     laborHoursPerProduct: 6 * 2, // An article of clothing in 6 hours?
+    //     production: {
+    //         demands: ["textiles", "textiles", "textiles"] as Commodity[],
+    //         supplies: ["clothing", "clothing"] as Commodity[],
+    //     },
+    // },
+    "Farm": {
+        laborHoursPerProduct: 52 * 5 * 10 / 1000 / 2, // Assume 1000 bushels grown in 1 year.
         production: {
-            demands: ["clothing"] as Commodity[],
-            supplies: ["wool"] as Commodity[],
+            demands: ["tools"] as Commodity[],
+            supplies: ["grain", "grain", "potatoes"] as Commodity[],
         },
     },
-    "Weaver": {
-        laborHoursPerProduct: 1,
-        production: {
-            demands: ["wool", "clothing"] as Commodity[],
-            supplies: ["textiles"] as Commodity[],
-        },
-    },
-    "Tailor": {
-        laborHoursPerProduct: 10,
-        production: {
-            demands: ["textiles"] as Commodity[],
-            supplies: ["clothing", "clothing", "clothing"] as Commodity[],
-        },
-    },
-    // "Farm": {
-    //     laborHoursPerProduct: 52 * 5 * 8 / 1000, // Assume 1000 bushels grown in 1 year.
+    // "Tobacco Farm": {
+    //     laborHoursPerProduct: 52 * 5 * 10 / 1000, // Assume 1000 bushels grown in 1 year.
     //     production: {
     //         demands: ["tools"] as Commodity[],
-    //         supplies: ["grain", "potatoes"] as Commodity[],
+    //         supplies: ["tobacco"] as Commodity[],
     //     },
     // },
     // "Feed Mill": {
@@ -142,11 +149,25 @@ export const INDUSTRIES_DEMANDS_SUPPLIES = {
     //         supplies: ["flour"] as Commodity[],
     //     },
     // },
-    // "Brewery": {
-    //     laborHoursPerProduct: 8 / 2, // Assume 2 cases per day?
+    "Brewery": {
+        laborHoursPerProduct: 8, // Assume 2 cases per day?
+        production: {
+            demands: ["grain", "potatoes"] as Commodity[],
+            supplies: ["spirits"] as Commodity[],
+        },
+    },
+    // "General Store": {
+    //     laborHoursPerProduct: 5 * 0.5,
     //     production: {
-    //         demands: ["grain", "potatoes"] as Commodity[],
-    //         supplies: ["spirits"] as Commodity[],
+    //         demands: ["flour", "potatoes", "clothing", "tobacco", "spirits"] as Commodity[],
+    //         supplies: [] as Commodity[],
+    //     },
+    // },
+    // "Liquor Store": {
+    //     laborHoursPerProduct: 0.75,
+    //     production: {
+    //         demands: ["spirits"] as Commodity[],
+    //         supplies: [] as Commodity[],
     //     },
     // },
     // "Winery": {
@@ -204,7 +225,11 @@ export const TOWN_BUSINESSES = {
     }),
 };
 
-export function laborCostOfCommodities(): { [comm in Commodity]?: number } | null {
+type LaborCostMatrixResult =
+    | { [comm in Commodity]?: number }
+    | { err: "OVERDETERMINED" | "UNDERDETERMINED"; };
+
+export function laborCostOfCommodities(): LaborCostMatrixResult {
     console.time("Labor Costs Computation");
 
     const commodityIndicies: { [comm in Commodity]?: number } = {};
@@ -256,6 +281,7 @@ export function laborCostOfCommodities(): { [comm in Commodity]?: number } | nul
     console.log("M\n", prettyPrint(m));
     console.log("b\n", prettyPrint(b));
     console.log("commodity indicies", indiciesCommodities);
+    console.log(`System is ${b.getDimension()} equations in ${rowVecs[0].getDimension()} unknowns.`);
 
     const soln = solveByGaussianElimination(m, b);
 
@@ -271,6 +297,6 @@ export function laborCostOfCommodities(): { [comm in Commodity]?: number } | nul
         case SolutionType.UNDERDETERMINED:
         case SolutionType.OVERDETERMINED:
             console.error("Could not solve production matrix", soln);
-            return null;
+            return { err: soln.solutionType as unknown as ("OVERDETERMINED" | "UNDERDETERMINED") };
     }
 }
