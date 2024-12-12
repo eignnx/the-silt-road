@@ -80,7 +80,7 @@ export function commodityBasePrice1860(commodity: Commodity): number {
             case "lumber":
                 return 15.55 / 4.0; // Price of home depot 1x12x4ft board
             case "tools":
-                return 400; // Current price of Vulcan plow: https://bchmt.org/documents/education/Stock-DrawnEquipmentforTrailWork.pdf
+                return 20; // Made up. Price of one "tool" at a hardware store?
             case "ammunition":
                 return 450.0; // Price of 1000 rounds of .45 ACP
             case "firearms":
@@ -268,13 +268,16 @@ export class UnitPriceSummary {
     }
 
     toString(): string {
-        const unitPrice = commodityBasePrice1860(this.commodity);
         const u = commodityUnit(this.commodity).short;
-        if (unitPrice < 0.01) {
-            return `${(this.unitPrice * 100 * 100).toFixed(0)}¢/100${u}`;
-        } else if (unitPrice < 1.00) {
+        if (this.unitPrice < 0.01) {
+            if (this.unitPrice * 100 < 0.01) {
+                return `${(this.unitPrice * 100 * 100).toFixed(0)}¢/100${u}`;
+            } else {
+                return `$${(this.unitPrice * 100).toFixed(2)}/100${u}`;
+            }
+        } else if (this.unitPrice < 1.00) {
             return `${(this.unitPrice * 100).toFixed(0)}¢/${u}`;
-        } else if (unitPrice > 1000.0) {
+        } else if (this.unitPrice > 1000.0) {
             return `$${(this.unitPrice / 1000.0).toFixed(1)}k/${u}`;
         } else {
             return `$${this.unitPrice.toFixed(2)}/${u}`;
