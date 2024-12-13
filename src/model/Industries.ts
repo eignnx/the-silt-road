@@ -156,13 +156,13 @@ export const INDUSTRIES_DEMANDS_SUPPLIES = {
             supplies: ["spirits"] as Commodity[],
         },
     },
-    // "General Store": {
-    //     laborHoursPerProduct: 5 * 0.5,
-    //     production: {
-    //         demands: ["flour", "potatoes", "clothing", "tobacco", "spirits"] as Commodity[],
-    //         supplies: [] as Commodity[],
-    //     },
-    // },
+    "Wholesale Market": {
+        laborHoursPerProduct: 5 * 0.5,
+        production: {
+            demands: ["flour", "potatoes", "clothing", "tobacco", "spirits"] as Commodity[],
+            supplies: ["flour", "potatoes", "clothing", "tobacco", "spirits"] as Commodity[],
+        },
+    },
     // "Liquor Store": {
     //     laborHoursPerProduct: 0.75,
     //     production: {
@@ -213,6 +213,10 @@ async function DEFAULT(): Promise<TownBusinesses> {
             if (townBusinesses[townName].includes(newBusiness)) continue;
             townBusinesses[townName].push(newBusiness);
             workers -= randInt(50, 250);
+        }
+
+        if (!townBusinesses[townName].includes("Wholesale Market")) {
+            townBusinesses[townName].unshift("Wholesale Market");
         }
     }
     return townBusinesses;

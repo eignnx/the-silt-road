@@ -21,6 +21,12 @@
             margin-block-start: 0.5rem;
             text-shadow: 5px 5px 5px black;
             transition: text-shadow 200ms ease;
+
+            a {
+                color: inherit;
+                font-family: inherit;
+                font-size: inherit;
+            }
         }
 
         &:hover h3 {
