@@ -1,85 +1,83 @@
 .trade-ledger {
-    --bg-clr: color-mix(in oklab, var(--clr-light), brown 10%);
-    --clr-red:
-        color-mix(in oklab,
-            maroon 40%,
-            var(--bg-clr));
-    --clr-blue:
-        color-mix(in oklab,
-            rgb(48, 48, 140) 40%,
-            var(--bg-clr));
 
-    background-color: var(--bg-clr);
-
-    /* transition: transform 400ms ease-in-out;
-    transform: translate(calc(-1 * min(20rem, 50%)), -2%) rotate(2deg);
-
-    &:hover {
-        transform: translate(0, 0) rotate(0deg);
-    } */
-
-    thead h3 {
-        font-size: 30pt;
-        margin: 0;
-        margin-block-start: 0.25rem;
-        padding-block: 0;
-        font-family: var(--fnt-cursive);
-    }
+    padding-inline: 2rem;
 
     table {
-        border: none;
-    }
 
-    td.handwritten {
-        font-size: smaller;
-    }
+        thead h3 {
+            font-size: 20pt;
+            margin: 0;
+            margin-block-start: 0.25rem;
+            padding-block: 0;
+            font-family: var(--fnt-handwritten);
+            font-weight: 100;
+        }
 
-    tbody td:nth-child(3n+1) {
-        border-inline-end-style: double;
-        border-inline-end-width: 3px;
-    }
-
-    tbody {
+        thead>tr:first-child>th {
+            border: none;
+        }
 
         th,
         td {
-            border-block-color: var(--clr-blue);
-            border-inline-color: var(--clr-red);
+            border: 1px solid black;
         }
 
-        tr:last-child th,
-        tr:last-child td {
-            border-bottom: none;
+
+        td.handwritten {
+            font-size: smaller;
         }
-    }
 
-    .text-size-smaller {
-        font-size: smaller;
-    }
+        tbody {
 
-    tbody td {
-        text-align: center;
-    }
+            td:nth-child(3n+1):not(:last-child) {
+                border-inline-end-style: double;
+                border-inline-end-width: 3px;
+            }
 
-    .commname {
-        font-size: x-small;
-        text-align: right;
-        font-weight: 600;
-        font-variant: small-caps;
-        vertical-align: middle;
+            th,
+            td {
+                border-block-color: var(--clr-blue);
+                border-inline-color: var(--clr-red);
+            }
 
-        border-inline-end-color: var(--clr-blue);
-        border-inline-end-style: double;
-        border-inline-end-width: 3px;
-    }
+            tr:last-child th,
+            tr:last-child td {
+                border-bottom: none;
+            }
+        }
 
-    .data-age-display {
-        font-size: x-small;
-        text-align: center;
-    }
+        .text-size-smaller {
+            font-size: smaller;
+        }
 
-    tfoot {
-        height: 3rem;
-        border-top: 3px double var(--clr-dark);
+        tbody td {
+            text-align: center;
+        }
+
+        .commname {
+            font-size: x-small;
+            text-align: right;
+            font-weight: 600;
+            font-variant: small-caps;
+            vertical-align: middle;
+
+            border-inline-end-color: var(--clr-blue);
+            border-inline-end-style: double;
+            border-inline-end-width: 3px;
+        }
+
+        .data-age-display {
+            font-size: x-small;
+            text-align: center;
+        }
+
+        tfoot {
+            height: 3rem;
+            border-top: 3px double var(--clr-dark);
+
+            tr td {
+                border: none;
+            }
+        }
     }
 }

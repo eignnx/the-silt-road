@@ -55,83 +55,85 @@ export default function TradeLedger({ orderedCommodities }: Props) {
     const cols = townCount * townSubCols + 1;
 
     return (
-        <table className='document trade-ledger'>
-            <thead>
-                <tr>
-                    <th colSpan={cols}>
-                        <h3>Recent Market Rates</h3>
-                    </th>
-                </tr>
-                <tr className="text-size-smaller">
-                    <th>✯</th>
-                    {townOrder.map(town => {
-                        const currentDate = 120; // TODO: impl time passage
-                        const sinceLastVisit = currentDate - tradeLedger.townVisits[town]?.lastVisitedDate;
-                        return <th colSpan={townSubCols}>
-                            <div>
-                                {town}
-                            </div>
-                            <div className="data-age-display handwritten">
-                                ({sinceLastVisit} days ago)
-                            </div>
-                        </th>;
-                    })}
-                </tr>
-                <tr className="text-size-smaller">
-                    <th>Good</th>
-                    {Array.from({ length: townCount }).map(() => (
-                        <>
-                            <th>Qty.</th>
-                            <th>Price</th>
-                            <th>% Diff.</th>
-                        </>
-                    ))}
-                </tr>
-            </thead>
-            <tbody>
-                {orderedCommodities.map(comm => {
-                    const commShort = titleCase(commodityAbbreviatedName(comm));
-                    const commLong = titleCase(comm) !== commShort ? titleCase(comm) : undefined;
-
-                    return <tr>
-                        <th scope="row" className="commname" title={commLong}>{commShort}</th>
+        <div className='document trade-ledger'>
+            <table>
+                <thead>
+                    <tr>
+                        <th colSpan={cols}>
+                            <h3>Recent Market Rates</h3>
+                        </th>
+                    </tr>
+                    <tr className="text-size-smaller">
+                        <th>✯</th>
                         {townOrder.map(town => {
-
-                            // Skip listing for current town.
-                            if (town === currentTown) return null;
-
-                            const commRow = commRows[comm];
-                            if (commRow === undefined) return null;
-                            else if (commRow[town] !== undefined) {
-                                const { unitPrice: price, qtyOnHand: qty } = commRow[town];
-
-
-                                const priceHere = marketPrice(market, comm).unitPrice;
-                                const pctPriceDiff = 100 * (price - priceHere) / price;
-
-                                return <>
-                                    <td className="handwritten">{qty}</td>
-                                    <td className="handwritten">{new UnitPriceSummary(comm, price).toString()}</td>
-                                    <td className="handwritten">
-                                        {pctPriceDiff < 0 ? "-" : "+"}{Math.abs(pctPriceDiff).toFixed(0)}%
-                                    </td>
-                                </>;
-                            } else {
-                                return <>
-                                    <td>‒</td>
-                                    <td>‒</td>
-                                    <td>‒</td>
-                                </>;
-                            }
+                            const currentDate = 120; // TODO: impl time passage
+                            const sinceLastVisit = currentDate - tradeLedger.townVisits[town]?.lastVisitedDate;
+                            return <th colSpan={townSubCols}>
+                                <div>
+                                    {town}
+                                </div>
+                                <div className="data-age-display handwritten">
+                                    ({sinceLastVisit} days ago)
+                                </div>
+                            </th>;
                         })}
-                    </tr>;
-                })}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colSpan={cols}></td>
-                </tr>
-            </tfoot>
-        </table>
+                    </tr>
+                    <tr className="text-size-smaller">
+                        <th>Good</th>
+                        {Array.from({ length: townCount }).map(() => (
+                            <>
+                                <th>Qty.</th>
+                                <th>Price</th>
+                                <th>% Diff.</th>
+                            </>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {orderedCommodities.map(comm => {
+                        const commShort = titleCase(commodityAbbreviatedName(comm));
+                        const commLong = titleCase(comm) !== commShort ? titleCase(comm) : undefined;
+
+                        return <tr>
+                            <th scope="row" className="commname" title={commLong}>{commShort}</th>
+                            {townOrder.map(town => {
+
+                                // Skip listing for current town.
+                                if (town === currentTown) return null;
+
+                                const commRow = commRows[comm];
+                                if (commRow === undefined) return null;
+                                else if (commRow[town] !== undefined) {
+                                    const { unitPrice: price, qtyOnHand: qty } = commRow[town];
+
+
+                                    const priceHere = marketPrice(market, comm).unitPrice;
+                                    const pctPriceDiff = 100 * (price - priceHere) / price;
+
+                                    return <>
+                                        <td className="handwritten">{qty}</td>
+                                        <td className="handwritten">{new UnitPriceSummary(comm, price).toString()}</td>
+                                        <td className="handwritten">
+                                            {pctPriceDiff < 0 ? "-" : "+"}{Math.abs(pctPriceDiff).toFixed(0)}%
+                                        </td>
+                                    </>;
+                                } else {
+                                    return <>
+                                        <td>‒</td>
+                                        <td>‒</td>
+                                        <td>‒</td>
+                                    </>;
+                                }
+                            })}
+                        </tr>;
+                    })}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colSpan={cols}></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
     );
 }
