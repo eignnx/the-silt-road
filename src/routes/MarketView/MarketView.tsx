@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import { COMMODITIES, Commodity, Inventory } from '../../model/Commodities';
 import { Market, MARKETS } from '../../model/Markets';
@@ -9,6 +9,7 @@ import { WORLD_MAP } from '../../model/Towns';
 import BillOfSale from './BillOfSale';
 import TradeLedger from './TradeLedger';
 import { TRADE_LEDGER, TradeLedger as TradeLedgerData } from '../../model/TradeLedger';
+import { useDraggable } from '../../utils/draggable';
 
 import './MarketView.css';
 
@@ -79,19 +80,26 @@ export default function MarketView() {
 
     const townVisitCount = Object.keys(tradeLedger.townVisits).length;
 
+    const dragRefBillOfSale = useDraggable<HTMLDivElement>();
+    const dragRefTradeLedger = useDraggable<HTMLDivElement>();
+
     return (<>
         <h1>{market.name}</h1>
         <h2>Wholesale Market</h2>
         <h3>{currentTown}, Silt County, CO</h3>
-        <section id="billofsale-and-tradeledger">
-            <BillOfSale
-                orderedInventories={orderedInventories}
-                currentTxn={currentTxn}
-                setCurrentTxn={setCurrentTxn}
-            />
-            {townVisitCount > 0 && <TradeLedger
-                orderedCommodities={orderedCommodities}
-            />}
+        <section id="billofsale-and-tradeledger" className="drag-surface">
+            <div className="draggable" ref={dragRefBillOfSale}>
+                <BillOfSale
+                    orderedInventories={orderedInventories}
+                    currentTxn={currentTxn}
+                    setCurrentTxn={setCurrentTxn}
+                />
+            </div>
+            {townVisitCount > 0 && <div className="draggable" ref={dragRefTradeLedger}>
+                <TradeLedger
+                    orderedCommodities={orderedCommodities}
+                />
+            </div>}
         </section>
     </>);
 };

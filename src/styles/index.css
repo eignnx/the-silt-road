@@ -248,3 +248,25 @@ button[popovertarget] {
     color: var(--clr-light);
   }
 }
+
+/******************************************************************************/
+.drag-surface {
+  position: relative;
+}
+
+.draggable {
+  position: absolute;
+  transform: translate(var(--drag-x, 0), var(--drag-y, 0));
+  transition: transform 70ms ease;
+
+  &:hover {
+    cursor: grab;
+  }
+
+  &.dragging {
+    cursor: grabbing;
+    user-select: none;
+  }
+}
+
+/******************************************************************************/
