@@ -1,7 +1,18 @@
 import React, { useEffect, useRef } from "react";
 
+type Props = {
+    children: React.ReactNode;
+};
 
-export function useDraggable<E extends HTMLElement>(): React.RefObject<E> {
+const Draggable: React.FC<Props> = ({ children }) => {
+    const dragRef = useDraggable<HTMLDivElement>();
+
+    return <div className="draggable" ref={dragRef}>
+        {children}
+    </div>;
+};
+
+function useDraggable<E extends HTMLElement>(): React.RefObject<E> {
     const drag = useRef<E>(null);
 
     useEffect(() => {
@@ -15,6 +26,7 @@ export function useDraggable<E extends HTMLElement>(): React.RefObject<E> {
 }
 
 const MOUSE_PRIMARY_BTN = 0;
+let zIndex = 0;
 
 /**
  * 
@@ -28,6 +40,7 @@ function registerDraggable(el: HTMLElement): () => void {
 
     function onMouseDown(ev: MouseEvent) {
         if (!dragging && ev.button === MOUSE_PRIMARY_BTN) {
+            ev.stopPropagation();
             dragging = true;
 
             const { pageX, pageY } = ev;
@@ -36,6 +49,7 @@ function registerDraggable(el: HTMLElement): () => void {
 
             el.style.setProperty("--drag-x", `${absPos[0]}px`);
             el.style.setProperty("--drag-y", `${absPos[1]}px`);
+            el.style.setProperty("--drag-z-index", `${++zIndex}`);
         }
     }
 
@@ -43,6 +57,7 @@ function registerDraggable(el: HTMLElement): () => void {
 
     function onMouseMove(ev: MouseEvent) {
         if (dragging && ev.button === MOUSE_PRIMARY_BTN) {
+            ev.stopPropagation();
             el.classList.add("dragging");
             const { pageX, pageY } = ev;
             absPos = [pageX - dragStart[0], pageY - dragStart[1]];
@@ -56,16 +71,20 @@ function registerDraggable(el: HTMLElement): () => void {
 
     el.addEventListener("mousemove", onMouseMove);
 
-    function onMouseUp() {
+    function dragEnd() {
         dragging = false;
         el.classList.remove("dragging");
     }
 
-    el.addEventListener("mouseup", onMouseUp);
+    el.addEventListener("mouseup", dragEnd);
+    el.addEventListener("mouseleave", dragEnd);
 
     return () => {
         el.removeEventListener("mousedown", onMouseDown);
         el.removeEventListener("mousemove", onMouseMove);
-        el.removeEventListener("mouseup", onMouseUp);
+        el.removeEventListener("mouseup", dragEnd);
+        el.removeEventListener("mouseleave", dragEnd);
     };
 }
+
+export default Draggable;

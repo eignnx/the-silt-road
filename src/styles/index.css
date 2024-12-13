@@ -250,14 +250,16 @@ button[popovertarget] {
 }
 
 /******************************************************************************/
+
 .drag-surface {
   position: relative;
+  isolation: isolate;
 }
 
 .draggable {
   position: absolute;
   transform: translate(var(--drag-x, 0), var(--drag-y, 0));
-  transition: transform 70ms ease;
+  z-index: var(--drag-z-index, unset);
 
   &:hover {
     cursor: grab;
