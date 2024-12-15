@@ -21,7 +21,8 @@ def main():
         print("Scheduled today:")
         for employee in c.scheduled_today:
             print(f"\t- {employee.full_name()}")
-        confirm()
+
+        menu(c)
 
         events = random.choices(Event.__subclasses__(), k=random.randint(0, 3))
         for event_kind in events:
@@ -35,8 +36,18 @@ def main():
             confirm()
 
         if len(events) == 0:
-            print("The day went by smoothly.")
+            print(
+                random.choice(
+                    [
+                        "The day went by smoothly.",
+                        "The day was uneventful.",
+                        "Nothing out of the ordinary happened today.",
+                    ]
+                )
+            )
             confirm()
+
+        menu(c)
 
         c.end_of_day()
 
@@ -70,6 +81,62 @@ def confirm():
     print()
     input("[Press ENTER to continue]")
     print()
+
+
+def menu(c: "Company"):
+    while True:
+        print()
+        print("OPTIONS")
+        print("-------")
+        print("    dbg [LAST_NAME] - Print debug info for a person by last name")
+        print("    hiring - Go to hiring menu")
+        print("    [ENTER] - Continue")
+        match input("> ").split(" "):
+            case [] | [""]:
+                break
+            case ["hiring"]:
+                hiring_menu(c)
+            case ["dbg", name]:
+                for employee in c.employees:
+                    if (
+                        (employee.nickname or "").lower() == name.lower()
+                        or employee.first_name.lower() == name.lower()
+                        or employee.last_name.lower() == name.lower()
+                    ):
+                        print(repr(employee))
+                        break
+                else:
+                    print("Employee not found.")
+            case _:
+                print("Invalid command.")
+
+
+def hiring_menu(c: "Company"):
+    pool = [Employee.generate() for _ in range(5)]
+    print("HIRING")
+    print("------")
+
+    while True:
+        for i, employee in enumerate(pool):
+            print(f"{i + 1}. {employee.full_name()}")
+            print(f"    - Age: {employee.age}")
+        print()
+        inp = input("> ")
+        try:
+            idx = int(inp) - 1
+            if 0 <= idx < len(pool):
+                c.hire(pool[idx])
+                print(f"{pool[idx].full_name()} was hired.")
+                break
+            else:
+                print("Invalid index.")
+        except ValueError:
+            match inp.lower():
+                case "exit" | "quit" | "q":
+                    break
+                case _:
+                    print("Invalid input.")
+                    continue
 
 
 def day_of_week(dow: int) -> str:
@@ -118,37 +185,41 @@ class Company:
 
     @staticmethod
     def generate() -> "Company":
+        c = Company(
+            employees=set(),
+            scheduled_today=set(),
+            days_till_next_scheduled={},
+            days_worked_per_week={},
+        )
+
         n_emps = random.randint(5, 15)
-        employees: set[Employee] = set()
         for _ in range(n_emps):
-            e = Employee.generate()
+            c.hire(Employee.generate())
 
-            same_name = [o for o in employees if o.first_name == e.first_name]
-            if same_name:
-                Person.give_distinguishing_nicknames(
-                    [e, *same_name], set(o.nickname for o in employees)
-                )
-
-            employees.add(e)
-
-        days_worked_per_week = {
-            employee: random.randint(1, 6) for employee in employees
+        c.days_worked_per_week = {
+            employee: random.randint(1, 6) for employee in c.employees
         }
-        days_till_next_scheduled = {
-            employee: random.randint(0, 6) for employee in employees
+
+        c.days_till_next_scheduled = {
+            employee: random.randint(0, 6) for employee in c.employees
         }
-        scheduled_today = set(
+
+        c.scheduled_today = set(
             employee
-            for employee, days_till_scheduled in days_till_next_scheduled.items()
+            for employee, days_till_scheduled in c.days_till_next_scheduled.items()
             if days_till_scheduled == 0
         )
 
-        return Company(
-            employees=employees,
-            scheduled_today=scheduled_today,
-            days_till_next_scheduled=days_till_next_scheduled,
-            days_worked_per_week=days_worked_per_week,
-        )
+        return c
+
+    def hire(self, e: Employee):
+        same_name = [o for o in self.employees if o.first_name == e.first_name]
+        if same_name:
+            Person.give_distinguishing_nicknames(
+                [e, *same_name], set(o.nickname for o in self.employees)
+            )
+
+        self.employees.add(e)
 
     def end_of_day(self):
         self.day_of_week += 1
@@ -305,7 +376,7 @@ class Gossip(Event):
 
     def print(self):
         print(
-            f"{self.gossip} gossips about {self.subject}. {self.gossip.They} {self.dirt}."
+            f"{self.gossip} was gossiping about {self.subject}. {self.gossip.They} {self.dirt}."
         )
 
     def apply(self, company: Company):
