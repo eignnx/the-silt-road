@@ -121,17 +121,40 @@ def menu(c: "Company"):
                 print("Invalid command.")
 
 
-def hiring_menu(c: "Company"):
-    Applicant = namedtuple("Applicant", ["employee", "start_delay", "workdays"])
+@dataclass
+class Applicant:
+    employee: "Employee"
+    start_delay: int
+    workdays: int
+    sign_on_bonus: float = 0.0
 
-    pool = [
-        Applicant(
-            employee=Employee.generate(),
-            start_delay=random.randint(0, 5),
-            workdays=random.randint(2, 6),
+    def __hash__(self):
+        return hash(self.employee)
+
+    def __eq__(self, value: "Applicant"):
+        return self.employee == value.employee
+
+    @staticmethod
+    def generate():
+        e = Employee.generate()
+        max_delay = 5
+        start_delay = random.randint(0, max_delay)
+        sign_on_bonus = max(
+            random.normalvariate(7.50, 1.0) * (1 - (start_delay + 1) / max_delay) * 4,
+            0,
         )
-        for _ in range(random.randint(1, 6))
-    ]
+        return Applicant(
+            employee=e,
+            start_delay=start_delay,
+            workdays=random.randint(2, 6),
+            sign_on_bonus=round(sign_on_bonus) / 4,
+        )
+
+
+def hiring_menu(c: "Company"):
+    n_applicants = random.randint(1, 6)
+    pool = [Applicant.generate() for _ in range(n_applicants)]
+
     print()
     print()
     print("HIRING")
@@ -146,8 +169,13 @@ def hiring_menu(c: "Company"):
                 employee = applicant.employee
                 start_delay = applicant.start_delay
                 workdays = applicant.workdays
+                sign_on_bonus = applicant.sign_on_bonus
 
-                start_when = f"in {start_delay} days" if start_delay > 0 else "today"
+                start_when = (
+                    "TODAY"
+                    if start_delay == 0
+                    else "tomorrow" if start_delay == 1 else f"in {start_delay} days"
+                )
                 sex = employee.sex_descriptor()
                 workdays = random.randint(2, 6)
                 print()
@@ -155,6 +183,8 @@ def hiring_menu(c: "Company"):
                 print(f"    - Desired wage: {employee.hourly_wage:2.2f}/hr")
                 print(f"    - Wants to work {workdays} days per week")
                 print(f"    - Can start {start_when}")
+                if sign_on_bonus > 0:
+                    print(f"    - Requested sign-on bonus: {sign_on_bonus:3.2f}")
         else:
             print("No applicants.")
         print()
