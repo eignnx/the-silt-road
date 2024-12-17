@@ -44,9 +44,11 @@ def main():
             )
             confirm()
 
-        menu(c)
+        total_labor_hours = c.end_of_day()
+        print()
+        print(f"Today's productivity: {total_labor_hours} labor hours")
 
-        c.end_of_day()
+        menu(c)
 
         if c.day_of_week == 0:
             print("End of week.")
@@ -61,7 +63,7 @@ def main():
                 total += pay
                 print(f"{employee.full_name():<30} | {hours:>3} | {pay:6.2f}")
             print("-" * 50)
-            print(f"Total pay: ${total:.2f}")
+            print(f"{'Totals':<30} | {total_labor_hours:>3} | ${total:3.2f}")
 
             unscheduled = c.employees - set(c.weekly_hours_worked.keys())
             if unscheduled:
@@ -296,6 +298,9 @@ class Company:
     min_shift_size: int = 5
     max_shift_size: int = 10
     hourly_wage: float = 1.35 / 8  # $1.35 per hour (1860s dollars)
+    daily_punchcard: defaultdict[Employee, int] = field(
+        default_factory=lambda: defaultdict(int)
+    )
 
     @staticmethod
     def generate() -> "Company":
@@ -335,26 +340,28 @@ class Company:
 
         self.employees.add(e)
 
-    def end_of_day(self):
-        self.day_of_week += 1
-        self.day_of_week %= 7
-
-        for employee in self.scheduled_today:
-            self.days_worked_per_week[employee] += 1
-            self.weekly_hours_worked[employee] += 8
-
-        to_pop = []
-        for employee, days_till_scheduled in self.cant_be_scheduled_for_days.items():
-            if days_till_scheduled > 0:
-                self.cant_be_scheduled_for_days[employee] -= 1
-            else:
-                to_pop.append(employee)
-        for e in to_pop:
-            self.cant_be_scheduled_for_days.pop(e)
-
     def start_of_day(self):
         self.event_history.append([])
         self.create_todays_schedule()
+        self.daily_punchcard = defaultdict(int)
+
+    def end_of_day(self) -> int:
+        self.day_of_week += 1
+        self.day_of_week %= 7
+
+        total_labor_hours = 0
+
+        for employee in self.scheduled_today:
+            self.days_worked_per_week[employee] += 1
+            self.daily_punchcard[employee] += 8
+            self.weekly_hours_worked[employee] += self.daily_punchcard[employee]
+            total_labor_hours += self.daily_punchcard[employee]
+
+        for employee, days_till_scheduled in self.cant_be_scheduled_for_days.items():
+            if days_till_scheduled > 0:
+                self.cant_be_scheduled_for_days[employee] -= 1
+
+        return total_labor_hours
 
     def create_todays_schedule(self):
         while len(self.scheduled_today) < self.min_shift_size:
@@ -645,7 +652,7 @@ class QuittingDislikesCoworkers(Quitting):
     def apply(self, company):
         company.employees.remove(self.employee)
         if not self.worked_whole_day:
-            company.weekly_hours_worked[self.employee] -= random.randint(2, 6)
+            company.daily_punchcard[self.employee] -= random.randint(2, 6)
 
     def described_by_to(self, speaker: Employee, listener: Employee):
         e = self.employee
@@ -853,7 +860,7 @@ class Injury(Event):
         if self.severe:
             company.scheduled_today.remove(self.employee)
             company.cant_be_scheduled_for_days[self.employee] = self.days_off
-            company.weekly_hours_worked[self.employee] -= random.randint(2, 6)
+            company.daily_punchcard[self.employee] -= random.randint(2, 6)
             if self.employee.disposition_toward_company > 0.85:
                 self.employee.disposition_toward_company -= 0.15
             elif self.employee.disposition_toward_company > 0.1:
@@ -864,7 +871,7 @@ class Injury(Event):
                 self.employee.disposition_toward_company = -1.0
         else:
             company.scheduled_today.remove(self.employee)
-            company.weekly_hours_worked[self.employee] -= random.randint(2, 6)
+            company.daily_punchcard[self.employee] -= random.randint(2, 6)
             if self.employee.disposition_toward_company > 0.85:
                 self.employee.disposition_toward_company -= 0.05
             elif self.employee.disposition_toward_company > 0.1:
