@@ -1,48 +1,52 @@
 from abc import ABC, abstractmethod
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from dataclasses import dataclass, field
 from enum import Enum
 import random
 from typing import Optional
 
-from gen import Person
+from person import Person
 
 
 def main():
     c = Company.generate()
     c.day_of_week = 5
     while True:
-        c.start_of_day()
-
-        print()
+        print("\n" * 3)
         print(day_of_week(c.day_of_week))
         print("----------")
 
-        print("Scheduled today:")
-        for employee in c.scheduled_today:
-            print(f"\t- {employee.full_name()}")
+        c.start_of_day()
 
-        menu(c)
+        if not c.scheduled_today:
+            print("No one could be scheduled to work today!")
+        else:
+            print("Scheduled today:")
+            for employee in c.scheduled_today:
+                print(f"\t- {employee.full_name()}")
 
-        events = random.choices(Event.__subclasses__(), k=random.randint(0, 3))
-        for event_kind in events:
-            e = event_kind.generate(c)
-            e.print()
-            e.apply(c)
-            c.event_history[-1].append(e)
-            confirm()
+            menu(c)
 
-        if len(events) == 0:
-            print(
-                random.choice(
-                    [
-                        "The day went by smoothly.",
-                        "The day was uneventful.",
-                        "Nothing out of the ordinary happened today.",
-                    ]
+            print()
+            events = random.choices(Event.__subclasses__(), k=random.randint(0, 3))
+            for event_kind in events:
+                e = event_kind.generate(c)
+                e.print()
+                e.apply(c)
+                c.event_history[-1].append(e)
+                confirm()
+
+            if len(events) == 0:
+                print(
+                    random.choice(
+                        [
+                            "The day went by smoothly.",
+                            "The day was uneventful.",
+                            "Nothing out of the ordinary happened today.",
+                        ]
+                    )
                 )
-            )
-            confirm()
+                confirm()
 
         total_labor_hours = c.end_of_day()
         print()
@@ -51,28 +55,7 @@ def main():
         menu(c)
 
         if c.day_of_week == 0:
-            print("End of week.")
-            confirm()
-
-            print(f"{"Employee":^30} |{"Hrs":^5}| {"Pay ($)":^6}")
-            print("-" * 50)
-            total = 0.00
-            for employee in c.weekly_hours_worked.keys():
-                hours = c.weekly_hours_worked[employee]
-                pay = hours * c.hourly_wage
-                total += pay
-                print(f"{employee.full_name():<30} | {hours:>3} | {pay:6.2f}")
-            print("-" * 50)
-            print(f"{'Totals':<30} | {total_labor_hours:>3} | ${total:3.2f}")
-
-            unscheduled = c.employees - set(c.weekly_hours_worked.keys())
-            if unscheduled:
-                print()
-                print("Unscheduled employees:")
-                for employee in unscheduled:
-                    print(f"\t- {employee}")
-
-            c.weekly_hours_worked = defaultdict(int)
+            c.end_of_week()
             confirm()
 
 
@@ -116,6 +99,7 @@ def menu(c: "Company"):
             case ["e" | "E" | "employees"]:
                 print()
                 print("CURRENT EMPLOYEES")
+                print("-----------------")
                 for employee in c.employees:
                     bullet = (
                         "*"
@@ -127,7 +111,10 @@ def menu(c: "Company"):
                         if c.cant_be_scheduled_for_days[employee] > 0
                         else ""
                     )
-                    print(f"\t{bullet} {employee.full_name():<30}{days_till}")
+                    wage = employee.hourly_wage
+                    print(
+                        f"\t{bullet} {employee.full_name():<25}{wage:>5.2f}/hr{days_till:>20}"
+                    )
                 print("* Scheduled today")
                 print("x Can't be scheduled for a few days")
             case _:
@@ -135,27 +122,73 @@ def menu(c: "Company"):
 
 
 def hiring_menu(c: "Company"):
-    pool = [Employee.generate() for _ in range(5)]
+    Applicant = namedtuple("Applicant", ["employee", "start_delay", "workdays"])
+
+    pool = [
+        Applicant(
+            employee=Employee.generate(),
+            start_delay=random.randint(0, 5),
+            workdays=random.randint(2, 6),
+        )
+        for _ in range(random.randint(1, 6))
+    ]
+    print()
+    print()
     print("HIRING")
     print("------")
 
     while True:
-        for i, employee in enumerate(pool):
-            print(f"{i + 1}. {employee.full_name()}")
-            print(f"    - Age: {employee.age}")
+        print()
+        print("Applicants")
+        print("-----------")
+        if pool:
+            for i, applicant in enumerate(pool):
+                employee = applicant.employee
+                start_delay = applicant.start_delay
+                workdays = applicant.workdays
+
+                start_when = f"in {start_delay} days" if start_delay > 0 else "today"
+                sex = employee.sex_descriptor()
+                workdays = random.randint(2, 6)
+                print()
+                print(f"{i + 1}. {employee.full_name()}, {employee.age} -- Sex: {sex}")
+                print(f"    - Desired wage: {employee.hourly_wage:2.2f}/hr")
+                print(f"    - Wants to work {workdays} days per week")
+                print(f"    - Can start {start_when}")
+        else:
+            print("No applicants.")
+        print()
+        print(f"E[x]it hiring menu")
         print()
         inp = input("> ")
         try:
             idx = int(inp) - 1
             if 0 <= idx < len(pool):
-                c.hire(pool[idx])
-                print(f"{pool[idx].full_name()} was hired.")
-                break
+                applicant = pool[idx]
+                e = applicant.employee
+                start_delay = applicant.start_delay
+                workdays = applicant.workdays
+
+                pool.remove(applicant)
+                c.hire(e, start_delay=start_delay, desired_workdays=workdays)
+
+                start_when = f"in {start_delay} days" if start_delay > 0 else "tomorrow"
+                print()
+                print(f"{e.full_name()} is hired. {e.They} can start {start_when}.")
             else:
-                print("Invalid index.")
+                print()
+                print(
+                    f"Invalid index. Please enter a number between 1 and {len(pool)}."
+                )
         except ValueError:
             match inp.lower():
-                case "exit" | "quit" | "q":
+                case "x" | "exit":
+                    print()
+                    print("Redoing schedule...")
+                    c.create_todays_schedule()
+                    print("Scheduled today:")
+                    for employee in c.scheduled_today:
+                        print(f"\t- {employee.full_name()}")
                     break
                 case _:
                     print("Invalid input.")
@@ -224,6 +257,7 @@ def day_of_week(dow: int) -> str:
 
 @dataclass
 class Employee(Person):
+    hourly_wage: float = field(default_factory=lambda: random.normalvariate(0.17, 0.03))
     disposition_toward_company: float = 0.8
     relationships: defaultdict["Employee", float] = field(
         default_factory=lambda: defaultdict(float)
@@ -288,7 +322,7 @@ class Company:
     employees: set[Employee]
     scheduled_today: set[Employee]
     cant_be_scheduled_for_days: defaultdict[Employee, int]
-    days_worked_per_week: dict[Employee, int]
+    desired_workdays_per_week: dict[Employee, int]
     event_history: list[list["Event"]] = field(default_factory=list)
 
     weekly_hours_worked: defaultdict[Employee, int] = field(
@@ -297,10 +331,12 @@ class Company:
     day_of_week: int = 0
     min_shift_size: int = 5
     max_shift_size: int = 10
-    hourly_wage: float = 1.35 / 8  # $1.35 per hour (1860s dollars)
+    hourly_wage: float = 1.35 / 8  # $1.35 per day (1860s dollars) (~17 cents/hr)
     daily_punchcard: defaultdict[Employee, int] = field(
         default_factory=lambda: defaultdict(int)
     )
+    weekly_operating_expenses: float = 21.00
+    hourly_revenue: float = 0.25
 
     @staticmethod
     def generate() -> "Company":
@@ -308,16 +344,12 @@ class Company:
             employees=set(),
             scheduled_today=set(),
             cant_be_scheduled_for_days=defaultdict(int),
-            days_worked_per_week={},
+            desired_workdays_per_week={},
         )
 
         n_emps = random.randint(5, 15)
         for _ in range(n_emps):
             c.hire(Employee.generate())
-
-        c.days_worked_per_week = {
-            employee: random.randint(1, 6) for employee in c.employees
-        }
 
         c.cant_be_scheduled_for_days = defaultdict(
             int, {employee: random.randint(0, 2) for employee in c.employees}
@@ -331,13 +363,20 @@ class Company:
 
         return c
 
-    def hire(self, e: Employee):
+    def hire(
+        self,
+        e: Employee,
+        start_delay: Optional[int] = None,
+        desired_workdays: Optional[int] = None,
+    ):
         same_name = [o for o in self.employees if o.first_name == e.first_name]
         if same_name:
             Person.give_distinguishing_nicknames(
                 [e, *same_name], set(o.nickname for o in self.employees)
             )
 
+        self.desired_workdays_per_week[e] = desired_workdays or random.randint(3, 6)
+        self.cant_be_scheduled_for_days[e] = start_delay or random.randint(0, 5)
         self.employees.add(e)
 
     def start_of_day(self):
@@ -351,11 +390,13 @@ class Company:
 
         total_labor_hours = 0
 
+        # These all worked a full shift.
         for employee in self.scheduled_today:
-            self.days_worked_per_week[employee] += 1
             self.daily_punchcard[employee] += 8
-            self.weekly_hours_worked[employee] += self.daily_punchcard[employee]
-            total_labor_hours += self.daily_punchcard[employee]
+
+        for employee, hours_worked in self.daily_punchcard.items():
+            self.weekly_hours_worked[employee] += hours_worked
+            total_labor_hours += hours_worked
 
         for employee, days_till_scheduled in self.cant_be_scheduled_for_days.items():
             if days_till_scheduled > 0:
@@ -363,7 +404,48 @@ class Company:
 
         return total_labor_hours
 
+    def end_of_week(self):
+        print("END OF WEEK")
+        print("-----------")
+        print(f"{"Employee":^30} |{"Hrs":^5}|{"Wage":^6}| {"Pay ($)":^6}")
+        print("-" * 60)
+        total_pay = 0.00
+        total_labor_hours = 0
+        for employee, hours in self.weekly_hours_worked.items():
+            if hours > 0:
+                wage = employee.hourly_wage
+                pay = hours * wage
+                total_labor_hours += hours
+                total_pay += pay
+                print(
+                    f"{employee.full_name():<30} | {hours:>3} | {wage:>2.2f} | {pay:6.2f}"
+                )
+        print("-" * 60)
+        print(f"{'Totals':<30} |{total_labor_hours:>4} |{"--":^6}| {total_pay:6.2f}")
+
+        unscheduled = {e for e in self.employees if self.weekly_hours_worked[e] == 0}
+        if unscheduled:
+            print()
+            print("Unscheduled employees this week:")
+            for employee in unscheduled:
+                print(f"\t- {employee}")
+
+        print()
+        operating_costs = random.normalvariate(self.weekly_operating_expenses, 2.00)
+        expenses = operating_costs + total_pay
+        revenue = total_labor_hours * random.normalvariate(self.hourly_revenue, 0.05)
+        profit = revenue - expenses
+        print(f"Expenses:      {expenses:>6.2f}")
+        print(f"    Wages:     {total_pay:>6.2f}")
+        print(f"    Operating: {operating_costs:>6.2f}")
+        print(f"Revenue:       {revenue:>6.2f}")
+        print(f"----------------------------------")
+        print(f"Profit:        {profit:>6.2f}")
+
+        self.weekly_hours_worked = defaultdict(int)
+
     def create_todays_schedule(self):
+        self.scheduled_today = set()
         while len(self.scheduled_today) < self.min_shift_size:
             no_emp_added = True
 
@@ -377,7 +459,7 @@ class Company:
 
                 over_weekly_hours = (
                     self.weekly_hours_worked[employee]
-                    >= self.days_worked_per_week[employee] * 8
+                    >= self.desired_workdays_per_week[employee] * 8
                 )
                 out_for_a_bit = self.cant_be_scheduled_for_days[employee] > 0
 
@@ -386,7 +468,7 @@ class Company:
                     # Prioritize employees who need the hours the most.
                     days_left_in_week = 7 - self.day_of_week
 
-                    if self.days_worked_per_week[employee] >= days_left_in_week:
+                    if self.desired_workdays_per_week[employee] >= days_left_in_week:
                         self.scheduled_today.add(employee)  # Definitely add them.
                         no_emp_added = False
                     elif random.random() < 0.5:
@@ -652,7 +734,8 @@ class QuittingDislikesCoworkers(Quitting):
     def apply(self, company):
         company.employees.remove(self.employee)
         if not self.worked_whole_day:
-            company.daily_punchcard[self.employee] -= random.randint(2, 6)
+            company.scheduled_today.remove(self.employee)
+            company.daily_punchcard[self.employee] += random.randint(2, 6)
 
     def described_by_to(self, speaker: Employee, listener: Employee):
         e = self.employee
@@ -859,8 +942,8 @@ class Injury(Event):
     def apply(self, company: Company):
         if self.severe:
             company.scheduled_today.remove(self.employee)
+            company.daily_punchcard[self.employee] += random.randint(2, 6)
             company.cant_be_scheduled_for_days[self.employee] = self.days_off
-            company.daily_punchcard[self.employee] -= random.randint(2, 6)
             if self.employee.disposition_toward_company > 0.85:
                 self.employee.disposition_toward_company -= 0.15
             elif self.employee.disposition_toward_company > 0.1:
@@ -871,7 +954,7 @@ class Injury(Event):
                 self.employee.disposition_toward_company = -1.0
         else:
             company.scheduled_today.remove(self.employee)
-            company.daily_punchcard[self.employee] -= random.randint(2, 6)
+            company.daily_punchcard[self.employee] += random.randint(2, 6)
             if self.employee.disposition_toward_company > 0.85:
                 self.employee.disposition_toward_company -= 0.05
             elif self.employee.disposition_toward_company > 0.1:

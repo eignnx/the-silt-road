@@ -45,8 +45,16 @@ class Person:
     def is_masc(self) -> bool:
         return Trait.Masc in self.traits
 
-    def is_femm(self) -> bool:
+    def is_fem(self) -> bool:
         return Trait.Femm in self.traits
+
+    def sex_descriptor(self) -> str:
+        if self.is_fem():
+            return "F"
+        elif self.is_masc():
+            return "M"
+        else:
+            return "?"
 
     def is_queer(self) -> bool:
         return Trait.VisQueer in self.traits
@@ -120,7 +128,7 @@ class Person:
     def they(self) -> str:
         if self.is_masc():
             return "he"
-        elif self.is_femm():
+        elif self.is_fem():
             return "she"
         else:
             return "they"
@@ -133,7 +141,7 @@ class Person:
     def them(self) -> str:
         if self.is_masc():
             return "him"
-        elif self.is_femm():
+        elif self.is_fem():
             return "her"
         else:
             return "them"
@@ -146,7 +154,7 @@ class Person:
     def their(self) -> str:
         if self.is_masc():
             return "his"
-        elif self.is_femm():
+        elif self.is_fem():
             return "her"
         else:
             return "their"
@@ -159,7 +167,7 @@ class Person:
     def theyre(self) -> str:
         if self.is_masc():
             return "he's"
-        elif self.is_femm():
+        elif self.is_fem():
             return "she's"
         else:
             return "they're"
