@@ -228,10 +228,6 @@ th.section-div-row {
   align-items: center;
 }
 
-.classified-notice {
-  font-family: var(--fnt-rubberstamp);
-}
-
 *:popover-open {
   color: var(--clr-dark-lighter);
   padding: 0.5rem;

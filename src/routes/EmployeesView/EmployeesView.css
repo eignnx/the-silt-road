@@ -1,6 +1,6 @@
 .employee-record-sheet {
     padding-block: 2rem;
-    background-color: rgb(208, 191, 198);
+    /* background-color: rgb(208, 191, 198); */
     max-width: 80ch;
     margin-block: 3rem;
 
@@ -11,8 +11,29 @@
         padding: 0.5rem;
     }
 
-    table {
-        background-color: rgb(208, 191, 198);
-        /* background-color: rgb(210, 230, 199); */
+    .classified-notice {
+        font-family: var(--fnt-rubberstamp);
+        text-align: center;
+    }
+
+    .flavor-text {
+        color: var(--clr-dark-lighter);
+        font-size: small;
+    }
+
+
+    /* background-color: rgb(208, 191, 198); */
+    background-color: rgb(210, 230, 199);
+
+    & .skill-field>* {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        & span {
+            font-size: x-large;
+            font-weight: 900;
+        }
     }
 }
