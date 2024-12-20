@@ -8,6 +8,7 @@ import { CARAVAN } from '../../model/PlayerCaravan';
 import './Dashboard.css';
 import CargoMeter from '../../components/CargoMeter';
 import React, { SetStateAction, useContext, useState } from 'react';
+import { TIME } from '../../model/Time';
 
 type LoaderRetTy = {
     playerAccountBalance: number;
@@ -37,6 +38,7 @@ export const SetTxnWeight = React.createContext<TxnWeightCtx>({
 
 export default function Dashboard() {
     const { playerAccountBalance, playerInfo, playerInventory, caravanCapacity } = useLoaderData() as LoaderRetTy;
+    const time = TIME.useTime("any");
 
     const [txnWeight, setTxnWeight] = useState(Weight.fromLbs(0));
 
@@ -80,32 +82,48 @@ export default function Dashboard() {
                             <tr><td colSpan={2}>{playerInfo.companyName}</td></tr>
                             <tr><td colSpan={2}>Owner: {playerInfo.playerName}</td></tr>
                         </thead>
-                        <tr>
-                            <th scope="row">Bank Balance</th>
-                            <td>${playerAccountBalance.toFixed(2)}</td>
-                        </tr>
-                        <tr>
-                            <th scope="col" colSpan={2}>Caravan</th>
-                        </tr>
-                        <tr>
-                            <td colSpan={2}>
-                                <div>Cargo & Capacity</div>
-                                <CargoMeter
-                                    cargo={cargoWeight}
-                                    capacity={caravanCapacity}
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Employees</th>
-                            <td>12</td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Bank Balance</th>
+                                <td>${playerAccountBalance.toFixed(2)}</td>
+                            </tr>
+                            <tr>
+                                <th scope="col" colSpan={2}>Caravan</th>
+                            </tr>
+                            <tr>
+                                <td colSpan={2}>
+                                    <div>Cargo & Capacity</div>
+                                    <CargoMeter
+                                        cargo={cargoWeight}
+                                        capacity={caravanCapacity}
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Employees</th>
+                                <td>12</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr><td colSpan={2}>
+                                {time !== "loading"
+                                    ? `${time.dayOfWeek} — ${time.timeOfDay}`
+                                    : "... — ..."}
+                            </td></tr>
+                            <tr>
+                                <td colSpan={2}>
+                                    <button onClick={() => TIME.progressToNextTimeOfDay()}>Advance Time</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colSpan={2}>
+                                    <button onClick={RESET_ALL_STORAGE}>Clear All Save Data</button>
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </section>
                 <section>
-                    <button
-                        onClick={RESET_ALL_STORAGE}
-                    >Clear All Save Data</button>
                 </section>
             </aside>
             <main className='dashboard-outlet'>
