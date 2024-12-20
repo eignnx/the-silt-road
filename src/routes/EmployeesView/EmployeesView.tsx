@@ -1,9 +1,10 @@
-import { ActionFunction, useLoaderData, useSubmit } from 'react-router-dom';
+import { ActionFunction, useLoaderData } from 'react-router-dom';
 import { PLAYER_INFO } from '../../model/PlayerInfo';
 import "./EmployeesView.css";
 import { Company } from '../../gen/company';
-import { TIME, Time } from '../../model/Time';
-import React, { useEffect } from 'react';
+import React from 'react';
+import { Employee } from '../../gen/employee';
+import { currencyDisplay } from '../../utils';
 
 const company = new Company();
 
@@ -18,7 +19,7 @@ export async function employeesViewLoader(): Promise<LoaderData> {
         company,
     };
 }
-type A = ActionFunction;
+
 export async function employeesViewAction({ request }: { request: Request; }) {
     return null;
 }
@@ -26,39 +27,14 @@ export async function employeesViewAction({ request }: { request: Request; }) {
 export default function EmployeesView() {
     const { companyName, company } = useLoaderData() as LoaderData;
 
-    const time = TIME.useTime("any");
-
-    const employees = [
-        { name: "Russel O'Connor", skills: ["cook", "laborer"] },
-        { name: "Claire Vandermonde", skills: ["teamster", "cook", "laborer", "hired gun"] },
-        { name: "Hezekiah P. Smith", skills: ["hired gun"] },
-        { name: "Judith Damascus", skills: ["laborer"] },
-    ];
-
     return <>
-        <section>
-            {Array.from(company.employees).map(e => (
-                <div>{e.fullName()}, {e.age}</div>
-            ))}
-        </section>
-        <section>
-            <div>
-                {time !== "loading"
-                    ? `${time.dayOfWeek} -- ${time.timeOfDay}`
-                    : "... -- ..."}
-            </div>
-            <div>
-                <button onClick={() => TIME.progressToNextTimeOfDay()}>Advance Time</button>
-            </div>
-        </section>
-        {employees.map(emp => (
+        {Array.from(company.employees).map(emp => (
             <EmployeeCard companyName={companyName} employee={emp} />
         ))}
     </>;
 }
 
-function EmployeeCard({ companyName, employee: emp }: { companyName: string, employee: { name: string, skills: string[]; }; }) {
-    const { name, skills } = emp;
+function EmployeeCard({ companyName, employee: emp }: { companyName: string, employee: Employee; }) {
     return <table className='employee-record-sheet document'>
         <thead>
             <tr>
@@ -72,7 +48,7 @@ function EmployeeCard({ companyName, employee: emp }: { companyName: string, emp
                 </th>
             </tr>
             <tr>
-                <th scope="row">Emp. Name</th><td className='handwritten'>{emp.name}</td>
+                <th scope="row" colSpan={2}>Emp. Name <span className='handwritten'>{emp.fullName()}</span></th>
                 <td>Emp. № 24</td>
                 <th scope="row">Date of Hire</th>
                 <td className='handwritten'>March 23rd 1859</td>
@@ -92,9 +68,9 @@ function EmployeeCard({ companyName, employee: emp }: { companyName: string, emp
                 <th scope="row">Wage (hourly)</th>
                 <td colSpan={1}>
                     <div className='flex-evenly'>
-                        <button>Cut</button>
-                        <span>72¢</span>
-                        <button>Raise</button>
+                        <button disabled>Cut</button>
+                        <span>{currencyDisplay(emp.hourlyWage)}/hr</span>
+                        <button disabled>Raise</button>
                     </div>
                 </td>
                 <td>✯✯✯</td>
@@ -102,27 +78,29 @@ function EmployeeCard({ companyName, employee: emp }: { companyName: string, emp
             <tr>
                 <th scope="row" rowSpan={2}>Skills:</th>
                 <th scope="col">Teamster</th>
-                <th scope="col">Cook</th>
+                <th scope="col">Accounting</th>
                 <th scope="col">Laborer</th>
                 <th scope="col">Security</th>
             </tr>
             <tr>
-                <td className='handwritten'>{emp.skills.includes("teamster") ? "X" : ""}</td>
-                <td className='handwritten'>{emp.skills.includes("cook") ? "X" : ""}</td>
-                <td className='handwritten'>{emp.skills.includes("laborer") ? "X" : ""}</td>
-                <td className='handwritten'>{emp.skills.includes("hired gun") ? "X" : ""}</td>
+                <td className='handwritten'>{emp.skills.has("Teamster") ? "X" : ""}</td>
+                <td className='handwritten'>{emp.skills.has("Accounting") ? "X" : ""}</td>
+                <td className='handwritten'>{emp.skills.has("Laborer") ? "X" : ""}</td>
+                <td className='handwritten'>{emp.skills.has("Security") ? "X" : ""}</td>
             </tr>
             <tr><th scope='col' colSpan={5} className='section-div-row'>Biographical Information</th></tr>
             <tr>
-                <th scope="row">Age</th><td className='handwritten'>47</td>
-                <th scope="row">Prospects</th><td colSpan={2} className='handwritten'>desperate</td>
+                <th scope="row">Age</th><td className='handwritten'>{emp.age}</td>
+                <th scope="row">Prospects</th><td colSpan={2} className='handwritten'>{
+                    emp.poorMoral() ? "desperate" : emp.goodMoral() ? "positive" : "unknown"
+                }</td>
             </tr>
             <tr>
                 <th scope="row">Race</th><td className='handwritten'>White</td>
                 <th scope="row">Dependants</th><td colSpan={2} className='handwritten'> spouse, 3 ch., 1 elder</td>
             </tr>
             <tr>
-                <th scope="row">Sex</th><td className='handwritten'>F</td>
+                <th scope="row">Sex</th><td className='handwritten'>{emp.sexDescriptor()}</td>
                 <th scope="row">Est. Assets</th><td colSpan={2} className='handwritten'>$27</td>
             </tr>
             <tr>

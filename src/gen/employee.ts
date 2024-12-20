@@ -1,7 +1,17 @@
 import { Person, Trait } from './person';
-import { DefaultMap, randChoice, randNormal } from '../utils'; // Assuming you have a utility function for normal distribution
+import { DefaultMap, randChoice, randNormal, randSample } from '../utils'; // Assuming you have a utility function for normal distribution
+
+export const SKILLS = [
+    "Teamster",
+    "Laborer",
+    "Security",
+    "Accounting",
+] as const;
+
+export type Skill = typeof SKILLS[number];
 
 export class Employee extends Person {
+    skills: Set<Skill>;
     hourlyWage: number;
     moral: number;
     relationships: DefaultMap<Employee, number>;
@@ -11,11 +21,13 @@ export class Employee extends Person {
         lastName: string,
         age: number,
         traits: Set<Trait>,
+        skills: Set<Skill>,
         hourlyWage: number,
         moral: number,
         relationships: DefaultMap<Employee, number> = new DefaultMap(() => 0),
     ) {
         super(firstName, lastName, age, traits);
+        this.skills = skills;
         this.hourlyWage = hourlyWage;
         this.moral = moral;
         this.relationships = relationships;
@@ -23,6 +35,10 @@ export class Employee extends Person {
 
     static generate(): Employee {
         const person = Person.generate();
+        const skills = new Set(randSample(
+            Math.round(randNormal(1, 0.6, [1, SKILLS.length])),
+            SKILLS,
+        ));
         const hourlyWage = randNormal(0.17, 0.03, [0.01, 0.75]);
         const moral = randNormal(0.5, 0.1, [-1, 1]);
         return new Employee(
@@ -30,6 +46,7 @@ export class Employee extends Person {
             person.lastName,
             person.age,
             person.traits,
+            skills,
             hourlyWage,
             moral,
         );

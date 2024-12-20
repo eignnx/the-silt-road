@@ -44,7 +44,7 @@ export function randNormal(mean: number = 0, stdev: number = 1, bounds?: [number
     }
 }
 
-export function randSample<T>(size: number, arr: T[]): T[] {
+export function randSample<T>(size: number, arr: readonly T[]): T[] {
     if (size > arr.length) {
         return arr.slice();
     }
