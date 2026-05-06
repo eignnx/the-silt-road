@@ -1,7 +1,7 @@
 # The Silt Road
 > A game about managing trading company in the wild west.
 
-![Screenshot 2026-04-22 at 14-04-45 The Silt Road](/Screenshot 2026-04-22 at 14-04-45 The Silt Road.png)
+![Screenshot 2026-04-22 at 14-04-45 The Silt Road](/screenshot-2026-04-22--14-04-45.png)
 
 ## Play Online
 
