@@ -10,7 +10,8 @@ type Props = {
 
 export default function EmployeeCard({ companyName, employee: emp }: Props) {
     function skillCheckmark(skill: Skill) {
-        return <span>{emp.skills.has(skill) ? "☑" : "☐"}</span>;
+        // return <span>{emp.skills.has(skill) ? "☑" : "☐"}</span>;
+        return <span>{emp.skills.has(skill) ? "☒" : "☐"}</span>;
     }
 
     return <table className='employee-record-sheet document'>
@@ -116,11 +117,6 @@ export default function EmployeeCard({ companyName, employee: emp }: Props) {
             <tr></tr>
         </tbody>
         <tfoot>
-            <tr>
-                <th colSpan={5}>
-                    <div className='classified-notice'>MANAGEMENT EYES ONLY</div>
-                </th>
-            </tr>
             <tr>
                 <td colSpan={5}>
                     <p className="flavor-text">Hemlock Printing Co.</p>
